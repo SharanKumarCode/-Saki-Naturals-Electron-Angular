@@ -1,4 +1,6 @@
 import {app, BrowserWindow, screen} from 'electron';
+import { contextBridge, ipcRenderer, ipcMain } from 'electron';
+import { getProducts } from './db/db_manager';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -20,7 +22,7 @@ function createWindow(): BrowserWindow {
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
-      contextIsolation: true,  // false if you want to run e2e test with Spectron
+      contextIsolation: false,  // false if you want to run e2e test with Spectron
     },
   });
 
@@ -59,7 +61,29 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(createWindow, 400)
+  //   contextBridge.exposeInMainWorld( 'electronapi', {
+  //     send: ( channel: string ) => ipcRenderer.invoke( channel ),
+  //     getProducts: getProducts
+  // })
+  });
+
+  ipcMain.handle('close-main-window', async () => {
+    console.log("closing window")
+    win.close();
+  });
+
+  ipcMain.handle('get-products', async (event) => {
+    console.log("get products")
+    const res = getProducts();
+    res.then(data=>{
+      console.log("received and sending product data")
+      console.log(data);
+      console.log(JSON.stringify(data));
+      event.sender.send('get-products', JSON.stringify(data))
+    });    
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
