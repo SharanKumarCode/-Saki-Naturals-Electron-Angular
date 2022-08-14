@@ -1,0 +1,26 @@
+<div class="nav-container" [class.nav-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="nav-toolbar">
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon svgIcon="menu"></mat-icon></button>
+      <h1 class="nav-app-name">Saki Naturals</h1>
+      <button mat-icon-button class="close-btn" (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+    </mat-toolbar>
+  
+    <mat-sidenav-container class="nav-sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+      <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                   [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+        <mat-nav-list>
+          <a routerLink="/products" mat-list-item><mat-icon svgIcon="products"></mat-icon><span class="nav-link-item">Products</span></a>
+          <a routerLink="/sales" mat-list-item><mat-icon svgIcon="sales"></mat-icon><span class="nav-link-item">Sales</span></a>
+          <a routerLink="/purchase" mat-list-item><mat-icon svgIcon="purchase"></mat-icon><span class="nav-link-item">Purchase</span></a>
+          <a routerLink="/expense" mat-list-item><mat-icon svgIcon="expense"></mat-icon><span class="nav-link-item">Expense</span></a>
+          <a routerLink="/employee" mat-list-item><mat-icon svgIcon="employee"></mat-icon><span class="nav-link-item">Employee</span></a>
+          <a routerLink="/settings" mat-list-item><mat-icon svgIcon="settings"></mat-icon><span class="nav-link-item">Settings</span></a>
+        </mat-nav-list>
+      </mat-sidenav>
+  
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
