@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>ADD PRODUCTS</h1>
+<mat-dialog-content class="form-container" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Product Name</mat-label>
+    <input matInput #input maxlength="50" formControlName="productName" value="{{productName}}"/>
+    <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Group</mat-label>
+    <input matInput #input maxlength="30" formControlName="group" value="{{group}}"/>
+    <mat-hint align="end">{{input.value?.length || 0}}/30</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput #input maxlength="100" formControlName="description" value="{{description}}"></textarea>
+    <mat-hint align="end">{{input.value?.length || 0}}/100</mat-hint>
+  </mat-form-field>
+  <div class="stock-sold-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Stock</mat-label>
+      <input matInput type="number" min="0" placeholder="0" formControlName="stock" value="{{stock}}"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sold</mat-label>
+      <input matInput type="number" min="0" placeholder="0" formControlName="sold" value="{{sold}}"/>
+    </mat-form-field>
+  </div>  
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>Price - Direct Sale</mat-label>
+    <input matInput type="number" min="0" class="example-right-align" formControlName="priceDirectSale" value="{{priceDirectSale}}"/>
+    <span matPrefix>&#8377;&nbsp;</span>
+  </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>Price - Reseller</mat-label>
+    <input matInput type="number" class="example-right-align" formControlName="priceReseller" value="{{priceReseller}}"/>
+    <span matPrefix>&#8377;&nbsp;</span>
+  </mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>Price - Dealer</mat-label>
+    <input matInput type="number" class="example-right-align" formControlName="priceDealer" value="{{priceDealer}}"/>
+    <span matPrefix>&#8377;&nbsp;</span>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
+  <button mat-button (click)="onNoClick()">CANCEL</button>
+  <button mat-button cdkFocusInitial (click)="onSave()" color="warn">ADD PRODUCT</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onNoClick()">CANCEL</button>
+  <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE PRODUCT</button>
+  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn">DELETE</button>
+</div>

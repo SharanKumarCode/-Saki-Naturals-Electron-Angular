@@ -4,50 +4,32 @@ const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
 export class Product
 {
 	@PrimaryGeneratedColumn('uuid')
-	product_id: number;
+	product_id: string;
 
-	@Column({
-        "nullable": false
-    })
+	@Column()
 	group: string;
 
-    @Column({
-        "nullable": false
-    })
+    @Column()
 	product_name: string;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	description: string;
     
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	stock: Number;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	price_directSale: Number;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	price_reseller: Number;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	price_dealer: Number;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	created_date: Date;
 
-    @Column({
-        "nullable": true
-    })
+    @Column()
 	sold: Number;
 }
