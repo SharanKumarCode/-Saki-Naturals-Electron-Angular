@@ -18,7 +18,6 @@ export class ElectronService {
   constructor() {
     // Conditional imports
     if (this.isElectron) {
-      console.log('true');
       this.ipcRenderer = window.require('electron').ipcRenderer;
       this.webFrame = window.require('electron').webFrame;
 
@@ -49,12 +48,9 @@ export class ElectronService {
       // ipcRenderer.invoke can serve many common use cases.
       // https://www.electronjs.org/docs/latest/api/ipc-renderer#ipcrendererinvokechannel-args
     }
-    console.log('false');
   }
 
   get isElectron(): boolean {
-    console.log(window);
-    console.log(window.process);
     return !!(window && window.process && window.process.type);
   }
 
@@ -68,7 +64,7 @@ export class ElectronService {
   }
 
   closeApp(): void{
-    console.log('Angular close app');
+    console.log('Closing app..');
     this.ipcRenderer.invoke('close-main-window');
   }
 
