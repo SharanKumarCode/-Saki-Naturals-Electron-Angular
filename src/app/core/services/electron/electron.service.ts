@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, webFrame } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
+import { IProductData } from '../../../products/interfaces/productdata.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -57,8 +58,26 @@ export class ElectronService {
   getProducts(): void{
     console.log('Angular getting products');
     const res = this.ipcRenderer.invoke('get-products');
-    this.ipcRenderer.on('get-products',(event, data)=>{
-      console.log('on receiveing ipcRenderer');
+    this.ipcRenderer.on('get-products',(_, data)=>{
+      console.log('Angular on receiving ipcRenderer after getting products');
+      console.log(data);
+    });
+  }
+
+  insertProduct(product: IProductData): void{
+    console.log('Angular inserting product..');
+    this.ipcRenderer.invoke('insert-product', product);
+    this.ipcRenderer.on('insert-product-recv',(_, data)=>{
+      console.log('Angular on receiving ipcRenderer response after product insert');
+      console.log(data);
+    });
+  }
+
+  dummyHandler(dummy: string): void{
+    console.log('Angular dummy handler..');
+    this.ipcRenderer.invoke('dummy-handle', dummy);
+    this.ipcRenderer.on('dummy-handle-recv',(_, data)=>{
+      console.log('Angular on receiving ipcRenderer response after dummy handling');
       console.log(data);
     });
   }

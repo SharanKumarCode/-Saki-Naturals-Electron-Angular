@@ -15,60 +15,42 @@ let Product = class Product {
 };
 __decorate([
     PrimaryGeneratedColumn('uuid'),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Product.prototype, "product_id", void 0);
 __decorate([
-    Column({
-        "nullable": false
-    }),
+    Column(),
     __metadata("design:type", String)
 ], Product.prototype, "group", void 0);
 __decorate([
-    Column({
-        "nullable": false
-    }),
+    Column(),
     __metadata("design:type", String)
 ], Product.prototype, "product_name", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Number)
 ], Product.prototype, "stock", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Number)
 ], Product.prototype, "price_directSale", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Number)
 ], Product.prototype, "price_reseller", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Number)
 ], Product.prototype, "price_dealer", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Date)
 ], Product.prototype, "created_date", void 0);
 __decorate([
-    Column({
-        "nullable": true
-    }),
+    Column(),
     __metadata("design:type", Number)
 ], Product.prototype, "sold", void 0);
 Product = __decorate([

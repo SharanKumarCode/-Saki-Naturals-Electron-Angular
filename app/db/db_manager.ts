@@ -1,5 +1,7 @@
 import { randomUUID } from "crypto"
+import { delay } from "rxjs"
 import { DataSource } from "typeorm"
+import { IProductData } from "../../src/app/products/interfaces/productdata.interface"
 import { Product } from "./data/models/items.schema"
 
 const AppDataSource = new DataSource({
@@ -21,16 +23,26 @@ AppDataSource.initialize()
 
 async function getProducts(){
     console.log('getting products..')
-    // const res = await AppDataSource.manager.find(Product,{})
     const res = await AppDataSource.manager
     .createQueryBuilder(Product, "product")
     .where("product_id = :id", { id: 3 })
     .getOne()
-    if (!res){
-        console.log("product result is empty")
-        // populateProductsDummyData()
-    }
-    console.log(res)
+    return res
+}
+
+async function inserProduct(product: IProductData){
+    console.log("Inserting product data..")
+    const res = await AppDataSource.manager.insert(Product, {
+        group: product.group,
+        product_name: product.productName,
+        description: product.description,
+        stock: product.stock,
+        price_directSale: product.priceDirectSale,
+        price_reseller: product.priceReseller,
+        price_dealer: product.priceDealer,
+        created_date: product.createdDate,
+        sold: product.sold
+    })
     return res
 }
 
@@ -53,4 +65,4 @@ async function populateProductsDummyData(){
     })
 }
 
-export {AppDataSource, getProducts}
+export {AppDataSource, getProducts, inserProduct}

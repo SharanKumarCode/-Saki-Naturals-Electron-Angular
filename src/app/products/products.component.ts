@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
@@ -43,9 +43,12 @@ export class ProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog box is closed');
-      this.productdata = result;
-      console.log(this.productdata);
+      console.log(result);
+      this.electronService.insertProduct(result);
     });
+  }
+
+  onRefresh(){
   }
 
 }

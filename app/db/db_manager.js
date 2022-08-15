@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = exports.AppDataSource = void 0;
+exports.inserProduct = exports.getProducts = exports.AppDataSource = void 0;
 const typeorm_1 = require("typeorm");
 const items_schema_1 = require("./data/models/items.schema");
 const AppDataSource = new typeorm_1.DataSource({
@@ -31,20 +31,32 @@ AppDataSource.initialize()
 function getProducts() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('getting products..');
-        // const res = await AppDataSource.manager.find(Product,{})
         const res = yield AppDataSource.manager
             .createQueryBuilder(items_schema_1.Product, "product")
             .where("product_id = :id", { id: 3 })
             .getOne();
-        if (!res) {
-            console.log("product result is empty");
-            // populateProductsDummyData()
-        }
-        console.log(res);
         return res;
     });
 }
 exports.getProducts = getProducts;
+function inserProduct(product) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("Inserting product data..");
+        const res = yield AppDataSource.manager.insert(items_schema_1.Product, {
+            group: product.group,
+            product_name: product.productName,
+            description: product.description,
+            stock: product.stock,
+            price_directSale: product.priceDirectSale,
+            price_reseller: product.priceReseller,
+            price_dealer: product.priceDealer,
+            created_date: product.createdDate,
+            sold: product.sold
+        });
+        return res;
+    });
+}
+exports.inserProduct = inserProduct;
 function populateProductsDummyData() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("populating with dummy data");
