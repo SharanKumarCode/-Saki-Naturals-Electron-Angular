@@ -44,3 +44,22 @@
 .form-button-container > button:nth-child(2) {
     flex-grow: 7;
 }
+
+.form-button-edit-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: stretch;
+}
+
+.form-button-edit-container > button:first-child {
+  flex-grow: 1;
+}
+
+.form-button-edit-container > button:nth-child(2) {
+  flex-grow: 7;
+}
+
+.form-button-edit-container > button:nth-child(3) {
+  flex-grow: 1;
+}

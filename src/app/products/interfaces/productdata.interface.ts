@@ -9,4 +9,5 @@ export interface IProductData {
     priceDealer: number;
     createdDate?: Date;
     sold: number;
+    editCreate?: string;
   }

@@ -45,6 +45,32 @@ async function inserProduct(product: IProductData){
     return res
 }
 
+async function updateProduct(product: any){
+    console.log("Updating product data..")
+    const res = await AppDataSource.manager.update(Product, {
+        product_id: product.productID
+    }, {
+        group: product.group,
+        product_name: product.productName,
+        description: product.description,
+        stock: product.stock,
+        price_directSale: product.priceDirectSale,
+        price_reseller: product.priceReseller,
+        price_dealer: product.priceDealer,
+        created_date: product.createdDate,
+        sold: product.sold
+    })
+    return res
+}
+
+async function deleteProduct(product_ID: string){
+    console.log("Deleting product data..")
+    const res = await AppDataSource.manager.delete(Product, {
+        product_id: product_ID
+    })
+    return res
+}
+
 async function populateProductsDummyData(){
     console.log("populating with dummy data")
     const res = await AppDataSource.manager.insert(Product,{
@@ -64,4 +90,4 @@ async function populateProductsDummyData(){
     })
 }
 
-export {AppDataSource, getAllProducts, inserProduct}
+export {AppDataSource, getAllProducts, inserProduct, updateProduct, deleteProduct}

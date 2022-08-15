@@ -19,6 +19,7 @@ export class AddProductsDialogComponent implements OnInit {
   priceReseller: number;
   priceDealer: number;
   sold: number;
+  editCreate: string;
   form: FormGroup;
 
   constructor(
@@ -35,6 +36,7 @@ export class AddProductsDialogComponent implements OnInit {
     this.priceReseller = this.data.priceReseller;
     this.priceDealer = this.data.priceDealer;
     this.sold = this.data.sold;
+    this.editCreate = this.data.editCreate;
 
     this.form = this.fb.group(
       {
@@ -65,6 +67,27 @@ export class AddProductsDialogComponent implements OnInit {
         this.dialogRef.close(finalProductData);
       }
     }
+  }
+
+  onUpdate(): void {
+    const {value, valid} = this.form;
+    if (valid) {
+      if (value.priceDealer === 0 && value.priceDirectSale === 0 && value.priceReseller === 0){
+        this.snackbar.open('Please provide alteast one Price.', 'close');
+      } else {
+        const finalProductData = value;
+        finalProductData.productID = this.data.productId;
+        finalProductData.editCreate = 'Edit';
+        this.dialogRef.close(finalProductData);
+      }
+    }
+  }
+
+  onDelete(): void{
+    this.dialogRef.close({
+      productID: this.data.productId,
+      editCreate: 'Delete'
+    });
   }
 
   ngOnInit(): void {

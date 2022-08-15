@@ -25,25 +25,25 @@
 }
 
 .products-table-section{
-    height: 75%;
+    height: 70%;
     width: 95%;
     margin: 1% auto 8px auto;
+    overflow: auto;
 }
 
 table{
     width: 100%;
-    color: white;
+    color: black;
 
 }
 
 th{
-    background-color: #1f1f1f;
-    color: white;
+    background-color: #e0e0e0;
+    color: black;
 }
 
 td{
-    color: white;
-    background-color: #141313;
+    color: black;
 }
 
 .mat-row .mat-cell {

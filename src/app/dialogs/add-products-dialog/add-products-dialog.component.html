@@ -41,7 +41,12 @@
     <span matPrefix>&#8377;&nbsp;</span>
   </mat-form-field>
 </mat-dialog-content>
-<div mat-dialog-actions class="form-button-container">
+<div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
   <button mat-button (click)="onNoClick()">CANCEL</button>
   <button mat-button cdkFocusInitial (click)="onSave()" color="warn">ADD PRODUCT</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onNoClick()">CANCEL</button>
+  <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE PRODUCT</button>
+  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn">DELETE</button>
 </div>

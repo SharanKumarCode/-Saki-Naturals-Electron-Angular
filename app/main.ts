@@ -1,6 +1,6 @@
 import {app, BrowserWindow, screen} from 'electron';
-import { contextBridge, ipcRenderer, ipcMain } from 'electron';
-import { getAllProducts, inserProduct } from './db/db_manager';
+import { ipcMain } from 'electron';
+import { getAllProducts, inserProduct, deleteProduct, updateProduct } from './db/db_manager';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -87,6 +87,30 @@ try {
       console.log(data.identifiers[0])
     }).catch(err=>{
       event.sender.send('insert-product-recv', 'error')
+      console.log(err)
+    })
+  });
+
+  ipcMain.handle('delete-product', async (event, data) => {
+    console.log("deleting product..")
+    const res = deleteProduct(data);
+    res.then(data=>{
+      event.sender.send('delete-product-recv', data.affected)
+      console.log(data.affected)
+    }).catch(err=>{
+      event.sender.send('delete-product-recv', 'error')
+      console.log(err)
+    })
+  });
+
+  ipcMain.handle('update-product', async (event, data) => {
+    console.log("updating product..")
+    const res = updateProduct(data);
+    res.then(data=>{
+      event.sender.send('update-product-recv', JSON.stringify(data))
+      console.log(data)
+    }).catch(err=>{
+      event.sender.send('update-product-recv', 'error')
       console.log(err)
     })
   });
