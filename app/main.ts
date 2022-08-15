@@ -1,6 +1,6 @@
 import {app, BrowserWindow, screen} from 'electron';
 import { contextBridge, ipcRenderer, ipcMain } from 'electron';
-import { getProducts, inserProduct } from './db/db_manager';
+import { getAllProducts, inserProduct } from './db/db_manager';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -72,10 +72,10 @@ try {
 
   ipcMain.handle('get-products', async (event) => {
     console.log("getting products..")
-    const res = getProducts();
+    const res = getAllProducts();
     res.then(data=>{
       console.log("sending product data to renderer..")
-      event.sender.send('get-products', JSON.stringify(data))
+      event.sender.send('get-products-recv', JSON.stringify(data))
     });    
   });
 

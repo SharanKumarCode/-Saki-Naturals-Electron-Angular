@@ -55,12 +55,32 @@ export class ElectronService {
     return !!(window && window.process && window.process.type);
   }
 
-  getProducts(): void{
+  getProducts(): any{
     console.log('Angular getting products');
+    const productsList: IProductData[]  = [];
     const res = this.ipcRenderer.invoke('get-products');
-    this.ipcRenderer.on('get-products',(_, data)=>{
+    this.ipcRenderer.on('get-products-recv',(_, data)=>{
       console.log('Angular on receiving ipcRenderer after getting products');
       console.log(data);
+      const jsonData = JSON.parse(data);
+      jsonData.forEach(element => {
+        const productData: IProductData = {
+          productId: element.product_id,
+          productName: element.product_name,
+          group: element.group,
+          description: element.description,
+          stock: element.stock,
+          priceDirectSale: element.priceDirectSale,
+          priceReseller: element.priceReseller,
+          priceDealer: element.priceDealer,
+          sold: element.sold,
+          createdDate: element.created_date
+        };
+        productsList.push(productData);
+      });
+      console.log(productsList);
+      return productsList;
+
     });
   }
 

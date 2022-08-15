@@ -1,4 +1,4 @@
-section {
+.products-button-section {
     height: 15%;
 }
 
@@ -22,4 +22,36 @@ section {
 
 .products-button-row > button:nth-child(2) {
     flex-grow: 1;
+}
+
+.products-table-section{
+    height: 75%;
+    width: 95%;
+    margin: 1% auto 8px auto;
+}
+
+table{
+    width: 100%;
+    color: white;
+
+}
+
+th{
+    background-color: #1f1f1f;
+    color: white;
+}
+
+td{
+    color: white;
+    background-color: #141313;
+}
+
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+.mat-row:hover .mat-cell {
+    border-color: currentColor;
 }

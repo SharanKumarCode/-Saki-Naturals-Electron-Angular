@@ -1,6 +1,82 @@
-<section>
+<section class="products-button-section">
     <div class="products-button-row">
       <button mat-raised-button color="accent" (click)="openDialog()">ADD PRODUCTS</button>
       <button mat-raised-button color="warn" (click)="onRefresh()">REFRESH</button>
     </div>
+</section>
+<section class="products-table-section">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    class="mat-elevation-z8">
+
+  <!-- Product Name Column -->
+  <ng-container matColumnDef="product_name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+      Product Name
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+  </ng-container>
+
+  <!-- Product Group Column -->
+  <ng-container matColumnDef="group">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
+      Group
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.group}} </td>
+  </ng-container>
+
+  <!-- Stock Column -->
+  <ng-container matColumnDef="stock">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by stock">
+      Stock
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
+  </ng-container>
+
+  <!-- Price - Direct Sale Column -->
+  <ng-container matColumnDef="priceDirectSale">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
+      Price - Direct Sale
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.priceDirectSale}} </td>
+  </ng-container>
+
+  <!-- Price - Reseller Column -->
+  <ng-container matColumnDef="priceReseller">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
+      Price - Reseller
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.priceReseller}} </td>
+  </ng-container>
+
+  <!-- Price - Dealer Column -->
+  <ng-container matColumnDef="priceDealer">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
+      Price - Dealer
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.priceDealer}} </td>
+  </ng-container>
+
+  <!-- Sold Column -->
+  <ng-container matColumnDef="sold">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by stock">
+      Sold
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.sold}} </td>
+  </ng-container>
+
+  <!-- createdDate Column -->
+  <ng-container matColumnDef="createdDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+      Created Date
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.createdDate}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr 
+      mat-row 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClick(row)">
+    </tr>
+</table>
 </section>

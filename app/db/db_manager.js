@@ -33,8 +33,8 @@ function getProducts() {
         console.log('getting products..');
         const res = yield AppDataSource.manager
             .createQueryBuilder(items_schema_1.Product, "product")
-            .where("product_id = :id", { id: 3 })
-            .getOne();
+            // .where("product_id = :id", { id: 3 })
+            .getMany();
         return res;
     });
 }

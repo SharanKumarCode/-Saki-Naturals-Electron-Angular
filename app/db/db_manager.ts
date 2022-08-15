@@ -21,12 +21,11 @@ AppDataSource.initialize()
         console.error("Error during Data Source initialization", err)
     })
 
-async function getProducts(){
+async function getAllProducts(){
     console.log('getting products..')
     const res = await AppDataSource.manager
     .createQueryBuilder(Product, "product")
-    .where("product_id = :id", { id: 3 })
-    .getOne()
+    .getMany()
     return res
 }
 
@@ -65,4 +64,4 @@ async function populateProductsDummyData(){
     })
 }
 
-export {AppDataSource, getProducts, inserProduct}
+export {AppDataSource, getAllProducts, inserProduct}

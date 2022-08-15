@@ -14,6 +14,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule} from '@angular/material/table';
+import { MatSortModule} from '@angular/material/sort';
 
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -66,6 +68,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatTableModule,
+    MatSortModule,
 
     TranslateModule.forRoot({
       loader: {
