@@ -2,6 +2,7 @@ import {MediaMatcher} from '@angular/cdk/layout';
 import {Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ElectronService } from '../core/services';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(changeDetectorRef: ChangeDetectorRef,
               media: MediaMatcher,
               private domSanitizer: DomSanitizer,
-              private matIconRegistry: MatIconRegistry) {
+              private matIconRegistry: MatIconRegistry,
+              private electronService: ElectronService) {
 
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -44,6 +46,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   onClose(): void {
+    this.electronService.closeApp();
   }
 
 }
