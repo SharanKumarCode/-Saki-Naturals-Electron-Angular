@@ -15,22 +15,22 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icon",
+    "icon": "dist/assets/icons",
     "target": [
       "portable"
     ]
   },
   "portable": {
-    "splashImage": "dist/assets/icon/saki_naturals.bmp"
+    "splashImage": "dist/assets/icons/saki_naturals.bmp"
   },
   "mac": {
-    "icon": "dist/assets/icon",
+    "icon": "dist/assets/icons",
     "target": [
       "dmg"
     ]
   },
   "linux": {
-    "icon": "dist/assets/icon",
+    "icon": "dist/assets/icons",
     "target": [
       "AppImage"
     ]
