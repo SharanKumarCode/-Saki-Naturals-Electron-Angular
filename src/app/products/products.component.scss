@@ -1,0 +1,25 @@
+section {
+    height: 15%;
+}
+
+.products-button-row{
+    width: 90%;
+    height: 50%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-content: stretch;
+
+    margin: 4% auto 8px auto;
+  }
+
+.products-button-row > button:first-child {
+    flex-grow: 7;
+    margin-right: 10%;
+}
+
+.products-button-row > button:nth-child(2) {
+    flex-grow: 1;
+}

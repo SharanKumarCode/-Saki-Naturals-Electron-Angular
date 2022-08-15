@@ -1,5 +1,5 @@
 export interface IProductData {
-    productId: string;
+    productId?: string;
     productName: string;
     group: string;
     description: string;
@@ -7,6 +7,6 @@ export interface IProductData {
     priceDirectSale: number;
     priceReseller: number;
     priceDealer: number;
-    createdDate: Date;
+    createdDate?: Date;
     sold: number;
   }

@@ -1,0 +1,46 @@
+.example-right-align {
+    text-align: right;
+  }
+  
+  input.example-right-align::-webkit-outer-spin-button,
+  input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.example-right-align {
+    -moz-appearance: textfield;
+  }
+
+.form-container  {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+.stock-sold-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: stretch;
+}
+
+.stock-sold-container > mat-form-field:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+}
+
+.form-button-container  {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: stretch;
+}
+
+.form-button-container > button:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+}
+
+.form-button-container > button:nth-child(2) {
+    flex-grow: 7;
+}
