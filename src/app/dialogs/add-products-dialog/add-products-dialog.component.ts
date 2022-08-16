@@ -1,7 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import { FormBuilder, Validators, FormGroup} from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { IProductData } from '../../products/interfaces/productdata.interface';
 
@@ -22,11 +24,15 @@ export class AddProductsDialogComponent implements OnInit {
   editCreate: string;
   form: FormGroup;
 
+  private path = 'assets/icon/';
+
   constructor(
     public dialogRef: MatDialogRef<AddProductsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IProductData,
     private fb: FormBuilder,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private domSanitizer: DomSanitizer,
+    private matIconRegistry: MatIconRegistry
   ) {
     this.productName = this.data.productName;
     this.description = this.data.description;
@@ -50,6 +56,10 @@ export class AddProductsDialogComponent implements OnInit {
         sold: [this.sold, [Validators.required, Validators.min(0)]],
       }
     );
+
+    this.matIconRegistry
+    .addSvgIcon('close',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'close_icon.svg'))
+    .addSvgIcon('delete',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'delete_icon.svg'));
   }
 
   onNoClick(): void {
