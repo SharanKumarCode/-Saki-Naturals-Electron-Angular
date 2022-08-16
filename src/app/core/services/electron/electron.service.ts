@@ -5,8 +5,6 @@ import { Injectable } from '@angular/core';
 import { ipcRenderer, webFrame } from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
-import { IProductData } from '../../../products/interfaces/productdata.interface';
-import { ProductsService } from '../products.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +15,7 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
 
-  constructor(
-    private productService: ProductsService
-  ) {
+  constructor() {
     // Conditional imports
     if (this.isElectron) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
@@ -58,71 +54,20 @@ export class ElectronService {
     return !!(window && window.process && window.process.type);
   }
 
-  getProducts(): void{
-    console.log('Angular getting products');
-    const productsList: IProductData[]  = [];
-    const res = this.ipcRenderer.invoke('get-products');
-    this.ipcRenderer.on('get-products-recv',(_, data)=>{
-      console.log('Angular on receiving ipcRenderer after getting products');
-      const jsonData = JSON.parse(data);
-      jsonData.forEach(element => {
-        const productData: IProductData = {
-          productId: element.product_id,
-          productName: element.product_name,
-          group: element.group,
-          description: element.description,
-          stock: element.stock,
-          priceDirectSale: element.price_directSale,
-          priceReseller: element.price_reseller,
-          priceDealer: element.price_dealer,
-          sold: element.sold,
-          createdDate: element.created_date
-        };
-        productsList.push(productData);
-      });
-      this.productService.updateProductList(productsList);
-    });
-  }
-
-  insertProduct(product: IProductData): void{
-    console.log('Angular inserting product..');
-    this.ipcRenderer.invoke('insert-product', product);
-    this.ipcRenderer.on('insert-product-recv',(_, data)=>{
-      console.log('Angular on receiving ipcRenderer response after product insert');
-      console.log(data);
-    });
-  }
-
-  updateProduct(product: IProductData): void{
-    console.log('Angular updating product..');
-    console.log(product);
-    this.ipcRenderer.invoke('update-product', product);
-    this.ipcRenderer.on('update-product-recv',(_, data)=>{
-      console.log('Angular on receiving ipcRenderer response after product update');
-      console.log(data);
-    });
-  }
-
-  deleteProduct(productID: string): void {
-    console.log('Angular deleting product..');
-    this.ipcRenderer.invoke('delete-product', productID);
-    this.ipcRenderer.on('delete-product-recv',(_, data)=>{
-      console.log('Angular on receiving ipcRenderer response after product delete');
-      console.log(data);
-    });
+  getIpcRenderer(): typeof ipcRenderer{
+    return this.ipcRenderer;
   }
 
   dummyHandler(dummy: string): void{
     console.log('Angular dummy handler..');
     this.ipcRenderer.invoke('dummy-handle', dummy);
-    this.ipcRenderer.on('dummy-handle-recv',(_, data)=>{
+    this.ipcRenderer.once('dummy-handle-recv',(_, data)=>{
       console.log('Angular on receiving ipcRenderer response after dummy handling');
       console.log(data);
     });
   }
 
   closeApp(): void{
-    console.log('Closing app..');
     this.ipcRenderer.invoke('close-main-window');
   }
 

@@ -7,10 +7,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { EnumSaleType, ISalesData } from '../../sales/interfaces/salesdata.interface';
 import { ProductsService } from '../../core/services/products.service';
-import { ElectronService } from '../../core/services';
 import { IProductData } from '../../products/interfaces/productdata.interface';
 
 import * as _moment from 'moment';
+import { ProductsdbService } from '../../core/services/productsdb.service';
 
 const moment = _moment;
 
@@ -99,7 +99,7 @@ export class SalesDialogComponent implements OnInit {
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private productService: ProductsService,
-    private electronService: ElectronService,
+    private productDBService: ProductsdbService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
   ) {
@@ -212,7 +212,7 @@ export class SalesDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.electronService.getProducts();
+    this.productDBService.getProducts();
     this.productService.getProductList().subscribe(data=>{
       this.productList = data;
       const groups: IProductGroup[] = [];

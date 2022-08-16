@@ -5,35 +5,10 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
-import { ElectronService } from '../core/services';
 import { IProductData } from './interfaces/productdata.interface';
 import { ProductsService } from '../core/services/products.service';
 import { Subject } from 'rxjs';
-
-const PRODUCT_DATA_DUMMY: IProductData[] = [
-  {
-    productName: 'Herbal Soap',
-    description: 'Bid Soap',
-    group: 'Soap',
-    stock: 19,
-    priceDirectSale: 36.3,
-    priceReseller: 46.5,
-    priceDealer: 96.3,
-    createdDate: new Date(),
-    sold: 56,
-  },
-  {
-    productName: 'Traditional Cream',
-    group: 'Cream',
-    description: 'Bid Cream',
-    stock: 4569,
-    priceDirectSale: 5.3,
-    priceReseller: 0,
-    priceDealer: 59,
-    createdDate: new Date('Mon Aug 19 2022'),
-    sold: 46,
-  },
-];
+import { ProductsdbService } from '../core/services/productsdb.service';
 
 @Component({
   selector: 'app-products',
@@ -60,7 +35,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   private productListObservalble: Subject<IProductData[]>;
 
   constructor(
-    private electronService: ElectronService,
+    private productdbservice: ProductsdbService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
     private productService: ProductsService
@@ -102,7 +77,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
       console.log('The dialog box is closed');
       console.log(result);
       if (result){
-        this.electronService.insertProduct(result);
+        this.productdbservice.insertProduct(result);
       }
     });
   }
@@ -118,18 +93,16 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
       console.log('The dialog box is closed');
       if (result){
         if (result.editCreate === 'Delete'){
-          console.log('delete product');
-          this.electronService.deleteProduct(result.productID);
+          this.productdbservice.deleteProduct(result.productID);
         } else if (result.editCreate === 'Edit'){
-          console.log('update product');
-          this.electronService.updateProduct(result);
+          this.productdbservice.updateProduct(result);
         }
       }
     });
   }
 
   getProducts(){
-    this.electronService.getProducts();
+    this.productdbservice.getProducts();
     this.productListObservalble.subscribe(d=>{
       d.map((value, index)=>{
         value.createdDate = new Date(parseFloat(value.createdDate.toString()) * 1000);
@@ -151,7 +124,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   onRefresh(){
-    this.electronService.getProducts();
+    this.productdbservice.getProducts();
   }
 
   onRowClick(e: any){
