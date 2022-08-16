@@ -58,9 +58,6 @@ export class Sales
     @Column()
 	sellingQuantity: number;
 
-    @Column()
-	paid: number;
-
 	@Column()
 	remarks: string;
 
@@ -77,11 +74,11 @@ export class SaleTransactions
 	@Column()
 	salesID: string;
 
-    @Column()
-	transactionType: string;
+    // @Column()
+	// transactionType: string;
 
     @Column()
-	paid: string;
+	paid: number;
 
     @Column()
 	transactionDate: string;

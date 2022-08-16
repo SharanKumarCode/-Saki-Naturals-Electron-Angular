@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Product = void 0;
+exports.SaleTransactions = exports.Sales = exports.Product = void 0;
 const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
 let Product = class Product {
 };
@@ -57,4 +57,72 @@ Product = __decorate([
     Entity()
 ], Product);
 exports.Product = Product;
+let Sales = class Sales {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], Sales.prototype, "salesID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "productID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "purchaser", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "supplier", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "saleType", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], Sales.prototype, "sellingPrice", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], Sales.prototype, "sellingQuantity", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "remarks", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Sales.prototype, "saleDate", void 0);
+Sales = __decorate([
+    Entity()
+], Sales);
+exports.Sales = Sales;
+let SaleTransactions = class SaleTransactions {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], SaleTransactions.prototype, "transactionID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], SaleTransactions.prototype, "salesID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], SaleTransactions.prototype, "paid", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], SaleTransactions.prototype, "transactionDate", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], SaleTransactions.prototype, "remarks", void 0);
+SaleTransactions = __decorate([
+    Entity()
+], SaleTransactions);
+exports.SaleTransactions = SaleTransactions;
 //# sourceMappingURL=items.schema.js.map
