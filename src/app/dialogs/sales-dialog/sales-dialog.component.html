@@ -1,0 +1,113 @@
+<h1 mat-dialog-title>SALES</h1>
+
+<!-- Product Details -->
+<mat-dialog-content class="form-container" [formGroup]="form">
+  <div class="product-details-contianer">
+    <mat-form-field appearance="outline">
+      <mat-label>Product Group</mat-label>
+      <mat-select formControlName="productgroups" >
+          <mat-option *ngFor="let group of productGroups" (onSelectionChange)="onGroupChange($event)" [value]="group.value">
+            {{group.viewValue}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Product Name</mat-label>
+      <mat-select formControlName="productNames" >
+          <mat-option *ngFor="let name of productNames" (onSelectionChange)="onProductNameChange($event)" [value]="name.value">
+            {{name.viewValue}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Supplier and Purchaser Data -->
+  <div class="product-details-contianer">
+    <mat-form-field appearance="outline">
+      <mat-label>Purchaser</mat-label>
+      <input matInput #input maxlength="50" formControlName="purchaser" value="{{purchaser}}"/>
+      <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Supplier</mat-label>
+      <input matInput #input maxlength="50" formControlName="supplier" value="{{supplier}}"/>
+      <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Sale Data -->
+  <div class="product-details-contianer">
+    <mat-form-field appearance="outline">
+      <mat-label>Sales date</mat-label>
+      <input matInput [matDatepicker]="dp" [formControl]="date">
+      <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Sale Type</mat-label>
+      <mat-select formControlName="saleTypeList" >
+          <mat-option *ngFor="let sale of saleTypeList" [value]="sale.value">
+            {{sale.viewValue}}
+          </mat-option>
+        </mat-select>
+    </mat-form-field>
+  </div>
+  
+  <div class="product-details-contianer">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Selling Price</mat-label>
+      <input matInput type="number" class="price-right-align" (change)="onPriceQuantityChange()" formControlName="sellingPrice" value="{{sellingPrice}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Selling Quantity</mat-label>
+      <input matInput type="number" min="0" placeholder="0" (change)="onPriceQuantityChange()" formControlName="sellingQuantity" value="{{sellingQuantity}}"/>
+    </mat-form-field>
+  </div>
+  <div class="product-details-contianer">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Total Amount</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="totalAmount" value="{{totalAmount}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Stock After Sale</mat-label>
+      <input matInput type="number" min="0" placeholder="0" formControlName="stockAfterSale" value="{{stockAfterSale}}"/>
+    </mat-form-field>
+  </div>  
+
+  <mat-divider></mat-divider>
+  <br>
+  <!-- Payment Details -->
+  <div class="payment-detail-container">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Paid Amount</mat-label>
+      <input matInput type="number" class="price-right-align" (change)="onPriceQuantityChange()" formControlName="paidAmount" value="{{paid}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Balance Amount</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="balanceAmount" value="{{balance}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+  </div>
+  
+
+</mat-dialog-content>
+
+<div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
+  <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onSave()" [style.background-color]="'#33b249'" [style.color]="'#ffffff'">CREATE SALE</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE SALE</button>
+  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn"><mat-icon svgIcon="delete"></mat-icon></button>
+</div>
