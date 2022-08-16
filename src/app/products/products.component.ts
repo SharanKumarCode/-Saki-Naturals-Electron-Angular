@@ -57,7 +57,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
-  private productList: IProductData[];
   private productListObservalble: Subject<IProductData[]>;
 
   constructor(
