@@ -18,7 +18,7 @@ const AppDataSource = new typeorm_1.DataSource({
     logging: true,
     logger: 'simple-console',
     database: 'app/db/data/saki_naturals_db.db',
-    entities: [items_schema_1.Product],
+    entities: [items_schema_1.Product, items_schema_1.Sales, items_schema_1.SaleTransactions],
 });
 exports.AppDataSource = AppDataSource;
 AppDataSource.initialize()

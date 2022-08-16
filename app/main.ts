@@ -1,12 +1,13 @@
 import {app, BrowserWindow, screen} from 'electron';
 import { ipcMain } from 'electron';
-import { getAllProducts, inserProduct, deleteProduct, updateProduct } from './db/db_manager';
 import * as path from 'path';
 import * as fs from 'fs';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
+
+global.share = {ipcMain}
 
 function createWindow(): BrowserWindow {
 
@@ -70,50 +71,7 @@ try {
     win.close();
   });
 
-  ipcMain.handle('get-products', async (event) => {
-    console.log("getting products..")
-    const res = getAllProducts();
-    res.then(data=>{
-      console.log("sending product data to renderer..")
-      event.sender.send('get-products-recv', JSON.stringify(data))
-    });    
-  });
-
-  ipcMain.handle('insert-product', async (event, data) => {
-    console.log("inserting product..")
-    const res = inserProduct(data);
-    res.then(data=>{
-      event.sender.send('insert-product-recv', data.identifiers[0])
-      console.log(data.identifiers[0])
-    }).catch(err=>{
-      event.sender.send('insert-product-recv', 'error')
-      console.log(err)
-    })
-  });
-
-  ipcMain.handle('delete-product', async (event, data) => {
-    console.log("deleting product..")
-    const res = deleteProduct(data);
-    res.then(data=>{
-      event.sender.send('delete-product-recv', data.affected)
-      console.log(data.affected)
-    }).catch(err=>{
-      event.sender.send('delete-product-recv', 'error')
-      console.log(err)
-    })
-  });
-
-  ipcMain.handle('update-product', async (event, data) => {
-    console.log("updating product..")
-    const res = updateProduct(data);
-    res.then(data=>{
-      event.sender.send('update-product-recv', JSON.stringify(data))
-      console.log(data)
-    }).catch(err=>{
-      event.sender.send('update-product-recv', 'error')
-      console.log(err)
-    })
-  });
+  require('./ipc_handlers/index');
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
