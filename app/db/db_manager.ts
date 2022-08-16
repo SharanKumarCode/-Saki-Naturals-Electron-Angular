@@ -1,7 +1,19 @@
-import { DataSource } from "typeorm"
+import { DataSource } from "typeorm";
 
-import { Product, Sales, SaleTransactions } from "./data/models/items.schema"
-import { getAllProducts, inserProduct, updateProduct, deleteProduct } from './products_db_manager'
+import { Product, Sales, SaleTransactions } from "./data/models/items.schema";
+import { getAllProducts, inserProduct, updateProduct, deleteProduct } from './products_db_manager';
+import {
+    getAllSales, 
+    getSaleByID, 
+    deleteSale, 
+    insertSale, 
+    updateSale, 
+    getAllSaleTransactions,
+    getSaleTransactionByID,
+    deleteSaleTransaction,
+    insertSaleTransaction,
+    updateSaleTransaction
+} from './sales_db_manager';
 
 const AppDataSource = new DataSource({
     type: 'sqlite',
@@ -25,5 +37,15 @@ export {
     getAllProducts,
     inserProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getAllSales,
+    getSaleByID, 
+    deleteSale, 
+    insertSale, 
+    updateSale, 
+    getAllSaleTransactions, 
+    getSaleTransactionByID,
+    deleteSaleTransaction,
+    insertSaleTransaction,
+    updateSaleTransaction
 }
