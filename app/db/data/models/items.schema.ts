@@ -16,20 +16,76 @@ export class Product
 	description: string;
     
     @Column()
-	stock: Number;
+	stock: number;
 
     @Column()
-	price_directSale: Number;
+	price_directSale: number;
 
     @Column()
-	price_reseller: Number;
+	price_reseller: number;
 
     @Column()
-	price_dealer: Number;
+	price_dealer: number;
 
     @Column()
 	created_date: Date;
 
     @Column()
-	sold: Number;
+	sold: number;
+}
+
+@Entity()
+export class Sales
+{
+	@PrimaryGeneratedColumn('uuid')
+	salesID: string;
+
+	@Column()
+	productID: string;
+
+    @Column()
+	purchaser: string;
+
+    @Column()
+	supplier: string;
+    
+    @Column()
+	saleType: string;
+
+    @Column()
+	sellingPrice: number;
+
+    @Column()
+	sellingQuantity: number;
+
+    @Column()
+	paid: number;
+
+	@Column()
+	remarks: string;
+
+    @Column()
+	saleDate: string;
+}
+
+@Entity()
+export class SaleTransactions
+{
+	@PrimaryGeneratedColumn('uuid')
+	transactionID: string;
+
+	@Column()
+	salesID: string;
+
+    @Column()
+	transactionType: string;
+
+    @Column()
+	paid: string;
+
+    @Column()
+	transactionDate: string;
+
+    @Column()
+	remarks: string;
 }
