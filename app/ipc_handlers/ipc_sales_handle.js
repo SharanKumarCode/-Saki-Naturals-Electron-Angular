@@ -1,4 +1,6 @@
-const { getAllSales, 
+const { 
+  dummyFunc,
+  getAllSales, 
   getSaleByID, 
   deleteSale, 
   insertSale, 
@@ -12,7 +14,8 @@ const { getAllSales,
 module.exports = {
     salesHandler: [
             global.share.ipcMain.handle('get-sales', async () => {
-                return getAllSales();
+                const res = dummyFunc();
+                return res;
             }),
 
             global.share.ipcMain.handle('get-sale-by-id', async (_, data) => {
