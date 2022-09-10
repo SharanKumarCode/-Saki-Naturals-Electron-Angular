@@ -39,6 +39,7 @@ node_modules
 npm-debug.log
 testem.log
 /typings
+app/db/data/saki_naturals_db.db
 
 # e2e
 /e2e/*.js
