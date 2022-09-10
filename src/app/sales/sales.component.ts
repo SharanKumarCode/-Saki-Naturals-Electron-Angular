@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -7,12 +7,10 @@ import {MatTableDataSource} from '@angular/material/table';
 import { SalesDialogComponent } from '../dialogs/sales-dialog/sales-dialog.component';
 
 import { ElectronService } from '../core/services';
-import { ProductsService } from '../core/services/products.service';
-
-import { Subject } from 'rxjs';
 
 import { EnumSaleType, ISalesData } from './interfaces/salesdata.interface';
-import { IProductData } from '../products/interfaces/productdata.interface';
+import { SalesService } from '../core/services/sales/sales.service';
+import { SalesdbService } from '../core/services/sales/salesdb.service';
 
 @Component({
   selector: 'app-sales',
@@ -25,26 +23,29 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
                                 'serial_number',
-                                'product_name',
-                                'group',
-                                'stock',
-                                'priceDirectSale',
-                                'priceReseller',
-                                'priceDealer',
-                                'sold',
-                                'createdDate'];
+                                'salesID',
+                                'purchaser',
+                                'supplier',
+                                'productGroup',
+                                'productName',
+                                'saleType',
+                                'sellingPrice',
+                                'soldQuantity',
+                                'totalAmount',
+                                'paidAmount',
+                                'balanceAmount',
+                                'remarks'
+                              ];
   dataSource = new MatTableDataSource([]);
 
-  private productdata: IProductData;
   private salesData: ISalesData;
-  private productList: IProductData[];
-  private productListObservalble: Subject<IProductData[]>;
 
   constructor(
     private electronService: ElectronService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
-    private productService: ProductsService
+    private salesService: SalesService,
+    private salesdbService: SalesdbService
   ) {
     this.salesData = {
       productID: '',
@@ -65,17 +66,15 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getProductList();
+    this.getSalesList();
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
 
-  getProductList(){
-    this.productService.getProductList().subscribe(data=>{
-      this.productList = data;
-    });
+  getSalesList(){
+    this.salesdbService.getSalesList();
   }
 
   openAddDialog(): void {
@@ -94,8 +93,11 @@ export class SalesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onRefresh(){
+  onRowClick(e: any){
+  }
 
+  onRefresh(){
+    this.getSalesList();
   }
 
   announceSortChange(sortState: Sort) {
