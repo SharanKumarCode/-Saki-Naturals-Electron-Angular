@@ -2,14 +2,6 @@ import { AppDataSource } from "./db_manager";
 import { Sales, SaleTransactions } from "./data/models/items.schema";
 import { ISalesData, ISaleTransactionComplete, ISaleTransactions } from "../../src/app/sales/interfaces/salesdata.interface";
 
-// async function getAllSales(){
-//     console.log('Getting sales data..')
-//     const res = await AppDataSource.manager
-//     .createQueryBuilder(Sales, "sales")
-//     .innerJoinAndSelect(SaleTransactions, "saleTransactions", "saleTransactions.salesID = sales.salesID")
-//     .getMany()
-//     return res
-// }
 
 async function getAllSales(){
     console.log('Getting sales data..')
@@ -27,10 +19,17 @@ async function getAllSales(){
 
 async function getSaleByID(salesID: string){
     console.log("Getting sales data by ID..")
-    const res = await AppDataSource.manager
-    .createQueryBuilder(Sales, "sales")
-    .where("salesID = :id", { id: salesID })
-    .getMany()
+    const res = await AppDataSource.getRepository(Sales).find(
+        {
+            relations: {
+                saleTransactions: true
+            },
+            where: {
+                salesID: salesID
+            }
+        }
+    )
+
     return res
 }
 
@@ -44,7 +43,6 @@ async function deleteSale(salesID: string){
 
 async function insertSale(saleCompleteData: ISaleTransactionComplete){
     console.log("Inserting sale and transaction data..")
-    console.log(saleCompleteData)
 
     const saleEntity = new Sales()
     saleEntity.productID = saleCompleteData.saleData.productID
@@ -88,19 +86,31 @@ async function updateSale(sale: ISalesData){
 }
 
 async function getAllSaleTransactions(){
-    console.log('getting sale transation data..')
-    const res = await AppDataSource.manager
-    .createQueryBuilder(SaleTransactions, "saleTransactions")
-    .getMany()
+    console.log('Getting sale transation data..')
+    const res = await AppDataSource.getRepository(SaleTransactions).find(
+        {
+            relations: {
+                sale: true
+            }
+        }
+    )
+
     return res
 }
 
 async function getSaleTransactionByID(transactionID: string){
     console.log('getting sale transation data..')
-    const res = await AppDataSource.manager
-    .createQueryBuilder(SaleTransactions, "saleTransactions")
-    .where("transactionID = :id", { id: transactionID })
-    .getMany()
+    const res = await AppDataSource.getRepository(SaleTransactions).find(
+        {
+            relations: {
+                sale: true
+            },
+            where: {
+                transactionID: transactionID
+            }
+        }
+    )
+
     return res
 }
 
@@ -114,12 +124,20 @@ async function deleteSaleTransaction(transactionID: string){
 
 async function insertSaleTransaction(transaction: ISaleTransactions){
     console.log("Inserting sale transaction data..")
-    const res = await AppDataSource.manager.insert(SaleTransactions, {
-        transactionID: transaction.transactionID,
-        paid: transaction.paid,
-        transactionDate: transaction.transactionDate,
-        remarks: transaction.remarks,
+
+    const saleEntity = await AppDataSource.getRepository(Sales).find({
+        where: [
+            {salesID: transaction.salesID}
+        ],
     })
+
+    const saleTransactionEntity = new SaleTransactions()
+    saleTransactionEntity.paid = transaction.paid
+    saleTransactionEntity.remarks = transaction.remarks
+    saleTransactionEntity.transactionDate = transaction.transactionDate
+    saleTransactionEntity.sale = saleEntity[0]
+
+    const res = await AppDataSource.manager.save(saleTransactionEntity)
     return res
 }
 

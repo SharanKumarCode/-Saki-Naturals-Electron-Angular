@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from '../electron/electron.service';
 import { ipcRenderer } from 'electron';
 import { SalesService } from './sales.service';
-import { ISalesData, ISaleTransactionComplete } from '../../../sales/interfaces/salesdata.interface';
+import { ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../../sales/interfaces/salesdata.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,25 +19,113 @@ export class SalesdbService {
   }
 
   getSalesList(): void{
-    console.log('INFO: getting all sales data');
+    console.log('INFO: Getting all sales data');
     const salesList: ISalesData[] = [];
     this.ipcRenderer.invoke('get-sales')
     .then(data=>{
       console.log(data);
     })
     .catch(err=>{
-      console.warn(err);
+      console.error(err);
+    });
+  }
+
+  getSalesByID(salesID: string): void{
+    console.log('INFO: Getting sales by ID');
+    this.ipcRenderer.invoke('get-sale-by-id', salesID)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
     });
   }
 
   insertSales(saledata: ISaleTransactionComplete): void{
-    console.log('INFO: inserting sale data');
+    console.log('INFO: Inserting sale and initial Transaction data');
     this.ipcRenderer.invoke('insert-sale', saledata)
     .then(data=>{
       console.log(data);
     })
     .catch(err=>{
-      console.log(err);
+      console.error(err);
+    });
+  }
+
+  updateSales(saledata: ISalesData): void{
+    console.log('INFO: Updating sales data');
+    this.ipcRenderer.invoke('update-sale', saledata)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  deleteSales(salesID: string): void{
+    console.log('INFO: Deleting sales data');
+    this.ipcRenderer.invoke('delete-sale', salesID)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  getSaleTransactionsList(): void{
+    console.log('INFO: Getting all transaction data');
+    this.ipcRenderer.invoke('get-sales-transaction')
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  getSaleTransactionByID(transactionID: string): void{
+    console.log('INFO: Getting sale transaction by ID');
+    this.ipcRenderer.invoke('get-sales-transaction-by-id', transactionID)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  insertSaleTransaction(transaction: ISaleTransactions): void{
+    console.log('INFO: Inserting sale transaction data');
+    this.ipcRenderer.invoke('insert-sale-transaction', transaction)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  updateSaleTransaction(transaction: ISaleTransactions): void{
+    console.log('INFO: Updating sale transaction data');
+    this.ipcRenderer.invoke('update-sale-transaction', transaction)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
+    });
+  }
+
+  deleteSaleTransaction(transactionID: string): void{
+    console.log('INFO: Deleting sale transaction data');
+    this.ipcRenderer.invoke('delete-sale-transaction', transactionID)
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.error(err);
     });
   }
 }

@@ -56,7 +56,6 @@ exports.deleteSale = deleteSale;
 function insertSale(saleCompleteData) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Inserting sale and transaction data..");
-        console.log(saleCompleteData);
         const saleEntity = new items_schema_1.Sales();
         saleEntity.productID = saleCompleteData.saleData.productID;
         saleEntity.purchaser = saleCompleteData.saleData.purchaser;
@@ -98,10 +97,12 @@ function updateSale(sale) {
 exports.updateSale = updateSale;
 function getAllSaleTransactions() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('getting sale transation data..');
-        const res = yield db_manager_1.AppDataSource.manager
-            .createQueryBuilder(items_schema_1.SaleTransactions, "saleTransactions")
-            .getMany();
+        console.log('Getting sale transation data..');
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
+            relations: {
+                sale: true
+            }
+        });
         return res;
     });
 }
@@ -130,12 +131,17 @@ exports.deleteSaleTransaction = deleteSaleTransaction;
 function insertSaleTransaction(transaction) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Inserting sale transaction data..");
-        const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.SaleTransactions, {
-            transactionID: transaction.transactionID,
-            paid: transaction.paid,
-            transactionDate: transaction.transactionDate,
-            remarks: transaction.remarks,
+        const saleEntity = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
+            where: [
+                { salesID: transaction.salesID }
+            ],
         });
+        const saleTransactionEntity = new items_schema_1.SaleTransactions();
+        saleTransactionEntity.paid = transaction.paid;
+        saleTransactionEntity.remarks = transaction.remarks;
+        saleTransactionEntity.transactionDate = transaction.transactionDate;
+        saleTransactionEntity.sale = saleEntity[0];
+        const res = yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
     });
 }

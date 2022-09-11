@@ -72,7 +72,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getSalesList(){
-    this.salesdbService.getSalesList();
+    // this.salesdbService.getSalesList();
+    this.salesdbService.getSaleTransactionsList();
   }
 
   openAddDialog(): void {
