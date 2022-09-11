@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 
 import { Product, Sales, SaleTransactions } from "./data/models/items.schema";
-import { getAllProducts, inserProduct, updateProduct, deleteProduct } from './products_db_manager';
+import { getAllProducts, getProductByID, inserProduct, updateProduct, deleteProduct } from './products_db_manager';
 import {
     getAllSales, 
     getSaleByID, 
@@ -35,6 +35,7 @@ AppDataSource.initialize()
 export {
     AppDataSource,
     getAllProducts,
+    getProductByID,
     inserProduct,
     updateProduct,
     deleteProduct,

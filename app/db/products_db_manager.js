@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.inserProduct = exports.getAllProducts = void 0;
+exports.deleteProduct = exports.updateProduct = exports.inserProduct = exports.getProductByID = exports.getAllProducts = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
 function getAllProducts() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('getting products..');
+        console.log('INFO : Getting all products..');
         const res = yield db_manager_1.AppDataSource.manager
             .createQueryBuilder(items_schema_1.Product, "product")
             .getMany();
@@ -22,9 +22,21 @@ function getAllProducts() {
     });
 }
 exports.getAllProducts = getAllProducts;
+function getProductByID(productID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('INFO : Getting product by ID');
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Product).find({
+            where: {
+                product_id: productID
+            }
+        });
+        return res;
+    });
+}
+exports.getProductByID = getProductByID;
 function inserProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Inserting product data..");
+        console.log("INFO: Inserting product data..");
         const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.Product, {
             group: product.group,
             product_name: product.productName,
@@ -42,7 +54,7 @@ function inserProduct(product) {
 exports.inserProduct = inserProduct;
 function updateProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Updating product data..");
+        console.log("INFO: Updating product data..");
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Product, {
             product_id: product.productID
         }, {
@@ -62,7 +74,7 @@ function updateProduct(product) {
 exports.updateProduct = updateProduct;
 function deleteProduct(product_ID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Deleting product data..");
+        console.log("INFO: Deleting product data..");
         const res = yield db_manager_1.AppDataSource.manager.delete(items_schema_1.Product, {
             product_id: product_ID
         });

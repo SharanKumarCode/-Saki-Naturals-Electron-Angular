@@ -45,6 +45,11 @@ export class ProductsdbService {
     });
   }
 
+  getProductByID(productID: string): Promise<any>{
+    console.log('info: Getting product data by ID');
+    return this.ipcRenderer.invoke('get-product-by-id', productID);
+  }
+
   insertProduct(product: IProductData): void{
     console.log('info: adding new product');
     this.ipcRenderer.invoke('insert-product', product)

@@ -1,9 +1,13 @@
-const { getAllProducts, inserProduct, deleteProduct, updateProduct } = require('../db/db_manager')
+const { getAllProducts, getProductByID, inserProduct, deleteProduct, updateProduct } = require('../db/db_manager')
 
 module.exports = {
     productsHandler: [
             global.share.ipcMain.handle('get-products', async () => {
                 return getAllProducts();
+            }),
+
+            global.share.ipcMain.handle('get-product-by-id', async (_, data) => {
+                return getProductByID(data);
             }),
         
             global.share.ipcMain.handle('insert-product', async (_, data) => {
