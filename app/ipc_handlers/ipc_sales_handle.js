@@ -14,8 +14,7 @@ const {
 module.exports = {
     salesHandler: [
             global.share.ipcMain.handle('get-sales', async () => {
-                const res = dummyFunc();
-                return res;
+                return getAllSales();
             }),
 
             global.share.ipcMain.handle('get-sale-by-id', async (_, data) => {

@@ -59,8 +59,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
       saleType: EnumSaleType.dealer,
       sellingPrice: 0,
       sellingQuantity: 0,
-      paid: 0,
-      balance: 0,
       remarks: ''
     };
   }
@@ -89,6 +87,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       console.log(result);
       if (result){
         // this.electronService.insertProduct(result);
+        this.salesdbService.insertSales(result);
       }
     });
   }

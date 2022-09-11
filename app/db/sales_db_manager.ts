@@ -1,17 +1,32 @@
 import { AppDataSource } from "./db_manager";
 import { Sales, SaleTransactions } from "./data/models/items.schema";
-import { ISalesData, ISaleTransactions } from "../../src/app/sales/interfaces/salesdata.interface";
+import { ISalesData, ISaleTransactionComplete, ISaleTransactions } from "../../src/app/sales/interfaces/salesdata.interface";
+
+// async function getAllSales(){
+//     console.log('Getting sales data..')
+//     const res = await AppDataSource.manager
+//     .createQueryBuilder(Sales, "sales")
+//     .innerJoinAndSelect(SaleTransactions, "saleTransactions", "saleTransactions.salesID = sales.salesID")
+//     .getMany()
+//     return res
+// }
 
 async function getAllSales(){
-    console.log('getting sales data..')
-    const res = await AppDataSource.manager
-    .createQueryBuilder(Sales, "sales")
-    .getMany()
+    console.log('Getting sales data..')
+
+    const res = await AppDataSource.getRepository(Sales).find(
+        {
+            relations: {
+                saleTransactions: true
+            }
+        }
+    )
+
     return res
 }
 
 async function getSaleByID(salesID: string){
-    console.log('getting sales data..')
+    console.log("Getting sales data by ID..")
     const res = await AppDataSource.manager
     .createQueryBuilder(Sales, "sales")
     .where("salesID = :id", { id: salesID })
@@ -27,18 +42,29 @@ async function deleteSale(salesID: string){
     return res
 }
 
-async function insertSale(sale: ISalesData){
-    console.log("Inserting sale data..")
-    const res = await AppDataSource.manager.insert(Sales, {
-        productID: sale.productID,
-        purchaser: sale.purchaser,
-        supplier: sale.supplier,
-        saleType: sale.saleType,
-        sellingPrice: sale.sellingPrice,
-        sellingQuantity: sale.sellingQuantity,
-        remarks: sale.remarks,
-        saleDate: sale.saleDate,
-    })
+async function insertSale(saleCompleteData: ISaleTransactionComplete){
+    console.log("Inserting sale and transaction data..")
+    console.log(saleCompleteData)
+
+    const saleEntity = new Sales()
+    saleEntity.productID = saleCompleteData.saleData.productID
+    saleEntity.purchaser = saleCompleteData.saleData.purchaser
+    saleEntity.supplier = saleCompleteData.saleData.supplier
+    saleEntity.saleDate = saleCompleteData.saleData.saleDate
+    saleEntity.saleType = saleCompleteData.saleData.saleType
+    saleEntity.sellingPrice = saleCompleteData.saleData.sellingPrice
+    saleEntity.sellingQuantity = saleCompleteData.saleData.sellingQuantity
+    saleEntity.remarks = saleCompleteData.saleData.remarks
+
+    const saleTransactionEntity = new SaleTransactions()
+    saleTransactionEntity.paid = saleCompleteData.transactionData.paid
+    saleTransactionEntity.remarks = saleCompleteData.transactionData.remarks
+    saleTransactionEntity.transactionDate = saleCompleteData.transactionData.transactionDate
+    saleTransactionEntity.sale = saleEntity
+
+    const res = await AppDataSource.manager.save(saleEntity)
+    await AppDataSource.manager.save(saleTransactionEntity)
+
     return res
 }
 
@@ -90,7 +116,6 @@ async function insertSaleTransaction(transaction: ISaleTransactions){
     console.log("Inserting sale transaction data..")
     const res = await AppDataSource.manager.insert(SaleTransactions, {
         transactionID: transaction.transactionID,
-        salesID: transaction.salesID,
         paid: transaction.paid,
         transactionDate: transaction.transactionDate,
         remarks: transaction.remarks,
@@ -105,7 +130,6 @@ async function updateSaleTransaction(transaction: ISaleTransactions){
             transactionID: transaction.transactionID
         },
         {
-            salesID: transaction.salesID,
             paid: transaction.paid,
             transactionDate: transaction.transactionDate,
             remarks: transaction.remarks,

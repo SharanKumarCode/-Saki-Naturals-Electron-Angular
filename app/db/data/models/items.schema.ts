@@ -1,4 +1,4 @@
-const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
+const { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } = require('typeorm');
 
 @Entity()
 export class Product
@@ -63,6 +63,9 @@ export class Sales
 
     @Column()
 	saleDate: string;
+
+	@OneToMany(() => SaleTransactions, (saleTransactions) => saleTransactions.sale)
+    saleTransactions: SaleTransactions[]
 }
 
 @Entity()
@@ -71,8 +74,8 @@ export class SaleTransactions
 	@PrimaryGeneratedColumn('uuid')
 	transactionID: string;
 
-	@Column()
-	salesID: string;
+	@ManyToOne(() => Sales, (sales)=>sales.saleTransactions)
+	sale: Sales;
 
     // @Column()
 	// transactionType: string;
@@ -85,4 +88,5 @@ export class SaleTransactions
 
     @Column()
 	remarks: string;
+
 }

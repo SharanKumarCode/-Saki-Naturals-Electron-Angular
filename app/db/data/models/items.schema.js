@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SaleTransactions = exports.Sales = exports.Product = void 0;
-const { Entity, PrimaryGeneratedColumn, Column } = require('typeorm');
+const { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } = require('typeorm');
 let Product = class Product {
 };
 __decorate([
@@ -95,6 +95,10 @@ __decorate([
     Column(),
     __metadata("design:type", String)
 ], Sales.prototype, "saleDate", void 0);
+__decorate([
+    OneToMany(() => SaleTransactions, (saleTransactions) => saleTransactions.sale),
+    __metadata("design:type", Array)
+], Sales.prototype, "saleTransactions", void 0);
 Sales = __decorate([
     Entity()
 ], Sales);
@@ -106,9 +110,9 @@ __decorate([
     __metadata("design:type", String)
 ], SaleTransactions.prototype, "transactionID", void 0);
 __decorate([
-    Column(),
-    __metadata("design:type", String)
-], SaleTransactions.prototype, "salesID", void 0);
+    ManyToOne(() => Sales, (sales) => sales.saleTransactions),
+    __metadata("design:type", Sales)
+], SaleTransactions.prototype, "sale", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)

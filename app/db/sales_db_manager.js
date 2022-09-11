@@ -12,19 +12,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateSaleTransaction = exports.insertSaleTransaction = exports.deleteSaleTransaction = exports.getSaleTransactionByID = exports.getAllSaleTransactions = exports.updateSale = exports.insertSale = exports.deleteSale = exports.getSaleByID = exports.getAllSales = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
+// async function getAllSales(){
+//     console.log('Getting sales data..')
+//     const res = await AppDataSource.manager
+//     .createQueryBuilder(Sales, "sales")
+//     .innerJoinAndSelect(SaleTransactions, "saleTransactions", "saleTransactions.salesID = sales.salesID")
+//     .getMany()
+//     return res
+// }
 function getAllSales() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('getting sales data..');
-        const res = yield db_manager_1.AppDataSource.manager
-            .createQueryBuilder(items_schema_1.Sales, "sales")
-            .getMany();
+        console.log('Getting sales data..');
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
+            relations: {
+                saleTransactions: true
+            }
+        });
         return res;
     });
 }
 exports.getAllSales = getAllSales;
 function getSaleByID(salesID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('getting sales data..');
+        console.log("Getting sales data by ID..");
         const res = yield db_manager_1.AppDataSource.manager
             .createQueryBuilder(items_schema_1.Sales, "sales")
             .where("salesID = :id", { id: salesID })
@@ -43,19 +53,26 @@ function deleteSale(salesID) {
     });
 }
 exports.deleteSale = deleteSale;
-function insertSale(sale) {
+function insertSale(saleCompleteData) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Inserting sale data..");
-        const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.Sales, {
-            productID: sale.productID,
-            purchaser: sale.purchaser,
-            supplier: sale.supplier,
-            saleType: sale.saleType,
-            sellingPrice: sale.sellingPrice,
-            sellingQuantity: sale.sellingQuantity,
-            remarks: sale.remarks,
-            saleDate: sale.saleDate,
-        });
+        console.log("Inserting sale and transaction data..");
+        console.log(saleCompleteData);
+        const saleEntity = new items_schema_1.Sales();
+        saleEntity.productID = saleCompleteData.saleData.productID;
+        saleEntity.purchaser = saleCompleteData.saleData.purchaser;
+        saleEntity.supplier = saleCompleteData.saleData.supplier;
+        saleEntity.saleDate = saleCompleteData.saleData.saleDate;
+        saleEntity.saleType = saleCompleteData.saleData.saleType;
+        saleEntity.sellingPrice = saleCompleteData.saleData.sellingPrice;
+        saleEntity.sellingQuantity = saleCompleteData.saleData.sellingQuantity;
+        saleEntity.remarks = saleCompleteData.saleData.remarks;
+        const saleTransactionEntity = new items_schema_1.SaleTransactions();
+        saleTransactionEntity.paid = saleCompleteData.transactionData.paid;
+        saleTransactionEntity.remarks = saleCompleteData.transactionData.remarks;
+        saleTransactionEntity.transactionDate = saleCompleteData.transactionData.transactionDate;
+        saleTransactionEntity.sale = saleEntity;
+        const res = yield db_manager_1.AppDataSource.manager.save(saleEntity);
+        yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
     });
 }
@@ -115,7 +132,6 @@ function insertSaleTransaction(transaction) {
         console.log("Inserting sale transaction data..");
         const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.SaleTransactions, {
             transactionID: transaction.transactionID,
-            salesID: transaction.salesID,
             paid: transaction.paid,
             transactionDate: transaction.transactionDate,
             remarks: transaction.remarks,
@@ -130,7 +146,6 @@ function updateSaleTransaction(transaction) {
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.SaleTransactions, {
             transactionID: transaction.transactionID
         }, {
-            salesID: transaction.salesID,
             paid: transaction.paid,
             transactionDate: transaction.transactionDate,
             remarks: transaction.remarks,

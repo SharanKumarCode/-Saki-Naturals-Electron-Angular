@@ -5,7 +5,7 @@ import { FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { EnumSaleType, ISalesData } from '../../sales/interfaces/salesdata.interface';
+import { EnumSaleType, ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../sales/interfaces/salesdata.interface';
 import { ProductsService } from '../../core/services/products.service';
 import { IProductData } from '../../products/interfaces/productdata.interface';
 
@@ -115,7 +115,7 @@ export class SalesDialogComponent implements OnInit {
     this.sellingQuantity = this.data.sellingQuantity;
     this.stockAfterSale = this.currentStock - this.sellingQuantity;
     this.totalAmount = this.sellingPrice * this.sellingQuantity;
-    this.paid = this.data.paid;
+    this.paid = 0;
     this.balance = this.totalAmount - this.paid;
     this.editCreate = this.data.editCreate;
 
@@ -126,7 +126,7 @@ export class SalesDialogComponent implements OnInit {
         saleTypeList: [this.saleTypeList, [Validators.required]],
         purchaser: [this.purchaser, [Validators.required]],
         supplier: [this.supplier, [Validators.required]],
-        sellingPrice: [this.sellingPrice, [Validators.required]],
+        sellingPrice: [{value:this.sellingPrice, disabled: true}, [Validators.required]],
         sellingQuantity: [this.sellingQuantity, [Validators.required]],
         stockAfterSale: [{value:this.stockAfterSale, disabled: true}, [Validators.required]],
         totalAmount: [{value:this.totalAmount, disabled: true}, [Validators.required]],
@@ -160,22 +160,82 @@ export class SalesDialogComponent implements OnInit {
 
   onProductNameChange(name): void {
     if(name.isUserInput){
-      console.log(name.source.value);
       this.productID = name.source.value;
-      const tmp = this.productList.filter(e=>e.productId === this.productID);
-      this.currentStock = tmp[0].stock;
-      console.log(this.currentStock);
+      this.setCurrentStock();
       this.onPriceQuantityChange();
+    }
+
+    // set selling price if sale type is selected
+    if(typeof this.form.controls.saleTypeList.value == 'string'){
+      this.setSellingPrice(this.form.controls.saleTypeList.value);
+    }
+  }
+
+  onSaleTypeChange(saleType): void {
+    if(saleType.isUserInput && this.productID){
+      this.setSellingPrice(saleType.source.value);
     }
   }
 
   onPriceQuantityChange(): void {
-    const totalAmount = this.form.controls.sellingPrice.value * this.form.controls.sellingQuantity.value;
+    const totalAmount = this.sellingPrice * this.form.controls.sellingQuantity.value;
     this.form.controls.totalAmount.setValue(totalAmount);
     const balanceAmount = this.form.controls.totalAmount.value - this.form.controls.paidAmount.value;
     this.form.controls.balanceAmount.setValue(balanceAmount);
     const stockAfterSale = this.currentStock - this.form.controls.sellingQuantity.value;
     this.form.controls.stockAfterSale.setValue(stockAfterSale);
+  }
+
+  setSellingPrice(saleType): void{
+    const tmp = this.productList.filter(e=>e.productId === this.productID);
+      switch (saleType) {
+        case EnumSaleType.dealer:
+          this.sellingPrice = tmp[0].priceDealer;
+          break;
+
+        case EnumSaleType.directSale:
+          this.sellingPrice = tmp[0].priceDirectSale;
+          break;
+
+        case EnumSaleType.reseller:
+          this.sellingPrice = tmp[0].priceReseller;
+          break;
+
+        default:
+          break;
+      }
+      this.sellingPrice = tmp[0].priceDealer;
+  }
+
+  setCurrentStock(): void{
+    const tmp = this.productList.filter(e=>e.productId === this.productID);
+    this.currentStock = tmp[0].stock;
+  }
+
+  setFinalSaleData(): ISaleTransactionComplete{
+    const saleData: ISalesData = {
+      productID: this.productID,
+      saleDate: this.date.value.toString(),
+      purchaser: this.form.controls.purchaser.value,
+      supplier: this.form.controls.supplier.value,
+      saleType: this.saleType,
+      sellingPrice: this.sellingPrice,
+      sellingQuantity: this.form.controls.sellingQuantity.value,
+      remarks: ''
+    };
+
+    const transactionData: ISaleTransactions = {
+      transactionDate: this.date.value.toString(),
+      paid: this.form.controls.paidAmount.value,
+      remarks: ''
+    };
+
+    const completeSaleData: ISaleTransactionComplete = {
+      saleData,
+      transactionData
+    };
+
+    return completeSaleData;
   }
 
   onNoClick(): void {
@@ -185,7 +245,7 @@ export class SalesDialogComponent implements OnInit {
   onSave(): void{
     const {value, valid} = this.form;
     if (valid) {
-      const finalSalesData = value;
+      const finalSalesData = this.setFinalSaleData();
       this.dialogRef.close(finalSalesData);
     }
   }
