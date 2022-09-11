@@ -8,9 +8,13 @@ import { SalesDialogComponent } from '../dialogs/sales-dialog/sales-dialog.compo
 
 import { ElectronService } from '../core/services';
 
-import { EnumSaleType, ISalesData } from './interfaces/salesdata.interface';
+import { EnumSaleType, ISalesData, ISaleTransactions } from './interfaces/salesdata.interface';
 import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
+
+import { Subject } from 'rxjs';
+import { ProductsdbService } from '../core/services/productsdb.service';
+import { IProductData } from '../products/interfaces/productdata.interface';
 
 @Component({
   selector: 'app-sales',
@@ -23,7 +27,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
                                 'serial_number',
-                                'salesID',
                                 'purchaser',
                                 'supplier',
                                 'productGroup',
@@ -34,18 +37,19 @@ export class SalesComponent implements OnInit, AfterViewInit {
                                 'totalAmount',
                                 'paidAmount',
                                 'balanceAmount',
-                                'remarks'
+                                'salesDate'
                               ];
   dataSource = new MatTableDataSource([]);
 
   private salesData: ISalesData;
+  private salesDataListObservable: Subject<ISalesData[]>;
 
   constructor(
-    private electronService: ElectronService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
-    private salesdbService: SalesdbService
+    private salesdbService: SalesdbService,
+    private productdbService: ProductsdbService
   ) {
     this.salesData = {
       productID: '',
@@ -65,6 +69,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getSalesList();
+    this.salesDataListObservable = this.salesService.getSalesList();
+    this.setTableData();
   }
 
   ngAfterViewInit() {
@@ -72,8 +78,48 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   getSalesList(){
-    // this.salesdbService.getSalesList();
-    this.salesdbService.getSaleTransactionsList();
+    this.salesdbService.getSalesList();
+  }
+
+  setTableData(){
+    this.salesDataListObservable.subscribe(data=>{
+      this.dataSource = new MatTableDataSource();
+
+      // getting product data
+      const tmp = new Subject<ISalesData[]>();
+      const tmpTableList = [];
+      data.forEach((element, index)=>{
+        this.productdbService.getProductByID(element.productID)
+        .then(f=>{
+          element.productGroup = f[0].group;
+          element.productName = f[0].product_name;
+          element.productDescription = f[0].description;
+
+          // setting transaction data
+          element.paid = this.calcTransactionData(element.transactionHistory);
+          element.totalAmount = element.sellingPrice * element.sellingQuantity;
+          element.balance = element.totalAmount - element.paid;
+          tmp.next([{
+            ...element,
+            serialNumber: index + 1
+          }]);
+        })
+        .catch(err=>{
+          console.error(err);
+        });
+      });
+
+      // setting data to table
+      tmp.subscribe(g=>{
+        tmpTableList.push(g[0]);
+        this.dataSource.data = tmpTableList;
+      });
+    });
+  }
+
+  calcTransactionData(transactionData: ISaleTransactions[]): any{
+    const paidAmounts = transactionData.map(e=>e.paid);
+    return paidAmounts.reduce((a, b)=> a+b, 0);
   }
 
   openAddDialog(): void {
@@ -85,7 +131,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog box is closed');
-      console.log(result);
       if (result){
         // this.electronService.insertProduct(result);
         this.salesdbService.insertSales(result);
@@ -94,6 +139,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   onRowClick(e: any){
+    console.log(e);
   }
 
   onRefresh(){

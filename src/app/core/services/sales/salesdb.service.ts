@@ -23,7 +23,21 @@ export class SalesdbService {
     const salesList: ISalesData[] = [];
     this.ipcRenderer.invoke('get-sales')
     .then(data=>{
-      console.log(data);
+      data.forEach(element=>{
+        const saleData: ISalesData = {
+          productID: element.productID,
+          saleDate: element.saleDate,
+          purchaser: element.purchaser,
+          supplier: element.supplier,
+          saleType: element.saleType,
+          sellingPrice: element.sellingPrice,
+          sellingQuantity: element.sellingQuantity,
+          salesID: element.salesID,
+          transactionHistory: element.saleTransactions
+        };
+        salesList.push(saleData);
+      });
+      this.salesService.updateSalesList(salesList);
     })
     .catch(err=>{
       console.error(err);

@@ -2,6 +2,8 @@ export interface ISalesData {
     salesID?: string;
     productID: string;
     productName?: string;
+    productGroup?: string;
+    productDescription?: string;
     currentStock?: number;
     group?: string;
     saleDate: string;
@@ -11,9 +13,13 @@ export interface ISalesData {
     saleType: EnumSaleType;
     sellingPrice: number;
     sellingQuantity: number;
+    totalAmount?: number;
+    paid?: number;
+    balance?: number;
     remarks?: string;
     transactionHistory?: ISaleTransactions[];
     editCreate?: string;
+    serialNumber?: number;
 }
 
 export interface ISaleTransactions {

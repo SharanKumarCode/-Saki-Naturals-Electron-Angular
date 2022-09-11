@@ -12,14 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateSaleTransaction = exports.insertSaleTransaction = exports.deleteSaleTransaction = exports.getSaleTransactionByID = exports.getAllSaleTransactions = exports.updateSale = exports.insertSale = exports.deleteSale = exports.getSaleByID = exports.getAllSales = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
-// async function getAllSales(){
-//     console.log('Getting sales data..')
-//     const res = await AppDataSource.manager
-//     .createQueryBuilder(Sales, "sales")
-//     .innerJoinAndSelect(SaleTransactions, "saleTransactions", "saleTransactions.salesID = sales.salesID")
-//     .getMany()
-//     return res
-// }
 function getAllSales() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Getting sales data..');
@@ -35,10 +27,14 @@ exports.getAllSales = getAllSales;
 function getSaleByID(salesID) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Getting sales data by ID..");
-        const res = yield db_manager_1.AppDataSource.manager
-            .createQueryBuilder(items_schema_1.Sales, "sales")
-            .where("salesID = :id", { id: salesID })
-            .getMany();
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
+            relations: {
+                saleTransactions: true
+            },
+            where: {
+                salesID: salesID
+            }
+        });
         return res;
     });
 }
@@ -110,10 +106,14 @@ exports.getAllSaleTransactions = getAllSaleTransactions;
 function getSaleTransactionByID(transactionID) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('getting sale transation data..');
-        const res = yield db_manager_1.AppDataSource.manager
-            .createQueryBuilder(items_schema_1.SaleTransactions, "saleTransactions")
-            .where("transactionID = :id", { id: transactionID })
-            .getMany();
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
+            relations: {
+                sale: true
+            },
+            where: {
+                transactionID: transactionID
+            }
+        });
         return res;
     });
 }
