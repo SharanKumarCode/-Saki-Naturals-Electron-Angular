@@ -220,7 +220,6 @@ export class SalesDialogComponent implements OnInit {
         default:
           break;
       }
-      this.sellingPrice = tmp[0].priceDealer;
   }
 
   setCurrentStock(): void{
