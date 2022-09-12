@@ -17,7 +17,7 @@ export interface ISalesData {
     paid?: number;
     balance?: number;
     remarks?: string;
-    transactionHistory?: ISaleTransactions[];
+    saleTransactions?: ISaleTransactions[];
     editCreate?: string;
     serialNumber?: number;
 }

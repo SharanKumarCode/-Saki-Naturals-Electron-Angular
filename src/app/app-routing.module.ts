@@ -8,6 +8,7 @@ import { SalesComponent } from './sales/sales.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EmployeeComponent } from './employee/employee.component';
+import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'purchase', component: PurchaseComponent },
   { path: 'employee', component: EmployeeComponent },
   { path: 'settings', component: SettingsComponent },
+  { path: 'sale/transaction', component: SalesTransactionComponent},
   {
     path: '**',
     component: PageNotFoundComponent

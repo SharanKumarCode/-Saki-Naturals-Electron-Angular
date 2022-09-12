@@ -33,7 +33,7 @@ export class SalesdbService {
           sellingPrice: element.sellingPrice,
           sellingQuantity: element.sellingQuantity,
           salesID: element.salesID,
-          transactionHistory: element.saleTransactions
+          saleTransactions: element.saleTransactions
         };
         salesList.push(saleData);
       });
@@ -44,15 +44,9 @@ export class SalesdbService {
     });
   }
 
-  getSalesByID(salesID: string): void{
+  getSalesByID(salesID: string): Promise<ISalesData>{
     console.log('INFO: Getting sales by ID');
-    this.ipcRenderer.invoke('get-sale-by-id', salesID)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('get-sale-by-id', salesID);
   }
 
   insertSales(saledata: ISaleTransactionComplete): void{
