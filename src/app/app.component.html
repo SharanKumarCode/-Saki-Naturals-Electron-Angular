@@ -1,1 +1,2 @@
-<app-navbar></app-navbar>
+<app-navbar *ngIf="!timerFlag"></app-navbar>
+<app-splash-page *ngIf="timerFlag"></app-splash-page>

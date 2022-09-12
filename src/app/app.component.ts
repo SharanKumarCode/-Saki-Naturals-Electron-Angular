@@ -9,6 +9,8 @@ import { APP_CONFIG } from '../environments/environment';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  timerFlag = true;
+
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService
@@ -24,5 +26,7 @@ export class AppComponent {
     } else {
       console.log('Run in browser');
     }
+
+    setInterval(()=>this.timerFlag = false, 2500);
   }
 }
