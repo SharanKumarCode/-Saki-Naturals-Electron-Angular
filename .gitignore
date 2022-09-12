@@ -39,7 +39,6 @@ node_modules
 npm-debug.log
 testem.log
 /typings
-app/db/data
 
 # e2e
 /e2e/*.js
@@ -51,3 +50,4 @@ app/db/data
 # System Files
 .DS_Store
 Thumbs.db
+app/db/data/saki_naturals_db.db
