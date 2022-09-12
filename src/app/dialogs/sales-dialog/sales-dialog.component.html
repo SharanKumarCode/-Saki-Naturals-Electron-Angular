@@ -86,7 +86,7 @@
   <mat-divider></mat-divider>
   <br>
   <!-- Payment Details -->
-  <div class="payment-detail-container">
+  <div class="payment-detail-container" *ngIf="editCreate !== 'Edit'">
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>Paid Amount</mat-label>
       <input matInput type="number" class="price-right-align" (change)="onPriceQuantityChange()" formControlName="paidAmount" value="{{paid}}"/>
@@ -96,6 +96,16 @@
       <mat-label>Balance Amount</mat-label>
       <input matInput type="number" class="price-right-align" formControlName="balanceAmount" value="{{balance}}"/>
       <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br>
+  <!-- Remarks -->
+  <div class="remarks-details-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Remarks</mat-label>
+      <input matInput type="text" formControlName="remarks" value="{{remarks}}"/>
     </mat-form-field>
   </div>
   
@@ -108,6 +118,5 @@
 </div>
 <div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
   <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
-  <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE SALE</button>
-  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn"><mat-icon svgIcon="delete"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onSave()" color="primary">UPDATE SALE</button>
 </div>
