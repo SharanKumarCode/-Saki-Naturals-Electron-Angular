@@ -18,6 +18,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -39,6 +41,8 @@ import { EmployeeComponent } from './employee/employee.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AddProductsDialogComponent } from './dialogs/add-products-dialog/add-products-dialog.component';
 import { SalesDialogComponent } from './dialogs/sales-dialog/sales-dialog.component';
+import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
+import { SalesTransactionDialogComponent } from './dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -65,7 +69,9 @@ const MY_FORMATS = {
     EmployeeComponent,
     SettingsComponent,
     AddProductsDialogComponent,
-    SalesDialogComponent
+    SalesDialogComponent,
+    SalesTransactionComponent,
+    SalesTransactionDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +96,8 @@ const MY_FORMATS = {
     MatSortModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatExpansionModule,
+    MatCardModule,
 
     TranslateModule.forRoot({
       loader: {
