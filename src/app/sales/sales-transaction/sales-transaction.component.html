@@ -24,7 +24,7 @@
                 </div>
                 <div class="sales-data-section-two sales-data-sections">
                     <span>Sale Date</span>
-                    <span>{{selectedSaleData.saleDate ? selectedSaleData.saleDate : ''}}</span>
+                    <span>{{(selectedSaleData.saleDate ? selectedSaleData.saleDate : '') | date:'medium'}}</span>
                 </div>
                 <div class="sales-data-section-four sales-data-sections">
                     <span>Sale Type</span>

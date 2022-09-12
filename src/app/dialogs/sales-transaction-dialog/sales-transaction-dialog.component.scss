@@ -32,13 +32,13 @@
     margin-right: 2%;
 }
 
-.remarks-details-contianer {
+.remarks-details-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
 
-.remarks-details-contianer > mat-form-field{
+.remarks-details-container > mat-form-field{
   flex-grow: 1;
 }
 

@@ -103,6 +103,7 @@ export class SalesDialogComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
   ) {
+    console.log(this.data);
     this.productID = this.data.productID;
     this.productName = this.data.productName;
     this.currentStock = this.data.currentStock;
@@ -118,6 +119,7 @@ export class SalesDialogComponent implements OnInit {
     this.paid = 0;
     this.balance = this.totalAmount - this.paid;
     this.editCreate = this.data.editCreate;
+    this.remarks = this.data.remarks;
 
     this.form = this.fb.group(
       {
@@ -131,7 +133,8 @@ export class SalesDialogComponent implements OnInit {
         stockAfterSale: [{value:this.stockAfterSale, disabled: true}, [Validators.required]],
         totalAmount: [{value:this.totalAmount, disabled: true}, [Validators.required]],
         paidAmount: [this.paid, [Validators.required]],
-        balanceAmount: [{value:this.balance, disabled: true}, [Validators.required]]
+        balanceAmount: [{value:this.balance, disabled: true}, [Validators.required]],
+        remarks: [this.remarks]
       }
     );
 
@@ -140,21 +143,12 @@ export class SalesDialogComponent implements OnInit {
     .addSvgIcon('delete',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'delete_icon.svg'));
 
     dialogRef.disableClose = true;
+
   }
 
   onGroupChange(group): void {
-    let selectedGroup: string;
     if (group.isUserInput){
-      this.productNames = [];
-      selectedGroup = group.source.value;
-      this.productList.forEach(value=>{
-        if (value.group === selectedGroup){
-          this.productNames.push({
-            value: value.productId,
-            viewValue: value.productName
-          });
-        }
-      });
+      this.fetchAndSetProductsList(group.source.value);
     }
   }
 
@@ -186,6 +180,28 @@ export class SalesDialogComponent implements OnInit {
     this.form.controls.stockAfterSale.setValue(stockAfterSale);
   }
 
+  setDefaultTableValue(){
+    this.form.controls.productgroups.setValue(this.productGroups.filter(e=>e.value===this.data.group)[0].value);
+    this.fetchAndSetProductsList(this.data.group);
+    this.form.controls.productNames.setValue(this.productNames.filter(e=>e.value===this.data.productID)[0].value);
+    this.form.controls.saleTypeList.setValue(this.saleTypeList.filter(e=>e.value===this.data.saleType)[0].value);
+    this.setCurrentStock();
+    this.form.controls.stockAfterSale.setValue(this.currentStock - this.form.controls.sellingQuantity.value);
+    this.date.setValue(moment(this.data.saleDate));
+  }
+
+  fetchAndSetProductsList(group: string){
+    this.productNames = [];
+    this.productList.forEach(value=>{
+      if (value.group === group){
+        this.productNames.push({
+          value: value.productId,
+          viewValue: value.productName
+        });
+      }
+    });
+  }
+
   setSellingPrice(saleType): void{
     const tmp = this.productList.filter(e=>e.productId === this.productID);
       switch (saleType) {
@@ -210,6 +226,7 @@ export class SalesDialogComponent implements OnInit {
   setCurrentStock(): void{
     const tmp = this.productList.filter(e=>e.productId === this.productID);
     this.currentStock = tmp[0].stock;
+    console.log(this.currentStock);
   }
 
   setFinalSaleData(): ISaleTransactionComplete{
@@ -221,13 +238,13 @@ export class SalesDialogComponent implements OnInit {
       saleType: this.saleType,
       sellingPrice: this.sellingPrice,
       sellingQuantity: this.form.controls.sellingQuantity.value,
-      remarks: ''
+      remarks: this.form.controls.remarks.value
     };
 
     const transactionData: ISaleTransactions = {
       transactionDate: this.date.value.toString(),
       paid: this.form.controls.paidAmount.value,
-      remarks: ''
+      remarks: this.form.controls.remarks.value
     };
 
     const completeSaleData: ISaleTransactionComplete = {
@@ -250,31 +267,11 @@ export class SalesDialogComponent implements OnInit {
     }
   }
 
-  onUpdate(): void {
-    // const {value, valid} = this.form;
-    // if (valid) {
-    //   if (value.priceDealer === 0 && value.priceDirectSale === 0 && value.priceReseller === 0){
-    //     this.snackbar.open('Please provide alteast one Price.', 'close');
-    //   } else {
-    //     const finalProductData = value;
-    //     finalProductData.productID = this.data.productId;
-    //     finalProductData.editCreate = 'Edit';
-    //     this.dialogRef.close(finalProductData);
-    //   }
-    // }
-  }
-
-  onDelete(): void{
-    this.dialogRef.close({
-      salesID: this.data.salesID,
-      editCreate: 'Delete'
-    });
-  }
-
   ngOnInit(): void {
     this.productDBService.getProducts();
     this.productService.getProductList().subscribe(data=>{
       this.productList = data;
+      console.log(this.productList);
       const groups: IProductGroup[] = [];
       data.forEach(value=>{
         if (groups.filter(e=>e.value === value.group).length === 0){
@@ -285,6 +282,10 @@ export class SalesDialogComponent implements OnInit {
         }
       });
       this.productGroups = groups;
+
+      if (this.editCreate === 'Edit'){
+        this.setDefaultTableValue();
+      }
     });
   }
 

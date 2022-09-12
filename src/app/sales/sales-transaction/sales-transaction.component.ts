@@ -6,6 +6,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ProductsdbService } from '../../core/services/productsdb.service';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import { SalesDialogComponent } from '../../dialogs/sales-dialog/sales-dialog.component';
@@ -48,6 +49,7 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
     private salesdbService: SalesdbService,
+    private productsdbService: ProductsdbService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
@@ -70,8 +72,17 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
   getSalesData(){
     this.salesdbService.getSalesByID(this.selectedSalesID)
     .then(data=>{
+      console.log(data);
       this.selectedSaleData = data[0];
-      this.setTableData();
+      this.productsdbService.getProductByID(this.selectedSaleData.productID)
+      .then(prodData=>{
+        console.log(prodData);
+        this.selectedSaleData.group = prodData[0].group;
+        this.setTableData();
+      })
+      .catch(err=>{
+        console.error(err);
+      });
     })
     .catch(err=>{
       console.error(err);
@@ -160,10 +171,51 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openEditSaleDialog(): void {
+    console.log('opening dialog box edit/delete sale..');
+    console.log(this.selectedSaleData);
+    const dialogRef = this.dialog.open(SalesDialogComponent, {
+      width: '50%',
+      data: {
+        productID: this.selectedSaleData.productID,
+        productName: this.selectedSaleData.productName,
+        currentStock: this.selectedSaleData.currentStock,
+        group: this.selectedSaleData.group,
+        saleDate: this.selectedSaleData.saleDate,
+        saleTime: '',
+        purchaser: this.selectedSaleData.purchaser,
+        supplier: this.selectedSaleData.supplier,
+        saleType: this.selectedSaleData.saleType,
+        sellingPrice: this.selectedSaleData.sellingPrice,
+        sellingQuantity: this.selectedSaleData.sellingQuantity,
+        remarks: this.selectedSaleData.remarks,
+        editCreate: 'Edit'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog box is closed after update');
+      if (result){
+        result.saleData.salesID = this.selectedSalesID;
+        this.salesdbService.updateSales(result.saleData);
+      }
+    });
+  }
+
   onUpdateSale(){
+    this.openEditSaleDialog();
   }
 
   onDeleteSale(){
+    this.salesdbService.deleteSales(this.selectedSalesID)
+    .then(data=>{
+      console.log(data);
+      this.onBack();
+    })
+    .catch(err=>{
+      console.log(err);
+    });
+
   }
 
   onRowClick(e: any){
