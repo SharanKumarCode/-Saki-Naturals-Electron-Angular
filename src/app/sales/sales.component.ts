@@ -130,8 +130,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog box is closed');
       if (result){
-        // this.electronService.insertProduct(result);
-        this.salesdbService.insertSales(result);
+        this.salesdbService.insertSales(result)
+        .then(_=>{
+          console.log('INFO: Created new sale');
+          this.onRefresh();
+        })
+        .catch(err=>{
+          console.error(err);
+        });
       }
     });
   }

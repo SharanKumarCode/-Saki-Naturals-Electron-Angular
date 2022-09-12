@@ -132,7 +132,14 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
           remarks: result.remarks,
           salesID: this.selectedSalesID
         };
-        this.salesdbService.insertSaleTransaction(saleTransactionData);
+        this.salesdbService.insertSaleTransaction(saleTransactionData)
+        .then(_=>{
+          console.log('INFO: Created new sale transaction data');
+          this.onRefresh();
+        })
+        .catch(err=>{
+          console.log(err);
+        });
       }
     });
   }
@@ -163,9 +170,23 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
             remarks: result.remarks,
             transactionID: transactionData.transactionID
           };
-          this.salesdbService.updateSaleTransaction(saleTransactionData);
+          this.salesdbService.updateSaleTransaction(saleTransactionData)
+          .then(_=>{
+            console.log('INFO: Updated sale transaction data');
+            this.onRefresh();
+          })
+          .catch(err=>{
+            console.log(err);
+          });
         } else {
-          this.salesdbService.deleteSaleTransaction(transactionData.transactionID);
+          this.salesdbService.deleteSaleTransaction(transactionData.transactionID)
+          .then(_=>{
+            console.log('INFO: Deleted sale transaction data');
+            this.onRefresh();
+          })
+          .catch(err=>{
+            console.log(err);
+          });
         }
       }
     });
@@ -197,7 +218,14 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
       console.log('The dialog box is closed after update');
       if (result){
         result.saleData.salesID = this.selectedSalesID;
-        this.salesdbService.updateSales(result.saleData);
+        this.salesdbService.updateSales(result.saleData)
+        .then(_=>{
+          console.log('INFO: Updated sales data');
+          this.onRefresh();
+        })
+        .catch(err=>{
+          console.log(err);
+        });
       }
     });
   }
@@ -208,8 +236,8 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
 
   onDeleteSale(){
     this.salesdbService.deleteSales(this.selectedSalesID)
-    .then(data=>{
-      console.log(data);
+    .then(_=>{
+      console.log('INFO: Deleted sale');
       this.onBack();
     })
     .catch(err=>{

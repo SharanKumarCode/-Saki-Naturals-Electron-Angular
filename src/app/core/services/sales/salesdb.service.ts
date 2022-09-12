@@ -49,26 +49,14 @@ export class SalesdbService {
     return this.ipcRenderer.invoke('get-sale-by-id', salesID);
   }
 
-  insertSales(saledata: ISaleTransactionComplete): void{
+  insertSales(saledata: ISaleTransactionComplete): Promise<any>{
     console.log('INFO: Inserting sale and initial Transaction data');
-    this.ipcRenderer.invoke('insert-sale', saledata)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('insert-sale', saledata);
   }
 
-  updateSales(saledata: ISalesData): void{
+  updateSales(saledata: ISalesData): Promise<any>{
     console.log('INFO: Updating sales data');
-    this.ipcRenderer.invoke('update-sale', saledata)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('update-sale', saledata);
   }
 
   deleteSales(salesID: string): Promise<any>{
@@ -98,26 +86,14 @@ export class SalesdbService {
     });
   }
 
-  insertSaleTransaction(transaction: ISaleTransactions): void{
+  insertSaleTransaction(transaction: ISaleTransactions): Promise<any>{
     console.log('INFO: Inserting sale transaction data');
-    this.ipcRenderer.invoke('insert-sale-transaction', transaction)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('insert-sale-transaction', transaction);
   }
 
-  updateSaleTransaction(transaction: ISaleTransactions): void{
+  updateSaleTransaction(transaction: ISaleTransactions): Promise<any>{
     console.log('INFO: Updating sale transaction data');
-    this.ipcRenderer.invoke('update-sale-transaction', transaction)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('update-sale-transaction', transaction);
   }
 
   deleteSaleTransaction(transactionID: string): Promise<any>{
