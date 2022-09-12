@@ -71,15 +71,9 @@ export class SalesdbService {
     });
   }
 
-  deleteSales(salesID: string): void{
+  deleteSales(salesID: string): Promise<any>{
     console.log('INFO: Deleting sales data');
-    this.ipcRenderer.invoke('delete-sale', salesID)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('delete-sale', salesID);
   }
 
   getSaleTransactionsList(): void{
@@ -126,14 +120,8 @@ export class SalesdbService {
     });
   }
 
-  deleteSaleTransaction(transactionID: string): void{
+  deleteSaleTransaction(transactionID: string): Promise<any>{
     console.log('INFO: Deleting sale transaction data');
-    this.ipcRenderer.invoke('delete-sale-transaction', transactionID)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+    return this.ipcRenderer.invoke('delete-sale-transaction', transactionID);
   }
 }
