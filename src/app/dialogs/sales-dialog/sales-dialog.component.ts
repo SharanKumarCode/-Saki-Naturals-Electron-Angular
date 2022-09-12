@@ -130,7 +130,7 @@ export class SalesDialogComponent implements OnInit {
         sellingQuantity: [this.sellingQuantity, [Validators.required]],
         stockAfterSale: [{value:this.stockAfterSale, disabled: true}, [Validators.required]],
         totalAmount: [{value:this.totalAmount, disabled: true}, [Validators.required]],
-        paidAmount: [this.stockAfterSale, [Validators.required]],
+        paidAmount: [this.paid, [Validators.required]],
         balanceAmount: [{value:this.balance, disabled: true}, [Validators.required]]
       }
     );

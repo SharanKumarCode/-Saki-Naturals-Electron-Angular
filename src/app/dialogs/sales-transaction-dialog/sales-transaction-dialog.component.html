@@ -1,0 +1,53 @@
+<h1 mat-dialog-title>SALES</h1>
+
+<!-- Product Details -->
+<mat-dialog-content class="form-container" [formGroup]="form">
+  
+  <!-- Sale Data -->
+  <div class="sale-transaction-details-contianer">
+    <mat-form-field appearance="outline">
+      <mat-label>Transaction date</mat-label>
+      <input matInput [matDatepicker]="dp" [formControl]="date">
+      <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>Total Amount</mat-label>
+        <input matInput type="number" class="price-right-align" formControlName="totalAmount" value="{{totalAmount}}"/>
+        <span matPrefix>&#8377;&nbsp;</span>
+      </mat-form-field>
+  </div> 
+
+  <!-- Payment Details -->
+  <div class="payment-detail-container">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Paid Amount</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="paidAmount" value="{{paid}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <div class="remarks-details-contianer">
+    <mat-form-field appearance="outline">
+      <mat-label>Remarks</mat-label>
+      <input matInput type="text" formControlName="remarks" value="{{remarks}}"/>
+    </mat-form-field>
+  </div>
+  
+
+</mat-dialog-content>
+
+<div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
+  <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onSave()" [style.background-color]="'#33b249'" [style.color]="'#ffffff'">CREATE TRANSACTION</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE TRANSACTION</button>
+  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn"><mat-icon svgIcon="delete"></mat-icon></button>
+</div>
+

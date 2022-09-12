@@ -126,9 +126,7 @@ async function insertSaleTransaction(transaction: ISaleTransactions){
     console.log("Inserting sale transaction data..")
 
     const saleEntity = await AppDataSource.getRepository(Sales).find({
-        where: [
-            {salesID: transaction.salesID}
-        ],
+        where: {salesID: transaction.salesID},
     })
 
     const saleTransactionEntity = new SaleTransactions()

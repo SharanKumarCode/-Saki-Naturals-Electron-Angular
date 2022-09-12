@@ -132,9 +132,7 @@ function insertSaleTransaction(transaction) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Inserting sale transaction data..");
         const saleEntity = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
-            where: [
-                { salesID: transaction.salesID }
-            ],
+            where: { salesID: transaction.salesID },
         });
         const saleTransactionEntity = new items_schema_1.SaleTransactions();
         saleTransactionEntity.paid = transaction.paid;
