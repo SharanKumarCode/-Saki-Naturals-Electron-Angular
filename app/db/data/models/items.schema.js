@@ -110,7 +110,9 @@ __decorate([
     __metadata("design:type", String)
 ], SaleTransactions.prototype, "transactionID", void 0);
 __decorate([
-    ManyToOne(() => Sales, (sales) => sales.saleTransactions),
+    ManyToOne(() => Sales, (sales) => sales.saleTransactions, {
+        onDelete: "CASCADE"
+    }),
     __metadata("design:type", Sales)
 ], SaleTransactions.prototype, "sale", void 0);
 __decorate([

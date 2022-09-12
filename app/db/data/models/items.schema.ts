@@ -74,7 +74,9 @@ export class SaleTransactions
 	@PrimaryGeneratedColumn('uuid')
 	transactionID: string;
 
-	@ManyToOne(() => Sales, (sales)=>sales.saleTransactions)
+	@ManyToOne(() => Sales, (sales)=>sales.saleTransactions, {
+		onDelete: "CASCADE"
+	})
 	sale: Sales;
 
     // @Column()
