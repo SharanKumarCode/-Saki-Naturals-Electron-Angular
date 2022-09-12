@@ -5,16 +5,13 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { SalesDialogComponent } from '../dialogs/sales-dialog/sales-dialog.component';
-
-import { ElectronService } from '../core/services';
-
 import { EnumSaleType, ISalesData, ISaleTransactions } from './interfaces/salesdata.interface';
 import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
 
 import { Subject } from 'rxjs';
 import { ProductsdbService } from '../core/services/productsdb.service';
-import { IProductData } from '../products/interfaces/productdata.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sales',
@@ -49,7 +46,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
     private salesdbService: SalesdbService,
-    private productdbService: ProductsdbService
+    private productdbService: ProductsdbService,
+    private router: Router
   ) {
     this.salesData = {
       productID: '',
@@ -96,7 +94,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
           element.productDescription = f[0].description;
 
           // setting transaction data
-          element.paid = this.calcTransactionData(element.transactionHistory);
+          element.paid = this.calcTransactionData(element.saleTransactions);
           element.totalAmount = element.sellingPrice * element.sellingQuantity;
           element.balance = element.totalAmount - element.paid;
           tmp.next([{
@@ -140,6 +138,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onRowClick(e: any){
     console.log(e);
+    this.salesService.updateSelectedSalesID(e.salesID);
+    this.router.navigate(['sale/transaction']);
   }
 
   onRefresh(){
