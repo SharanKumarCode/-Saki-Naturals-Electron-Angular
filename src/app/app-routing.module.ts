@@ -9,6 +9,7 @@ import { PurchaseComponent } from './purchase/purchase.component';
 import { SettingsComponent } from './settings/settings.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
+import { ProductionComponent } from './production/production.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: 'products', component: ProductsComponent },
+  { path: 'production', component: ProductionComponent },
   { path: 'expense', component: ExpenseComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'purchase', component: PurchaseComponent },
