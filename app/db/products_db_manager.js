@@ -55,6 +55,7 @@ exports.inserProduct = inserProduct;
 function updateProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("INFO: Updating product data..");
+        console.log(product);
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Product, {
             product_id: product.productID
         }, {

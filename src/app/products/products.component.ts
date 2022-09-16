@@ -9,6 +9,9 @@ import { IProductData } from './interfaces/productdata.interface';
 import { ProductsService } from '../core/services/products.service';
 import { Subject } from 'rxjs';
 import { ProductsdbService } from '../core/services/productsdb.service';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-products',
@@ -105,7 +108,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     this.productdbservice.getProducts();
     this.productListObservalble.subscribe(d=>{
       d.map((value, index)=>{
-        value.createdDate = new Date(parseFloat(value.createdDate.toString()) * 1000);
+        value.createdDate = value.createdDate.toString();
         return {
           ...value,
           serialNumber: index

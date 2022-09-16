@@ -7,7 +7,7 @@ export interface IProductData {
     priceDirectSale: number;
     priceReseller: number;
     priceDealer: number;
-    createdDate?: Date;
+    createdDate?: string;
     sold: number;
     editCreate?: string;
   }

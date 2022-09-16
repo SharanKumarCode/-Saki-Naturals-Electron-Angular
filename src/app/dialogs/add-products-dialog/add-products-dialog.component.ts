@@ -6,6 +6,9 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { IProductData } from '../../products/interfaces/productdata.interface';
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 @Component({
   selector: 'app-add-products-dialog',
@@ -73,7 +76,7 @@ export class AddProductsDialogComponent implements OnInit {
         this.snackbar.open('Please provide alteast one Price.', 'close');
       } else {
         const finalProductData = value;
-        finalProductData.createdDate = Date.now() / 1000;
+        finalProductData.createdDate = moment()['_d'].toString();
         this.dialogRef.close(finalProductData);
       }
     }

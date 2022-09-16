@@ -28,7 +28,7 @@ export class Product
 	price_dealer: number;
 
     @Column()
-	created_date: Date;
+	created_date: string;
 
     @Column()
 	sold: number;

@@ -41,6 +41,7 @@ async function inserProduct(product: IProductData){
 
 async function updateProduct(product: any){
     console.log("INFO: Updating product data..")
+    console.log(product)
     const res = await AppDataSource.manager.update(Product, {
         product_id: product.productID
     }, {

@@ -47,7 +47,7 @@ __decorate([
 ], Product.prototype, "price_dealer", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Product.prototype, "created_date", void 0);
 __decorate([
     Column(),
