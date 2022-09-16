@@ -27,6 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.matIconRegistry
     .addSvgIcon('products',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'products_icon.svg'))
+    .addSvgIcon('production',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'production_icon.svg'))
     .addSvgIcon('employee',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'employee_icon.svg'))
     .addSvgIcon('expense',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'expense_icon.svg'))
     .addSvgIcon('purchase',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'purchase_icon.svg'))
