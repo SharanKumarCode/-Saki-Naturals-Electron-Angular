@@ -25,17 +25,18 @@ export class ProductsdbService {
       console.log('info: received all products');
       data.forEach(element => {
         const productData: IProductData = {
-          productId: element.product_id,
-          productName: element.product_name,
-          group: element.group,
+          productId: element.productID,
+          productName: element.productName,
+          group: element.productGroup,
           description: element.description,
           stock: element.stock,
-          priceDirectSale: element.price_directSale,
-          priceReseller: element.price_reseller,
-          priceDealer: element.price_dealer,
+          priceDirectSale: element.priceDirectSale,
+          priceReseller: element.priceReseller,
+          priceDealer: element.priceDealer,
           sold: element.sold,
-          createdDate: element.created_date
+          createdDate: element.createdDate
         };
+        console.log(productData);
         productsList.push(productData);
       });
       this.productService.updateProductList(productsList);
