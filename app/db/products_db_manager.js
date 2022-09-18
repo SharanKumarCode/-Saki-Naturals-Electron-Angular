@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.insertProduct = exports.getProductByID = exports.getAllProducts = void 0;
+exports.hardDeleteProduct = exports.softDeleteProduct = exports.updateProduct = exports.insertProduct = exports.getProductByID = exports.getAllProducts = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
 function getAllProducts() {
@@ -44,7 +44,8 @@ function insertProduct(product) {
             priceDirectSale: product.priceDirectSale,
             priceReseller: product.priceReseller,
             priceDealer: product.priceDealer,
-            createdDate: product.createdDate
+            createdDate: product.createdDate,
+            remarks: product.remarks
         });
         return res;
     });
@@ -53,7 +54,6 @@ exports.insertProduct = insertProduct;
 function updateProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("INFO: Updating product data..");
-        console.log(product);
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Product, {
             product_id: product.productID
         }, {
@@ -69,14 +69,26 @@ function updateProduct(product) {
     });
 }
 exports.updateProduct = updateProduct;
-function deleteProduct(product_ID) {
+function softDeleteProduct(product_ID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("INFO: Deleting product data..");
+        console.log("INFO: Soft deleting product by ID..");
+        const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Product, {
+            product_id: product_ID
+        }, {
+            deleteFlag: true
+        });
+        return res;
+    });
+}
+exports.softDeleteProduct = softDeleteProduct;
+function hardDeleteProduct(product_ID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO: Hard deleting product data..");
         const res = yield db_manager_1.AppDataSource.manager.delete(items_schema_1.Product, {
             product_id: product_ID
         });
         return res;
     });
 }
-exports.deleteProduct = deleteProduct;
+exports.hardDeleteProduct = hardDeleteProduct;
 //# sourceMappingURL=products_db_manager.js.map
