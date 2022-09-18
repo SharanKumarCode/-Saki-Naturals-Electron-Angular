@@ -1,4 +1,4 @@
-const { getAllProducts, getProductByID, inserProduct, deleteProduct, updateProduct } = require('../db/db_manager')
+const { getAllProducts, getProductByID, inserProduct, softDeleteProduct, hardDeleteProduct, updateProduct } = require('../db/db_manager')
 
 module.exports = {
     productsHandler: [
@@ -14,8 +14,12 @@ module.exports = {
                 return inserProduct(data);
             }),
         
-            global.share.ipcMain.handle('delete-product', async (_, data) => {
-                return deleteProduct(data);
+            global.share.ipcMain.handle('soft-delete-product', async (_, data) => {
+                return softDeleteProduct(data);
+            }),
+
+            global.share.ipcMain.handle('hard-delete-product', async (_, data) => {
+                return hardDeleteProduct(data);
             }),
             
             global.share.ipcMain.handle('update-product', async (_, data) => {

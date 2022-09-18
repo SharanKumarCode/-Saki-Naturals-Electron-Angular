@@ -9,22 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SaleTransactions = exports.Sales = exports.Product = void 0;
+exports.Supplier = exports.Purchaser = exports.SaleTransactions = exports.SaleEntry = exports.Sales = exports.Product = void 0;
 const { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } = require('typeorm');
 let Product = class Product {
 };
 __decorate([
     PrimaryGeneratedColumn('uuid'),
     __metadata("design:type", String)
-], Product.prototype, "product_id", void 0);
+], Product.prototype, "productID", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Product.prototype, "group", void 0);
+], Product.prototype, "productGroup", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Product.prototype, "product_name", void 0);
+], Product.prototype, "productName", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
@@ -32,27 +32,29 @@ __decorate([
 __decorate([
     Column(),
     __metadata("design:type", Number)
-], Product.prototype, "stock", void 0);
+], Product.prototype, "priceDirectSale", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
-], Product.prototype, "price_directSale", void 0);
+], Product.prototype, "priceReseller", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
-], Product.prototype, "price_reseller", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", Number)
-], Product.prototype, "price_dealer", void 0);
+], Product.prototype, "priceDealer", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
-], Product.prototype, "created_date", void 0);
+], Product.prototype, "remarks", void 0);
 __decorate([
     Column(),
-    __metadata("design:type", Number)
-], Product.prototype, "sold", void 0);
+    __metadata("design:type", String)
+], Product.prototype, "createdDate", void 0);
+__decorate([
+    Column({
+        default: false
+    }),
+    __metadata("design:type", Boolean)
+], Product.prototype, "deleteFlag", void 0);
 Product = __decorate([
     Entity()
 ], Product);
@@ -64,29 +66,17 @@ __decorate([
     __metadata("design:type", String)
 ], Sales.prototype, "salesID", void 0);
 __decorate([
-    Column(),
+    ManyToOne(() => Product, (product) => product.productID),
     __metadata("design:type", String)
 ], Sales.prototype, "productID", void 0);
 __decorate([
-    Column(),
+    ManyToOne(() => Purchaser, (purchaser) => purchaser.purchaserID),
     __metadata("design:type", String)
-], Sales.prototype, "purchaser", void 0);
+], Sales.prototype, "purchaserID", void 0);
 __decorate([
-    Column(),
+    ManyToOne(() => Supplier, (supplier) => supplier.supplierID),
     __metadata("design:type", String)
-], Sales.prototype, "supplier", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Sales.prototype, "saleType", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", Number)
-], Sales.prototype, "sellingPrice", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", Number)
-], Sales.prototype, "sellingQuantity", void 0);
+], Sales.prototype, "supplierID", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
@@ -95,14 +85,44 @@ __decorate([
     Column(),
     __metadata("design:type", String)
 ], Sales.prototype, "saleDate", void 0);
-__decorate([
-    OneToMany(() => SaleTransactions, (saleTransactions) => saleTransactions.sale),
-    __metadata("design:type", Array)
-], Sales.prototype, "saleTransactions", void 0);
 Sales = __decorate([
     Entity()
 ], Sales);
 exports.Sales = Sales;
+let SaleEntry = class SaleEntry {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], SaleEntry.prototype, "entryID", void 0);
+__decorate([
+    ManyToOne(() => Sales, (sales) => sales.salesID, {
+        onDelete: "CASCADE"
+    }),
+    __metadata("design:type", String)
+], SaleEntry.prototype, "salesID", void 0);
+__decorate([
+    ManyToOne(() => Product, (product) => product.productID, {
+        onDelete: "RESTRICT"
+    }),
+    __metadata("design:type", String)
+], SaleEntry.prototype, "productID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], SaleEntry.prototype, "saleType", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], SaleEntry.prototype, "sellingPrice", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", Number)
+], SaleEntry.prototype, "sellingQuantity", void 0);
+SaleEntry = __decorate([
+    Entity()
+], SaleEntry);
+exports.SaleEntry = SaleEntry;
 let SaleTransactions = class SaleTransactions {
 };
 __decorate([
@@ -110,11 +130,11 @@ __decorate([
     __metadata("design:type", String)
 ], SaleTransactions.prototype, "transactionID", void 0);
 __decorate([
-    ManyToOne(() => Sales, (sales) => sales.saleTransactions, {
+    ManyToOne(() => Sales, (sales) => sales.salesID, {
         onDelete: "CASCADE"
     }),
-    __metadata("design:type", Sales)
-], SaleTransactions.prototype, "sale", void 0);
+    __metadata("design:type", String)
+], SaleTransactions.prototype, "salesID", void 0);
 __decorate([
     Column(),
     __metadata("design:type", Number)
@@ -131,4 +151,64 @@ SaleTransactions = __decorate([
     Entity()
 ], SaleTransactions);
 exports.SaleTransactions = SaleTransactions;
+let Purchaser = class Purchaser {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], Purchaser.prototype, "purchaserID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Purchaser.prototype, "purchaserName", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Purchaser.prototype, "createdDate", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Purchaser.prototype, "location", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Purchaser.prototype, "contact", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Purchaser.prototype, "remarks", void 0);
+Purchaser = __decorate([
+    Entity()
+], Purchaser);
+exports.Purchaser = Purchaser;
+let Supplier = class Supplier {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], Supplier.prototype, "supplierID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Supplier.prototype, "supplierName", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Supplier.prototype, "createdDate", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Supplier.prototype, "location", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Supplier.prototype, "contact", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Supplier.prototype, "remarks", void 0);
+Supplier = __decorate([
+    Entity()
+], Supplier);
+exports.Supplier = Supplier;
 //# sourceMappingURL=items.schema.js.map

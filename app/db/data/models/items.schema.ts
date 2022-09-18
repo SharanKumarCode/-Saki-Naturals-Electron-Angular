@@ -4,34 +4,37 @@ const { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn
 export class Product
 {
 	@PrimaryGeneratedColumn('uuid')
-	product_id: string;
+	productID: string;
 
 	@Column()
-	group: string;
+	productGroup: string;
 
     @Column()
-	product_name: string;
+	productName: string;
 
     @Column()
 	description: string;
-    
-    @Column()
-	stock: number;
 
     @Column()
-	price_directSale: number;
+	priceDirectSale: number;
 
     @Column()
-	price_reseller: number;
+	priceReseller: number;
 
     @Column()
-	price_dealer: number;
+	priceDealer: number;
+
+	@Column()
+	remarks: string;
 
     @Column()
-	created_date: string;
+	createdDate: string;
 
-    @Column()
-	sold: number;
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+
 }
 
 @Entity()
@@ -40,16 +43,39 @@ export class Sales
 	@PrimaryGeneratedColumn('uuid')
 	salesID: string;
 
-	@Column()
+	@ManyToOne(()=>Product, (product)=>product.productID)
 	productID: string;
 
-    @Column()
-	purchaser: string;
+    @ManyToOne(()=>Purchaser, (purchaser)=>purchaser.purchaserID)
+	purchaserID: string;
+
+    @ManyToOne(()=>Supplier, (supplier)=>supplier.supplierID)
+	supplierID: string;
+
+	@Column()
+	remarks: string;
 
     @Column()
-	supplier: string;
-    
-    @Column()
+	saleDate: string;
+}
+
+@Entity()
+export class SaleEntry
+{
+	@PrimaryGeneratedColumn('uuid')
+	entryID: string;
+
+	@ManyToOne(() => Sales, (sales)=>sales.salesID, {
+		onDelete: "CASCADE"
+	})
+	salesID: string;
+
+	@ManyToOne(() => Product, (product)=>product.productID, {
+		onDelete: "RESTRICT"
+	})
+	productID: string;
+
+	@Column()
 	saleType: string;
 
     @Column()
@@ -58,14 +84,6 @@ export class Sales
     @Column()
 	sellingQuantity: number;
 
-	@Column()
-	remarks: string;
-
-    @Column()
-	saleDate: string;
-
-	@OneToMany(() => SaleTransactions, (saleTransactions) => saleTransactions.sale)
-    saleTransactions: SaleTransactions[]
 }
 
 @Entity()
@@ -74,13 +92,10 @@ export class SaleTransactions
 	@PrimaryGeneratedColumn('uuid')
 	transactionID: string;
 
-	@ManyToOne(() => Sales, (sales)=>sales.saleTransactions, {
+	@ManyToOne(() => Sales, (sales)=>sales.salesID, {
 		onDelete: "CASCADE"
 	})
-	sale: Sales;
-
-    // @Column()
-	// transactionType: string;
+	salesID: string;
 
     @Column()
 	paid: number;
@@ -91,4 +106,48 @@ export class SaleTransactions
     @Column()
 	remarks: string;
 
+}
+
+@Entity()
+export class Purchaser
+{
+	@PrimaryGeneratedColumn('uuid')
+	purchaserID: string;
+
+    @Column()
+	purchaserName: string;
+
+    @Column()
+	createdDate: string;
+
+	@Column()
+	location: string;
+
+	@Column()
+	contact: string;
+
+	@Column()
+	remarks: string;
+}
+
+@Entity()
+export class Supplier
+{
+	@PrimaryGeneratedColumn('uuid')
+	supplierID: string;
+
+    @Column()
+	supplierName: string;
+
+    @Column()
+	createdDate: string;
+
+	@Column()
+	location: string;
+
+	@Column()
+	contact: string;
+
+	@Column()
+	remarks: string;
 }

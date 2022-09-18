@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.updateProduct = exports.inserProduct = exports.getProductByID = exports.getAllProducts = void 0;
+exports.deleteProduct = exports.updateProduct = exports.insertProduct = exports.getProductByID = exports.getAllProducts = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
 function getAllProducts() {
@@ -27,31 +27,29 @@ function getProductByID(productID) {
         console.log('INFO : Getting product by ID');
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Product).find({
             where: {
-                product_id: productID
+                productID: productID
             }
         });
         return res;
     });
 }
 exports.getProductByID = getProductByID;
-function inserProduct(product) {
+function insertProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("INFO: Inserting product data..");
         const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.Product, {
-            group: product.group,
-            product_name: product.productName,
+            productGroup: product.group,
+            productName: product.productName,
             description: product.description,
-            stock: product.stock,
-            price_directSale: product.priceDirectSale,
-            price_reseller: product.priceReseller,
-            price_dealer: product.priceDealer,
-            created_date: product.createdDate,
-            sold: product.sold
+            priceDirectSale: product.priceDirectSale,
+            priceReseller: product.priceReseller,
+            priceDealer: product.priceDealer,
+            createdDate: product.createdDate
         });
         return res;
     });
 }
-exports.inserProduct = inserProduct;
+exports.insertProduct = insertProduct;
 function updateProduct(product) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("INFO: Updating product data..");
@@ -59,15 +57,13 @@ function updateProduct(product) {
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Product, {
             product_id: product.productID
         }, {
-            group: product.group,
-            product_name: product.productName,
+            productGroup: product.group,
+            productName: product.productName,
             description: product.description,
-            stock: product.stock,
-            price_directSale: product.priceDirectSale,
-            price_reseller: product.priceReseller,
-            price_dealer: product.priceDealer,
-            created_date: product.createdDate,
-            sold: product.sold
+            priceDirectSale: product.priceDirectSale,
+            priceReseller: product.priceReseller,
+            priceDealer: product.priceDealer,
+            createdDate: product.createdDate
         });
         return res;
     });

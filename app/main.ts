@@ -71,6 +71,7 @@ try {
     win.close();
   });
 
+  // import all ipc handlers
   require('./ipc_handlers/index');
 
   // Quit when all windows are closed.

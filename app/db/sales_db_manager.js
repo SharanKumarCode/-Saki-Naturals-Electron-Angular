@@ -17,7 +17,7 @@ function getAllSales() {
         console.log('Getting sales data..');
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
             relations: {
-                saleTransactions: true
+                salesID: true
             }
         });
         return res;
@@ -29,7 +29,7 @@ function getSaleByID(salesID) {
         console.log("Getting sales data by ID..");
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
             relations: {
-                saleTransactions: true
+                salesID: true
             },
             where: {
                 salesID: salesID
@@ -54,18 +54,15 @@ function insertSale(saleCompleteData) {
         console.log("Inserting sale and transaction data..");
         const saleEntity = new items_schema_1.Sales();
         saleEntity.productID = saleCompleteData.saleData.productID;
-        saleEntity.purchaser = saleCompleteData.saleData.purchaser;
-        saleEntity.supplier = saleCompleteData.saleData.supplier;
+        saleEntity.purchaserID = saleCompleteData.saleData.purchaser;
+        saleEntity.supplierID = saleCompleteData.saleData.supplier;
         saleEntity.saleDate = saleCompleteData.saleData.saleDate;
-        saleEntity.saleType = saleCompleteData.saleData.saleType;
-        saleEntity.sellingPrice = saleCompleteData.saleData.sellingPrice;
-        saleEntity.sellingQuantity = saleCompleteData.saleData.sellingQuantity;
         saleEntity.remarks = saleCompleteData.saleData.remarks;
         const saleTransactionEntity = new items_schema_1.SaleTransactions();
         saleTransactionEntity.paid = saleCompleteData.transactionData.paid;
         saleTransactionEntity.remarks = saleCompleteData.transactionData.remarks;
         saleTransactionEntity.transactionDate = saleCompleteData.transactionData.transactionDate;
-        saleTransactionEntity.sale = saleEntity;
+        saleTransactionEntity.salesID = saleCompleteData.transactionData.salesID;
         const res = yield db_manager_1.AppDataSource.manager.save(saleEntity);
         yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
@@ -79,11 +76,8 @@ function updateSale(sale) {
             salesID: sale.salesID
         }, {
             productID: sale.productID,
-            purchaser: sale.purchaser,
-            supplier: sale.supplier,
-            saleType: sale.saleType,
-            sellingPrice: sale.sellingPrice,
-            sellingQuantity: sale.sellingQuantity,
+            purchaserID: sale.purchaser,
+            supplierID: sale.supplier,
             remarks: sale.remarks,
             saleDate: sale.saleDate,
         });
@@ -96,7 +90,7 @@ function getAllSaleTransactions() {
         console.log('Getting sale transation data..');
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
             relations: {
-                sale: true
+                salesID: true
             }
         });
         return res;
@@ -108,7 +102,7 @@ function getSaleTransactionByID(transactionID) {
         console.log('getting sale transation data..');
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
             relations: {
-                sale: true
+                salesID: true
             },
             where: {
                 transactionID: transactionID
@@ -131,14 +125,14 @@ exports.deleteSaleTransaction = deleteSaleTransaction;
 function insertSaleTransaction(transaction) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Inserting sale transaction data..");
-        const saleEntity = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
-            where: { salesID: transaction.salesID },
-        });
+        // const saleEntity = await AppDataSource.getRepository(Sales).find({
+        //     where: {salesID: transaction.salesID},
+        // })
         const saleTransactionEntity = new items_schema_1.SaleTransactions();
         saleTransactionEntity.paid = transaction.paid;
         saleTransactionEntity.remarks = transaction.remarks;
         saleTransactionEntity.transactionDate = transaction.transactionDate;
-        saleTransactionEntity.sale = saleEntity[0];
+        saleTransactionEntity.salesID = transaction.salesID;
         const res = yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
     });

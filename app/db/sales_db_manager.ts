@@ -9,7 +9,7 @@ async function getAllSales(){
     const res = await AppDataSource.getRepository(Sales).find(
         {
             relations: {
-                saleTransactions: true
+                salesID: true
             }
         }
     )
@@ -22,7 +22,7 @@ async function getSaleByID(salesID: string){
     const res = await AppDataSource.getRepository(Sales).find(
         {
             relations: {
-                saleTransactions: true
+                salesID: true
             },
             where: {
                 salesID: salesID
@@ -46,19 +46,16 @@ async function insertSale(saleCompleteData: ISaleTransactionComplete){
 
     const saleEntity = new Sales()
     saleEntity.productID = saleCompleteData.saleData.productID
-    saleEntity.purchaser = saleCompleteData.saleData.purchaser
-    saleEntity.supplier = saleCompleteData.saleData.supplier
+    saleEntity.purchaserID = saleCompleteData.saleData.purchaser
+    saleEntity.supplierID = saleCompleteData.saleData.supplier
     saleEntity.saleDate = saleCompleteData.saleData.saleDate
-    saleEntity.saleType = saleCompleteData.saleData.saleType
-    saleEntity.sellingPrice = saleCompleteData.saleData.sellingPrice
-    saleEntity.sellingQuantity = saleCompleteData.saleData.sellingQuantity
     saleEntity.remarks = saleCompleteData.saleData.remarks
 
     const saleTransactionEntity = new SaleTransactions()
     saleTransactionEntity.paid = saleCompleteData.transactionData.paid
     saleTransactionEntity.remarks = saleCompleteData.transactionData.remarks
     saleTransactionEntity.transactionDate = saleCompleteData.transactionData.transactionDate
-    saleTransactionEntity.sale = saleEntity
+    saleTransactionEntity.salesID = saleCompleteData.transactionData.salesID
 
     const res = await AppDataSource.manager.save(saleEntity)
     await AppDataSource.manager.save(saleTransactionEntity)
@@ -74,11 +71,8 @@ async function updateSale(sale: ISalesData){
         },
         {
         productID: sale.productID,
-        purchaser: sale.purchaser,
-        supplier: sale.supplier,
-        saleType: sale.saleType,
-        sellingPrice: sale.sellingPrice,
-        sellingQuantity: sale.sellingQuantity,
+        purchaserID: sale.purchaser,
+        supplierID: sale.supplier,
         remarks: sale.remarks,
         saleDate: sale.saleDate,
     })
@@ -90,7 +84,7 @@ async function getAllSaleTransactions(){
     const res = await AppDataSource.getRepository(SaleTransactions).find(
         {
             relations: {
-                sale: true
+                salesID: true
             }
         }
     )
@@ -103,7 +97,7 @@ async function getSaleTransactionByID(transactionID: string){
     const res = await AppDataSource.getRepository(SaleTransactions).find(
         {
             relations: {
-                sale: true
+                salesID: true
             },
             where: {
                 transactionID: transactionID
@@ -125,15 +119,15 @@ async function deleteSaleTransaction(transactionID: string){
 async function insertSaleTransaction(transaction: ISaleTransactions){
     console.log("Inserting sale transaction data..")
 
-    const saleEntity = await AppDataSource.getRepository(Sales).find({
-        where: {salesID: transaction.salesID},
-    })
+    // const saleEntity = await AppDataSource.getRepository(Sales).find({
+    //     where: {salesID: transaction.salesID},
+    // })
 
     const saleTransactionEntity = new SaleTransactions()
     saleTransactionEntity.paid = transaction.paid
     saleTransactionEntity.remarks = transaction.remarks
     saleTransactionEntity.transactionDate = transaction.transactionDate
-    saleTransactionEntity.sale = saleEntity[0]
+    saleTransactionEntity.salesID = transaction.salesID
 
     const res = await AppDataSource.manager.save(saleTransactionEntity)
     return res

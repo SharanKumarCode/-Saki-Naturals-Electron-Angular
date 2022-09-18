@@ -15,7 +15,7 @@ async function getProductByID(productID: string){
     const res = await AppDataSource.getRepository(Product).find(
         {
             where: {
-                product_id: productID
+                productID: productID
             }
         }
     )
@@ -23,47 +23,53 @@ async function getProductByID(productID: string){
     return res
 }
 
-async function inserProduct(product: IProductData){
+async function insertProduct(product: IProductData){
     console.log("INFO: Inserting product data..")
     const res = await AppDataSource.manager.insert(Product, {
-        group: product.group,
-        product_name: product.productName,
+        productGroup: product.group,
+        productName: product.productName,
         description: product.description,
-        stock: product.stock,
-        price_directSale: product.priceDirectSale,
-        price_reseller: product.priceReseller,
-        price_dealer: product.priceDealer,
-        created_date: product.createdDate,
-        sold: product.sold
+        priceDirectSale: product.priceDirectSale,
+        priceReseller: product.priceReseller,
+        priceDealer: product.priceDealer,
+        createdDate: product.createdDate,
+        remarks: product.remarks
     })
     return res
 }
 
 async function updateProduct(product: any){
     console.log("INFO: Updating product data..")
-    console.log(product)
     const res = await AppDataSource.manager.update(Product, {
         product_id: product.productID
     }, {
-        group: product.group,
-        product_name: product.productName,
+        productGroup: product.group,
+        productName: product.productName,
         description: product.description,
-        stock: product.stock,
-        price_directSale: product.priceDirectSale,
-        price_reseller: product.priceReseller,
-        price_dealer: product.priceDealer,
-        created_date: product.createdDate,
-        sold: product.sold
+        priceDirectSale: product.priceDirectSale,
+        priceReseller: product.priceReseller,
+        priceDealer: product.priceDealer,
+        createdDate: product.createdDate
     })
     return res
 }
 
-async function deleteProduct(product_ID: string){
-    console.log("INFO: Deleting product data..")
+async function softDeleteProduct(product_ID: string){
+    console.log("INFO: Soft deleting product by ID..")
+    const res = await AppDataSource.manager.update(Product, {
+        product_id: product_ID
+    }, {
+        deleteFlag: true
+    })
+    return res
+}
+
+async function hardDeleteProduct(product_ID: string){
+    console.log("INFO: Hard deleting product data..")
     const res = await AppDataSource.manager.delete(Product, {
         product_id: product_ID
     })
     return res
 }
 
-export { getAllProducts, getProductByID, inserProduct, updateProduct, deleteProduct}
+export { getAllProducts, getProductByID, insertProduct, updateProduct, softDeleteProduct, hardDeleteProduct }
