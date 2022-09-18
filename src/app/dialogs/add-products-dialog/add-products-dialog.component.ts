@@ -76,6 +76,7 @@ export class AddProductsDialogComponent implements OnInit {
         this.snackbar.open('Please provide alteast one Price.', 'close');
       } else {
         const finalProductData = value;
+        finalProductData.remarks = '';
         finalProductData.createdDate = moment()['_d'].toString();
         this.dialogRef.close(finalProductData);
       }
