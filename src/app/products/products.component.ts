@@ -10,6 +10,7 @@ import { ProductsService } from '../core/services/products.service';
 import { Subject } from 'rxjs';
 import { ProductsdbService } from '../core/services/productsdb.service';
 import * as _moment from 'moment';
+import { Router } from '@angular/router';
 
 const moment = _moment;
 
@@ -41,7 +42,8 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     private productdbservice: ProductsdbService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
-    private productService: ProductsService
+    private productService: ProductsService,
+    private router: Router
     ) {
       this.productdata = {
         productName: '',
@@ -108,6 +110,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     this.productdbservice.getProducts();
     this.productListObservalble.subscribe(d=>{
       d.map((value, index)=>{
+        console.log(value.createdDate);
         value.createdDate = value.createdDate.toString();
         return {
           ...value,
@@ -131,11 +134,13 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   onRowClick(e: any){
-    const editProductData: IProductData = {
-      ...e,
-      editCreate: 'Edit'
-    };
-    this.openEditDialog(editProductData);
+    // const editProductData: IProductData = {
+    //   ...e,
+    //   editCreate: 'Edit'
+    // };
+    // this.openEditDialog(editProductData);
+    this.productService.updateSelectedProductID(e.productID);
+    this.router.navigate(['product/detail']);
   }
 
   announceSortChange(sortState: Sort) {
