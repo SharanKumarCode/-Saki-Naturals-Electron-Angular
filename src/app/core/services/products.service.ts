@@ -8,6 +8,7 @@ import { IProductData } from '../../products/interfaces/productdata.interface';
 export class ProductsService {
 
   private productListSubject$: Subject<IProductData[]>;
+  private selectedProductID: string;
 
   constructor() {
     this.productListSubject$ = new Subject<IProductData[]>();
@@ -20,4 +21,12 @@ export class ProductsService {
   updateProductList(a: IProductData[]){
     this.productListSubject$.next(a);
   }
+
+  getSelectedProductID(): string{
+    return this.selectedProductID;
+   }
+
+   updateSelectedProductID(salesID: string){
+    this.selectedProductID = salesID;
+   }
 }
