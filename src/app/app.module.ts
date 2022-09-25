@@ -47,6 +47,7 @@ import { SalesTransactionDialogComponent } from './dialogs/sales-transaction-dia
 import { SplashPageComponent } from './splash-page/splash-page.component';
 import { ProductionComponent } from './production/production.component';
 import { ProductsDetailComponent } from './products/products-detail/products-detail.component';
+import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -78,7 +79,8 @@ const MY_FORMATS = {
     SalesTransactionDialogComponent,
     SplashPageComponent,
     ProductionComponent,
-    ProductsDetailComponent
+    ProductsDetailComponent,
+    AddUpdateSaleComponent
     ],
   imports: [
     BrowserModule,

@@ -11,6 +11,7 @@ import { EmployeeComponent } from './employee/employee.component';
 import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
 import { ProductionComponent } from './production/production.component';
 import { ProductsDetailComponent } from './products/products-detail/products-detail.component';
+import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'employee', component: EmployeeComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'sale/transaction', component: SalesTransactionComponent},
+  { path: 'sale/add_update_sale', component: AddUpdateSaleComponent},
   {
     path: '**',
     component: PageNotFoundComponent

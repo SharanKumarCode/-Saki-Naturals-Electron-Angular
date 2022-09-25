@@ -1,0 +1,131 @@
+<section class="add-update-sale-button-section">
+    <div class="add-update-sale-button-row">
+      <button mat-raised-button style="background-color: #2be813; color: black;" (click)="onCreateSale()">CREATE SALE</button>
+      <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+    </div>
+</section>
+<section class="add-update-sale-container-one">
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Sales date</mat-label>
+            <input matInput [matDatepicker]="dp" [formControl]="date">
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+    </div>
+      <!-- Supplier and Purchaser Data -->
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Purchaser</mat-label>
+                <input matInput #input maxlength="50" formControlName="purchaser" value="{{purchaser}}"/>
+            <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Supplier</mat-label>
+                <input matInput #input maxlength="50" formControlName="supplier" value="{{supplier}}"/>
+            <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Sale Type</mat-label>
+            <mat-select formControlName="saleTypeList" >
+                <mat-option *ngFor="let sale of saleTypeList" (onSelectionChange)="onSaleTypeChange($event)" [value]="sale.value">
+                    {{sale.viewValue}}
+                </mat-option>
+                </mat-select>
+        </mat-form-field>
+    </div>      
+    <div class="add-product-button-container">
+        <button mat-raised-button style="background-color: #1f8612; color: white; height: 100%;" (click)="onAddProduct()">ADD PRODUCT</button>   
+    </div>   
+</section>
+
+<section class="add-update-sale-container-two">
+
+    <section class="product-list-table mat-elevation-z8" tabindex="0">
+        <table mat-table [dataSource]="dataSourceProductList">
+      
+          <!-- Position Column -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+          </ng-container>
+      
+          <!-- Product Group Column -->
+          <ng-container matColumnDef="productGroup">
+            <th mat-header-cell *matHeaderCellDef> Product Group </th>
+            <td mat-cell *matCellDef="let element"> {{element.productGroup}} </td>
+          </ng-container>
+      
+          <!-- Product Name Column -->
+          <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+          </ng-container>
+      
+          <!-- selling price Column -->
+          <ng-container matColumnDef="sellingPrice">
+            <th mat-header-cell *matHeaderCellDef> Selling Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.sellingPrice}} </td>
+          </ng-container>
+
+          <!-- Quantity Column -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+          </ng-container>
+
+          <!-- Amount Column -->
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef> Amount </th>
+            <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+          </ng-container>
+
+          <!-- Delete Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element" style="width: 6%;"> <button mat-icon-button (click)="onProductDelete()"><mat-icon class="icon-display" style="color: rgb(206, 36, 36);" svgIcon="close"></mat-icon></button></td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsProductList; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsProductList;"></tr>
+        </table>
+        
+      </section>
+      <div class="no-products-div" *ngIf="!dataSourceProductList.data.length">
+        No products added yet..
+    </div>
+
+</section>
+
+<section class="add-update-sale-container-three">
+    <!-- Remarks -->
+    <div class="remarks-details-container">
+        <mat-form-field appearance="outline">
+        <mat-label>Remarks</mat-label>
+        <input matInput type="text" formControlName="remarks" value="{{remarks}}"/>
+        </mat-form-field>
+    </div>
+    <!-- Payment Details -->
+    <div class="payment-detail-container" *ngIf="editCreate !== 'Edit'">
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Total Amount</mat-label>
+            <input matInput type="number" class="price-right-align" formControlName="totalAmount" value="{{totalAmount}}"/>
+            <span matPrefix>&#8377;&nbsp;</span>
+            </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Paid Amount</mat-label>
+            <input matInput type="number" class="price-right-align" (change)="onPriceQuantityChange()" formControlName="paidAmount" value="{{paid}}"/>
+            <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Balance Amount</mat-label>
+            <input matInput type="number" class="price-right-align" formControlName="balanceAmount" value="{{balance}}"/>
+            <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+    </div>
+</section>
