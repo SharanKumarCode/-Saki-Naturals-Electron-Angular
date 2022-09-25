@@ -17,18 +17,18 @@
     align-items: stretch;
   }
 
-.payment-detail-container, .product-details-contianer, .remarks-details-container{
+.payment-detail-container, .product-details-container, .remarks-details-container{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-content: stretch;
 }
 
-.payment-detail-container > mat-form-field, .product-details-contianer > mat-form-field, .remarks-details-container > mat-form-field{
+.payment-detail-container > mat-form-field, .product-details-container > mat-form-field, .remarks-details-container > mat-form-field{
     flex-grow: 1;
 }
 
-.payment-detail-container > mat-form-field:first-child, .product-details-contianer > mat-form-field:first-child {
+.payment-detail-container > mat-form-field:first-child, .product-details-container > mat-form-field:first-child {
     margin-right: 2%;
 }
 
