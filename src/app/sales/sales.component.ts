@@ -142,6 +142,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
     });
   }
 
+  onAddSales(): void {
+    this.router.navigate(['sale/add_update_sale']);
+  }
+
   onRowClick(e: any){
     console.log(e);
     this.salesService.updateSelectedSalesID(e.salesID);
