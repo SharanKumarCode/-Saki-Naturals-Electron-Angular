@@ -2,7 +2,7 @@
 
 <!-- Product Details -->
 <mat-dialog-content class="form-container" [formGroup]="form">
-  <div class="product-details-contianer">
+  <div class="product-details-container">
     <mat-form-field appearance="outline">
       <mat-label>Product Group</mat-label>
       <mat-select formControlName="productgroups" >
@@ -25,7 +25,7 @@
   <br>
 
   <!-- Supplier and Purchaser Data -->
-  <div class="product-details-contianer">
+  <div class="product-details-container">
     <mat-form-field appearance="outline">
       <mat-label>Purchaser</mat-label>
       <input matInput #input maxlength="50" formControlName="purchaser" value="{{purchaser}}"/>
@@ -42,7 +42,7 @@
   <br>
 
   <!-- Sale Data -->
-  <div class="product-details-contianer">
+  <div class="product-details-container">
     <mat-form-field appearance="outline">
       <mat-label>Sales date</mat-label>
       <input matInput [matDatepicker]="dp" [formControl]="date">
@@ -60,7 +60,7 @@
     </mat-form-field>
   </div>
   
-  <div class="product-details-contianer">
+  <div class="product-details-container">
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>Selling Price</mat-label>
       <input matInput type="number" class="price-right-align" (change)="onPriceQuantityChange()" formControlName="sellingPrice" value="{{sellingPrice}}"/>
@@ -71,7 +71,7 @@
       <input matInput type="number" min="0" placeholder="0" (change)="onPriceQuantityChange()" formControlName="sellingQuantity" value="{{sellingQuantity}}"/>
     </mat-form-field>
   </div>
-  <div class="product-details-contianer">
+  <div class="product-details-container">
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>Total Amount</mat-label>
       <input matInput type="number" class="price-right-align" formControlName="totalAmount" value="{{totalAmount}}"/>
