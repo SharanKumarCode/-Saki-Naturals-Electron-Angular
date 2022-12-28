@@ -24,7 +24,6 @@ export class ProductsdbService {
     const productsList: IProductData[]  = [];
     this.ipcRenderer.invoke('get-products').then(data=>{
       console.log('INFO : Received all products');
-      console.log(data)
       data.forEach(element => {
         if (element.deleteFlag === false){
           const productData: IProductData = {
