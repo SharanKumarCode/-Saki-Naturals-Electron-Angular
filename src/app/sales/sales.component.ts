@@ -5,13 +5,15 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { SalesDialogComponent } from '../dialogs/sales-dialog/sales-dialog.component';
-import { EnumSaleType, ISalesData, ISaleTransactions } from './interfaces/salesdata.interface';
 import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
 
 import { Subject } from 'rxjs';
 import { ProductsdbService } from '../core/services/productsdb.service';
 import { Router } from '@angular/router';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ISalesData, EnumSaleType, ISaleTransactions } from '../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-sales',
@@ -40,6 +42,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   private salesData: ISalesData;
   private salesDataListObservable: Subject<ISalesData[]>;
+  private path = 'assets/icon/';
 
   constructor(
     public dialog: MatDialog,
@@ -47,7 +50,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private salesService: SalesService,
     private salesdbService: SalesdbService,
     private productdbService: ProductsdbService,
-    private router: Router
+    private router: Router,
+    private domSanitizer: DomSanitizer,
+    private matIconRegistry: MatIconRegistry
   ) {
     this.salesData = {
       productID: '',
@@ -63,6 +68,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
       sellingQuantity: 0,
       remarks: ''
     };
+
+    this.matIconRegistry
+        .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
   ngOnInit(): void {
@@ -116,7 +124,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   calcTransactionData(transactionData: ISaleTransactions[]): any{
-    const paidAmounts = transactionData.map(e=>e.paid);
+    const paidAmounts = transactionData.map(e=>e.amount);
     return paidAmounts.reduce((a, b)=> a+b, 0);
   }
 
@@ -143,7 +151,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   onAddSales(): void {
-    this.router.navigate(['sale/add_update_sale']);
+    this.router.navigate(['sale/transaction']);
   }
 
   onRowClick(e: any){

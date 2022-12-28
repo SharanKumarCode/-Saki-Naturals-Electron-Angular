@@ -5,7 +5,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
-import { ISaleTransactions } from '../../sales/interfaces/salesdata.interface';
+import { ISaleTransactions } from '../../core/interfaces/interfaces';
 
 const moment = _moment;
 
@@ -57,8 +57,8 @@ export class SalesTransactionDialogComponent implements OnInit {
 
   setFinalTransactionData(): ISaleTransactions{
     const transactionData: ISaleTransactions = {
-      transactionDate: this.date.value.toString(),
-      paid: this.form.controls.paidAmount.value,
+      transactionDate: this.date.value.toDate(),
+      amount: this.form.controls.paidAmount.value,
       remarks: this.form.controls.remarks.value
     };
 

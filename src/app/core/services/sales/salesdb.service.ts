@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ElectronService } from '../electron/electron.service';
 import { ipcRenderer } from 'electron';
 import { SalesService } from './sales.service';
-import { ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../../sales/interfaces/salesdata.interface';
+import { ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'

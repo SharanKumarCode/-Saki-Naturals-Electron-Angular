@@ -4,9 +4,9 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
+import { EnumSaleType } from '../../core/interfaces/interfaces';
 import { ProductsService } from '../../core/services/products.service';
 import { ProductsdbService } from '../../core/services/productsdb.service';
-import { EnumSaleType } from '../interfaces/salesdata.interface';
 
 const moment = _moment;
 
@@ -114,7 +114,7 @@ export class AddUpdateSaleComponent implements OnInit {
     const tmp = {
       position: 1,
       productGroup: 'Soap',
-      productName: 'Herbal Soap',
+      productName: 'Coffee Soap',
       sellingPrice: 235.6,
       quantity: 10,
       amount: 2356.00,

@@ -5,12 +5,11 @@ import { FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { EnumSaleType, ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../sales/interfaces/salesdata.interface';
 import { ProductsService } from '../../core/services/products.service';
-import { IProductData } from '../../products/interfaces/productdata.interface';
 
 import * as _moment from 'moment';
 import { ProductsdbService } from '../../core/services/productsdb.service';
+import { EnumSaleType, IProductData, ISalesData, ISaleTransactionComplete, ISaleTransactions } from '../../core/interfaces/interfaces';
 
 const moment = _moment;
 
@@ -193,9 +192,9 @@ export class SalesDialogComponent implements OnInit {
   fetchAndSetProductsList(group: string){
     this.productNames = [];
     this.productList.forEach(value=>{
-      if (value.group === group){
+      if (value.productGroupName === group){
         this.productNames.push({
-          value: value.productId,
+          value: value.productID,
           viewValue: value.productName
         });
       }
@@ -203,7 +202,7 @@ export class SalesDialogComponent implements OnInit {
   }
 
   setSellingPrice(saleType): void{
-    const tmp = this.productList.filter(e=>e.productId === this.productID);
+    const tmp = this.productList.filter(e=>e.productID === this.productID);
       switch (saleType) {
         case EnumSaleType.dealer:
           this.sellingPrice = tmp[0].priceDealer;
@@ -223,7 +222,7 @@ export class SalesDialogComponent implements OnInit {
   }
 
   setCurrentStock(): void{
-    const tmp = this.productList.filter(e=>e.productId === this.productID);
+    const tmp = this.productList.filter(e=>e.productID === this.productID);
     this.currentStock = tmp[0].stock;
     console.log(this.currentStock);
   }
@@ -241,8 +240,8 @@ export class SalesDialogComponent implements OnInit {
     };
 
     const transactionData: ISaleTransactions = {
-      transactionDate: this.date.value.toString(),
-      paid: this.form.controls.paidAmount.value,
+      transactionDate: this.date.value.toDate(),
+      amount: this.form.controls.paidAmount.value,
       remarks: this.form.controls.remarks.value
     };
 
@@ -273,10 +272,10 @@ export class SalesDialogComponent implements OnInit {
       console.log(this.productList);
       const groups: IProductGroup[] = [];
       data.forEach(value=>{
-        if (groups.filter(e=>e.value === value.group).length === 0){
+        if (groups.filter(e=>e.value === value.productGroupName).length === 0){
           groups.push({
-            viewValue: value.group,
-            value: value.group
+            viewValue: value.productGroupName,
+            value: value.productGroupID
           });
         }
       });

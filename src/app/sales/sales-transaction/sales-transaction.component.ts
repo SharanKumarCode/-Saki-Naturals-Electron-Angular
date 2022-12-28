@@ -6,12 +6,12 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { ISalesData, EnumSaleType, ISaleTransactions } from '../../core/interfaces/interfaces';
 import { ProductsdbService } from '../../core/services/productsdb.service';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import { SalesDialogComponent } from '../../dialogs/sales-dialog/sales-dialog.component';
 import { SalesTransactionDialogComponent } from '../../dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
-import { EnumSaleType, ISalesData, ISaleTransactions } from '../interfaces/salesdata.interface';
 
 @Component({
   selector: 'app-sales-transaction',
@@ -104,7 +104,7 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
   }
 
   calcTransactionData(transactionData: ISaleTransactions[]): any{
-    const paidAmounts = transactionData.map(e=>e.paid);
+    const paidAmounts = transactionData.map(e=>e.amount);
     return paidAmounts.reduce((a, b)=> a+b, 0);
   }
 
@@ -128,7 +128,7 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
         console.log(result);
         const saleTransactionData: ISaleTransactions = {
           transactionDate: result.transactionDate,
-          paid: result.paid,
+          amount: result.amount,
           remarks: result.remarks,
           salesID: this.selectedSalesID
         };
@@ -166,7 +166,7 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
         if (result.editCreate === 'Edit'){
           const saleTransactionData: ISaleTransactions = {
             transactionDate: result.transactionDate,
-            paid: result.paid,
+            amount: result.amount,
             remarks: result.remarks,
             transactionID: transactionData.transactionID
           };
