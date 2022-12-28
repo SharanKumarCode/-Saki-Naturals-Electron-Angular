@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmployeeTransaction = exports.Employee = exports.Company = exports.Supplier = exports.Customer = exports.PurchaseTransaction = exports.PurchaseEntry = exports.Purchase = exports.ProductionEntry = exports.Production = exports.SaleTransaction = exports.SaleEntry = exports.Sales = exports.Material = exports.Product = exports.ProductGroup = void 0;
+exports.EmployeeTransaction = exports.Employee = exports.Company = exports.PurchaseTransaction = exports.PurchaseEntry = exports.Purchase = exports.ProductionEntry = exports.Production = exports.SaleTransaction = exports.SaleEntry = exports.Sales = exports.Client = exports.Material = exports.Product = exports.ProductGroup = void 0;
 const typeorm_1 = require("typeorm");
 const { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToOne } = require('typeorm');
 let ProductGroup = class ProductGroup {
@@ -113,6 +113,86 @@ Material = __decorate([
     Entity()
 ], Material);
 exports.Material = Material;
+let Client = class Client {
+};
+__decorate([
+    PrimaryGeneratedColumn('uuid'),
+    __metadata("design:type", String)
+], Client.prototype, "clientID", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "clientType", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "clientName", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "contactPerson", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "description", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "contact1", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "contact2", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "landline", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "email", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "addressLine1", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "addressLine2", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "city", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "state", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "country", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "pincode", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)(),
+    __metadata("design:type", Date)
+], Client.prototype, "createdDate", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Client.prototype, "remarks", void 0);
+__decorate([
+    Column({
+        default: false
+    }),
+    __metadata("design:type", Boolean)
+], Client.prototype, "deleteFlag", void 0);
+Client = __decorate([
+    Entity()
+], Client);
+exports.Client = Client;
 let Sales = class Sales {
 };
 __decorate([
@@ -120,9 +200,9 @@ __decorate([
     __metadata("design:type", String)
 ], Sales.prototype, "salesID", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Customer, (customer) => customer.customerID),
-    __metadata("design:type", String)
-], Sales.prototype, "customerID", void 0);
+    (0, typeorm_1.OneToOne)(() => Client),
+    __metadata("design:type", Client)
+], Sales.prototype, "customer", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
@@ -277,9 +357,10 @@ __decorate([
     __metadata("design:type", String)
 ], Purchase.prototype, "purchaseID", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Supplier, (supplier) => supplier.supplierID),
-    __metadata("design:type", String)
-], Purchase.prototype, "supplierID", void 0);
+    (0, typeorm_1.OneToOne)(() => Client),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", Client)
+], Purchase.prototype, "supplier", void 0);
 __decorate([
     Column(),
     __metadata("design:type", String)
@@ -363,102 +444,6 @@ PurchaseTransaction = __decorate([
     Entity()
 ], PurchaseTransaction);
 exports.PurchaseTransaction = PurchaseTransaction;
-let Customer = class Customer {
-};
-__decorate([
-    PrimaryGeneratedColumn('uuid'),
-    __metadata("design:type", String)
-], Customer.prototype, "customerID", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "customerName", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "description", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "contact1", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "contact2", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "contact3", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
-], Customer.prototype, "createdDate", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Customer.prototype, "remarks", void 0);
-__decorate([
-    Column({
-        default: false
-    }),
-    __metadata("design:type", Boolean)
-], Customer.prototype, "deleteFlag", void 0);
-Customer = __decorate([
-    Entity()
-], Customer);
-exports.Customer = Customer;
-let Supplier = class Supplier {
-};
-__decorate([
-    PrimaryGeneratedColumn('uuid'),
-    __metadata("design:type", String)
-], Supplier.prototype, "supplierID", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "supplierName", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "description", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "contact1", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "contact2", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "contact3", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.CreateDateColumn)(),
-    __metadata("design:type", Date)
-], Supplier.prototype, "createdDate", void 0);
-__decorate([
-    Column(),
-    __metadata("design:type", String)
-], Supplier.prototype, "remarks", void 0);
-__decorate([
-    Column({
-        default: false
-    }),
-    __metadata("design:type", Boolean)
-], Supplier.prototype, "deleteFlag", void 0);
-Supplier = __decorate([
-    Entity()
-], Supplier);
-exports.Supplier = Supplier;
 let Company = class Company {
 };
 __decorate([

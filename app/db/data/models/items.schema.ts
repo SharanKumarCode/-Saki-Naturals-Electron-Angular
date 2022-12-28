@@ -83,13 +83,73 @@ export class Material
 }
 
 @Entity()
+export class Client
+{
+	@PrimaryGeneratedColumn('uuid')
+	clientID: string;
+
+	@Column()
+	clientType: string;
+
+    @Column()
+	clientName: string;
+
+	@Column()
+	contactPerson: string;
+
+	@Column()
+	description: string;
+
+	@Column()
+	contact1: string;
+
+	@Column()
+	contact2: string;
+
+	@Column()
+	landline: string;
+
+	@Column()
+	email: string;
+
+	@Column()
+	addressLine1: string;
+
+	@Column()
+	addressLine2: string;
+
+	@Column()
+	city: string;
+
+	@Column()
+	state: string;
+
+	@Column()
+	country: string;
+
+	@Column()
+	pincode: string;
+
+	@CreateDateColumn()
+	createdDate: Date;
+
+	@Column()
+	remarks: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+}
+
+@Entity()
 export class Sales
 {
 	@PrimaryGeneratedColumn('uuid')
 	salesID: string;
 
-    @OneToOne(()=>Customer, (customer)=>customer.customerID)
-	customerID: string;
+    @OneToOne(()=>Client)
+	customer: Client;
 
     @Column()
 	saleType: string;
@@ -215,8 +275,9 @@ export class Purchase
 	@PrimaryGeneratedColumn('uuid')
 	purchaseID: string;
 
-    @OneToOne(()=>Supplier, (supplier)=>supplier.supplierID)
-	supplierID: string;
+    @OneToOne(()=>Client)
+	@JoinColumn()
+	supplier: Client;
 
 	@Column()
 	remarks: string;
@@ -282,78 +343,6 @@ export class PurchaseTransaction
 	})
 	deleteFlag: boolean;
 
-}
-
-@Entity()
-export class Customer
-{
-	@PrimaryGeneratedColumn('uuid')
-	customerID: string;
-
-    @Column()
-	customerName: string;
-
-	@Column()
-	description: string;
-
-	@Column()
-	contact1: string;
-
-	@Column()
-	contact2: string;
-
-	@Column()
-	contact3: string;
-
-	@Column()
-	address: string;
-
-	@CreateDateColumn()
-	createdDate: Date;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class Supplier
-{
-	@PrimaryGeneratedColumn('uuid')
-	supplierID: string;
-
-    @Column()
-	supplierName: string;
-
-	@Column()
-	description: string;
-
-	@Column()
-	contact1: string;
-
-	@Column()
-	contact2: string;
-
-	@Column()
-	contact3: string;
-
-	@Column()
-	address: string;
-
-	@CreateDateColumn()
-	createdDate: Date;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
 }
 
 @Entity()

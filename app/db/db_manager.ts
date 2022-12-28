@@ -11,14 +11,14 @@ import { Product,
         Purchase,
         PurchaseEntry,
         PurchaseTransaction,
-        Customer,
-        Supplier,
+        Client,
         Company,
         Employee,
         EmployeeTransaction
         } from "./data/models/items.schema";
 import * as productsDB from './products_db_manager';
 import * as salesDB from './sales_db_manager';
+import * as clientDB from './clients_db_manager';
 
 const AppDataSource = new DataSource({
     type: 'sqlite',
@@ -37,8 +37,7 @@ const AppDataSource = new DataSource({
         Purchase,
         PurchaseEntry,
         PurchaseTransaction,
-        Customer,
-        Supplier,
+        Client,
         Company,
         Employee,
         EmployeeTransaction ],
@@ -55,5 +54,6 @@ AppDataSource.initialize()
 export {
     AppDataSource,
     productsDB,
-    salesDB
+    salesDB,
+    clientDB
 }
