@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateSaleTransaction = exports.insertSaleTransaction = exports.deleteSaleTransaction = exports.getSaleTransactionByID = exports.getAllSaleTransactions = exports.updateSale = exports.insertSale = exports.deleteSale = exports.getSaleByID = exports.getAllSales = void 0;
+exports.updateSaleTransaction = exports.insertSaleTransaction = exports.deleteSaleTransaction = exports.getSaleTransactionByID = exports.getAllSaleTransactions = exports.deleteSaleEntry = exports.insertSaleEntry = exports.getSaleEntryBySaleID = exports.updateSale = exports.insertSale = exports.deleteSale = exports.softDeleteSale = exports.getSaleByID = exports.getAllSales = void 0;
 const db_manager_1 = require("./db_manager");
 const items_schema_1 = require("./data/models/items.schema");
 function getAllSales() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('Getting sales data..');
+        console.log('INFO : Getting sales data');
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
             relations: {
                 salesID: true
@@ -26,7 +26,7 @@ function getAllSales() {
 exports.getAllSales = getAllSales;
 function getSaleByID(salesID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Getting sales data by ID..");
+        console.log("INFO : Getting sales data by ID");
         const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.Sales).find({
             relations: {
                 salesID: true
@@ -39,9 +39,21 @@ function getSaleByID(salesID) {
     });
 }
 exports.getSaleByID = getSaleByID;
+function softDeleteSale(salesID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO: Soft deleting sale by ID");
+        const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Sales, {
+            salesID: salesID
+        }, {
+            deleteFlag: true
+        });
+        return res;
+    });
+}
+exports.softDeleteSale = softDeleteSale;
 function deleteSale(salesID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Deleting sale data..");
+        console.log("INFO: Hard deleting sale by ID");
         const res = yield db_manager_1.AppDataSource.manager.delete(items_schema_1.Sales, {
             salesID: salesID
         });
@@ -51,20 +63,12 @@ function deleteSale(salesID) {
 exports.deleteSale = deleteSale;
 function insertSale(saleCompleteData) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Inserting sale and transaction data..");
+        console.log("INFO: Inserting sale and transaction data..");
         const saleEntity = new items_schema_1.Sales();
-        saleEntity.productID = saleCompleteData.saleData.productID;
-        saleEntity.purchaserID = saleCompleteData.saleData.purchaser;
-        saleEntity.supplierID = saleCompleteData.saleData.supplier;
-        saleEntity.saleDate = saleCompleteData.saleData.saleDate;
+        saleEntity.customerID = saleCompleteData.saleData.purchaser;
+        saleEntity.saleType = saleCompleteData.saleData.saleType;
         saleEntity.remarks = saleCompleteData.saleData.remarks;
-        const saleTransactionEntity = new items_schema_1.SaleTransactions();
-        saleTransactionEntity.paid = saleCompleteData.transactionData.paid;
-        saleTransactionEntity.remarks = saleCompleteData.transactionData.remarks;
-        saleTransactionEntity.transactionDate = saleCompleteData.transactionData.transactionDate;
-        saleTransactionEntity.salesID = saleCompleteData.transactionData.salesID;
         const res = yield db_manager_1.AppDataSource.manager.save(saleEntity);
-        yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
     });
 }
@@ -75,20 +79,54 @@ function updateSale(sale) {
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Sales, {
             salesID: sale.salesID
         }, {
-            productID: sale.productID,
-            purchaserID: sale.purchaser,
-            supplierID: sale.supplier,
+            customerID: sale.purchaser,
             remarks: sale.remarks,
-            saleDate: sale.saleDate,
         });
         return res;
     });
 }
 exports.updateSale = updateSale;
+function getSaleEntryBySaleID(salesID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO : Getting sale entry data by ID");
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleEntry).find({
+            where: {
+                salesID: salesID
+            }
+        });
+        return res;
+    });
+}
+exports.getSaleEntryBySaleID = getSaleEntryBySaleID;
+function insertSaleEntry(salesEntryList) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO : Inserting sale entry data");
+        return yield db_manager_1.AppDataSource
+            .createQueryBuilder()
+            .insert()
+            .into(items_schema_1.SaleEntry)
+            .values(salesEntryList)
+            .execute();
+    });
+}
+exports.insertSaleEntry = insertSaleEntry;
+function deleteSaleEntry(saleEntry) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO : Deleting sale entry data");
+        return yield db_manager_1.AppDataSource
+            .getRepository(items_schema_1.SaleEntry)
+            .createQueryBuilder("saleEntry")
+            .delete()
+            .where(`saleEntry.salesID = ${saleEntry.salesID}`)
+            .andWhere(`saleEntry.productID = ${saleEntry.productID}`)
+            .execute();
+    });
+}
+exports.deleteSaleEntry = deleteSaleEntry;
 function getAllSaleTransactions() {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('Getting sale transation data..');
-        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
+        console.log('INFO : Getting sale transaction data');
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransaction).find({
             relations: {
                 salesID: true
             }
@@ -99,11 +137,8 @@ function getAllSaleTransactions() {
 exports.getAllSaleTransactions = getAllSaleTransactions;
 function getSaleTransactionByID(transactionID) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('getting sale transation data..');
-        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransactions).find({
-            relations: {
-                salesID: true
-            },
+        console.log('INFO : Getting sale transaction data by ID');
+        const res = yield db_manager_1.AppDataSource.getRepository(items_schema_1.SaleTransaction).find({
             where: {
                 transactionID: transactionID
             }
@@ -112,27 +147,15 @@ function getSaleTransactionByID(transactionID) {
     });
 }
 exports.getSaleTransactionByID = getSaleTransactionByID;
-function deleteSaleTransaction(transactionID) {
-    return __awaiter(this, void 0, void 0, function* () {
-        console.log("Deleting sale transaction data..");
-        const res = yield db_manager_1.AppDataSource.manager.delete(items_schema_1.SaleTransactions, {
-            transactionID: transactionID
-        });
-        return res;
-    });
-}
-exports.deleteSaleTransaction = deleteSaleTransaction;
 function insertSaleTransaction(transaction) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Inserting sale transaction data..");
-        // const saleEntity = await AppDataSource.getRepository(Sales).find({
-        //     where: {salesID: transaction.salesID},
-        // })
-        const saleTransactionEntity = new items_schema_1.SaleTransactions();
-        saleTransactionEntity.paid = transaction.paid;
-        saleTransactionEntity.remarks = transaction.remarks;
-        saleTransactionEntity.transactionDate = transaction.transactionDate;
+        console.log("INFO : Inserting sale transaction data");
+        const saleTransactionEntity = new items_schema_1.SaleTransaction();
         saleTransactionEntity.salesID = transaction.salesID;
+        saleTransactionEntity.transactionType = transaction.transactionType;
+        saleTransactionEntity.amount = transaction.amount;
+        saleTransactionEntity.transactionDate = transaction.transactionDate;
+        saleTransactionEntity.remarks = transaction.remarks;
         const res = yield db_manager_1.AppDataSource.manager.save(saleTransactionEntity);
         return res;
     });
@@ -140,11 +163,11 @@ function insertSaleTransaction(transaction) {
 exports.insertSaleTransaction = insertSaleTransaction;
 function updateSaleTransaction(transaction) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("Updating sale transaction data..");
-        const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.SaleTransactions, {
+        console.log("INFO : Updating sale transaction data");
+        const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.SaleTransaction, {
             transactionID: transaction.transactionID
         }, {
-            paid: transaction.paid,
+            amount: transaction.amount,
             transactionDate: transaction.transactionDate,
             remarks: transaction.remarks,
         });
@@ -152,4 +175,14 @@ function updateSaleTransaction(transaction) {
     });
 }
 exports.updateSaleTransaction = updateSaleTransaction;
+function deleteSaleTransaction(transactionID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log("INFO : Deleting sale transaction data..");
+        const res = yield db_manager_1.AppDataSource.manager.delete(items_schema_1.SaleTransaction, {
+            transactionID: transactionID
+        });
+        return res;
+    });
+}
+exports.deleteSaleTransaction = deleteSaleTransaction;
 //# sourceMappingURL=sales_db_manager.js.map

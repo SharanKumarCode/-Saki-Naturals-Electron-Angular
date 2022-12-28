@@ -1,56 +1,45 @@
-const { 
-  dummyFunc,
-  getAllSales, 
-  getSaleByID, 
-  deleteSale, 
-  insertSale, 
-  updateSale, 
-  getAllSaleTransactions,
-  getSaleTransactionByID,
-  deleteSaleTransaction,
-  insertSaleTransaction,
-  updateSaleTransaction } = require('../db/db_manager')
+const {salesDB} = require('../db/db_manager')
 
 module.exports = {
     salesHandler: [
             global.share.ipcMain.handle('get-sales', async () => {
-                return getAllSales();
+                return salesDB.getAllSales();
             }),
 
             global.share.ipcMain.handle('get-sale-by-id', async (_, data) => {
-              return getSaleByID(data);
+              return salesDB.getSaleByID(data);
           }),
         
             global.share.ipcMain.handle('insert-sale', async (_, data) => {
-                return insertSale(data);
+                return salesDB.insertSale(data);
             }),
         
             global.share.ipcMain.handle('delete-sale', async (_, data) => {
-                return deleteSale(data);
+                return salesDB.deleteSale(data);
             }),
             
             global.share.ipcMain.handle('update-sale', async (_, data) => {
-                return updateSale(data);
+                return salesDB.updateSale(data);
             }),
 
             global.share.ipcMain.handle('get-sales-transaction', async () => {
-              return getAllSaleTransactions();
+              return salesDB.getAllSaleTransactions();
             }),
 
             global.share.ipcMain.handle('get-sales-transaction-by-id', async (_, data) => {
-              return getSaleTransactionByID(data);
+              return salesDB.getSaleTransactionByID(data);
             }),
         
             global.share.ipcMain.handle('insert-sale-transaction', async (_, data) => {
-                return insertSaleTransaction(data);
+                return salesDB.insertSaleTransaction(data);
             }),
         
             global.share.ipcMain.handle('delete-sale-transaction', async (_, data) => {
-                return deleteSaleTransaction(data);
+                return salesDB.deleteSaleTransaction(data);
             }),
             
             global.share.ipcMain.handle('update-sale-transaction', async (_, data) => {
-                return updateSaleTransaction(data);
+                return salesDB.updateSaleTransaction(data);
             }),
     ]
     }
