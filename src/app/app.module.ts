@@ -51,6 +51,8 @@ import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.
 import { ClientComponent } from './client/client.component';
 import { ClientDetailComponent } from './client/client-detail/client-detail.component';
 import { ProductGroupDialogComponent } from './dialogs/product-group-dialog/product-group-dialog.component';
+import { AddClientDialogComponent } from './dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
+import { MaterialModule } from '../material.module';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -86,7 +88,9 @@ const MY_FORMATS = {
     AddUpdateSaleComponent,
     ClientComponent,
     ClientDetailComponent,
-    ProductGroupDialogComponent
+    ProductGroupDialogComponent,
+    AddClientDialogComponent,
+
     ],
   imports: [
     BrowserModule,
@@ -114,6 +118,7 @@ const MY_FORMATS = {
     MatExpansionModule,
     MatCardModule,
     MatTabsModule,
+    MaterialModule,
 
     TranslateModule.forRoot({
       loader: {
