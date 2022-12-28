@@ -1,5 +1,5 @@
 import { AppDataSource } from "./db_manager";
-import { SaleEntry, Sales, SaleTransaction } from "./data/models/items.schema";
+import { Client, SaleEntry, Sales, SaleTransaction } from "./data/models/items.schema";
 import { ISaleEntry, ISalesData, ISaleTransactionComplete, ISaleTransactions } from "../../src/app/core/interfaces/interfaces";
 
 
@@ -54,8 +54,10 @@ async function deleteSale(salesID: string){
 async function insertSale(saleCompleteData: ISaleTransactionComplete){
     console.log("INFO: Inserting sale and transaction data..")
 
+    const clientEntity = new Client()
+
     const saleEntity = new Sales()
-    saleEntity.customerID = saleCompleteData.saleData.purchaser
+    saleEntity.customer = clientEntity
     saleEntity.saleType = saleCompleteData.saleData.saleType
     saleEntity.remarks = saleCompleteData.saleData.remarks
     
@@ -66,13 +68,14 @@ async function insertSale(saleCompleteData: ISaleTransactionComplete){
 
 async function updateSale(sale: ISalesData){
     console.log("Updating sale data..")
+    const clientEntity = new Client()
     const res = await AppDataSource.manager.update(Sales,
         {
             salesID: sale.salesID
         },
         {
-        customerID: sale.purchaser,
-        remarks: sale.remarks,
+        customer: clientEntity,
+        remarks: sale.remarks
     })
     return res
 }

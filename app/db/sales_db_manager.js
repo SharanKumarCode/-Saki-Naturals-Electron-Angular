@@ -64,8 +64,9 @@ exports.deleteSale = deleteSale;
 function insertSale(saleCompleteData) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("INFO: Inserting sale and transaction data..");
+        const clientEntity = new items_schema_1.Client();
         const saleEntity = new items_schema_1.Sales();
-        saleEntity.customerID = saleCompleteData.saleData.purchaser;
+        saleEntity.customer = clientEntity;
         saleEntity.saleType = saleCompleteData.saleData.saleType;
         saleEntity.remarks = saleCompleteData.saleData.remarks;
         const res = yield db_manager_1.AppDataSource.manager.save(saleEntity);
@@ -76,11 +77,12 @@ exports.insertSale = insertSale;
 function updateSale(sale) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("Updating sale data..");
+        const clientEntity = new items_schema_1.Client();
         const res = yield db_manager_1.AppDataSource.manager.update(items_schema_1.Sales, {
             salesID: sale.salesID
         }, {
-            customerID: sale.purchaser,
-            remarks: sale.remarks,
+            customer: clientEntity,
+            remarks: sale.remarks
         });
         return res;
     });
