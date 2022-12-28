@@ -1,6 +1,22 @@
 import { DataSource } from "typeorm";
 
-import { Product, Purchaser, SaleEntry, Sales, SaleTransactions, Supplier } from "./data/models/items.schema";
+import { Product,
+        ProductGroup, 
+        Material, 
+        Sales, 
+        SaleEntry, 
+        SaleTransaction, 
+        Production,
+        ProductionEntry,
+        Purchase,
+        PurchaseEntry,
+        PurchaseTransaction,
+        Customer,
+        Supplier,
+        Company,
+        Employee,
+        EmployeeTransaction
+        } from "./data/models/items.schema";
 import * as productsDB from './products_db_manager';
 import * as salesDB from './sales_db_manager';
 
@@ -10,7 +26,22 @@ const AppDataSource = new DataSource({
     logging: true,
     logger: 'simple-console',
     database: 'app/db/data/saki_naturals_db.db',
-    entities: [ Product, Sales, SaleTransactions, Purchaser, Supplier, SaleEntry ],
+    entities: [ Product,
+        ProductGroup,
+        Material, 
+        Sales, 
+        SaleEntry, 
+        SaleTransaction, 
+        Production,
+        ProductionEntry,
+        Purchase,
+        PurchaseEntry,
+        PurchaseTransaction,
+        Customer,
+        Supplier,
+        Company,
+        Employee,
+        EmployeeTransaction ],
 })
 
 AppDataSource.initialize()
