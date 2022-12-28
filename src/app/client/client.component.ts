@@ -21,27 +21,6 @@ interface IClientTypeFilter {
 
 const tmpClientList = [];
 
-const tmp = [
-  {
-    serialNumber: 1,
-    clientType: EnumClientType.customer,
-    clientName: 'Sharan Industries',
-    clientLocation: 'Bharathi Avenue, Coimbatore - 641017',
-    contact: '9941677517',
-    email: 'sharankumaraero@gmail.com',
-    createdDate: new Date()
-  },
-  {
-    serialNumber: 2,
-    clientType: EnumClientType.supplier,
-    clientName: 'Shanthi Industries',
-    clientLocation: 'Av residency Avenue, Coimbatore - 641017',
-    contact: '7584589652',
-    email: 'cnshanthi@gmail.com',
-    createdDate: new Date()
-  }
-];
-
 @Component({
   selector: 'app-client',
   templateUrl: './client.component.html',
