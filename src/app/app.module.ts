@@ -48,6 +48,9 @@ import { SplashPageComponent } from './splash-page/splash-page.component';
 import { ProductionComponent } from './production/production.component';
 import { ProductsDetailComponent } from './products/products-detail/products-detail.component';
 import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.component';
+import { ClientComponent } from './client/client.component';
+import { ClientDetailComponent } from './client/client-detail/client-detail.component';
+import { ProductGroupDialogComponent } from './dialogs/product-group-dialog/product-group-dialog.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -80,7 +83,10 @@ const MY_FORMATS = {
     SplashPageComponent,
     ProductionComponent,
     ProductsDetailComponent,
-    AddUpdateSaleComponent
+    AddUpdateSaleComponent,
+    ClientComponent,
+    ClientDetailComponent,
+    ProductGroupDialogComponent
     ],
   imports: [
     BrowserModule,

@@ -1,0 +1,148 @@
+<section class="client-details-button-section">
+    <div class="client-details-button-row">
+      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+      <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+    </div>
+</section>
+<section class="client-details-data-section">
+    <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                CLIENT DATA
+            </mat-panel-title>
+            <mat-panel-description>
+                {{panelOpenState ? '' : 'Expand to update or delete Client data'}}
+            </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="client-details-data">
+                <div class="client-details-data-section-one client-details-data-sections">
+                    <span>Client ID</span>
+                    <span>{{selectedClientID}}</span>
+                </div>
+                <div class="client-details-data-section-two client-details-data-sections">
+                    <span>Create Date</span>
+                    <span>{{(selectedClientData.createdDate ? selectedClientData.createdDate : '') | date:'medium'}}</span>
+                </div>
+                <div class="client-details-data-section-five client-details-data-sections">
+                    <span>Client Type</span>
+                    <span>{{selectedClientData.clientType ? selectedClientData.clientType : ''}}</span>
+                </div>
+                <div class="client-details-data-section-four client-details-data-sections">
+                    <span>Client Name</span>
+                    <span>{{selectedClientData.clientName ? selectedClientData.clientName : ''}}</span>
+                </div>
+                <div class="client-details-data-section-three client-details-data-sections">
+                    <span>Location</span>
+                    <span>{{selectedClientData.clientLocation ? selectedClientData.clientLocation : ''}}</span>
+                </div>
+                <div class="client-details-data-section-six client-details-data-sections">
+                    <span>Contact</span>
+                    <span>{{selectedClientData.clientContact ? selectedClientData.clientContact : ''}}</span>
+                </div>
+                
+                <div class="client-details-data-section-seven client-details-data-sections">
+                    <span>Remarks</span>
+                    <span>{{selectedClientData.remarks ? selectedClientData.remarks : '(blank)'}}</span>
+                </div>
+            </div>
+            <mat-action-row>
+                <button mat-button color="primary" (click)="onUpdateClient()">UPDATE</button>
+                <button mat-button color="warn" (click)="onDeleteClient()"><mat-icon svgIcon="delete"></mat-icon></button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>
+<section class="client-details-history-table-section">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+            class="mat-elevation-z8">
+
+        <!-- Serial Number Column -->
+        <ng-container matColumnDef="serial_number">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+            
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+        </ng-container>
+
+        <!-- Product Group Column -->
+        <ng-container matColumnDef="productGroup">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
+            Group
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.purchaser}} </td>
+        </ng-container>
+
+        <!-- Product Name Column -->
+        <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+            Product Name
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.supplier}} </td>
+        </ng-container>
+
+        <!-- Sale Type Column -->
+        <ng-container matColumnDef="saleType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
+            Sale Type
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.saleType}} </td>
+        </ng-container>
+
+        <!-- Selling Price Column -->
+        <ng-container matColumnDef="sellingPrice">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by stock">
+            Selling Price
+            </th>
+            <td mat-cell *matCellDef="let element"> &#8377; {{element.sellingPrice}} </td>
+        </ng-container>
+
+        <!-- Sold Quantity Column -->
+        <ng-container matColumnDef="soldQuantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sold quantity">
+            Sold Quantity
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.sellingQuantity}} </td>
+        </ng-container>
+
+        <!-- Total Amount Column -->
+        <ng-container matColumnDef="totalAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total amount">
+            Total Amount
+            </th>
+            <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount}} </td>
+        </ng-container>
+
+        <!-- Paid Amount Column -->
+        <ng-container matColumnDef="paidAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+            Paid Amount
+            </th>
+            <td mat-cell *matCellDef="let element"> &#8377; {{element.paid}} </td>
+        </ng-container>
+
+        <!-- Balance Amount Column -->
+        <ng-container matColumnDef="balanceAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
+            Balance Amount
+            </th>
+            <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="salesDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+            Sale Date
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.saleDate | date}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            (click)="onRowClick(row)">
+            </tr>
+        </table>
+  </section>
