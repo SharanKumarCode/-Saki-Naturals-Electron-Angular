@@ -7,6 +7,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { EnumClientType, IClientData } from '../../core/interfaces/interfaces';
+import { ClientService } from '../../core/services/client/client.service';
+import { ClientdbService } from '../../core/services/client/clientdb.service';
+import { NotificationService } from '../../core/services/notification/notification.service';
+import { AddClientDialogComponent } from '../../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
 
 @Component({
   selector: 'app-client-detail',
@@ -17,6 +21,9 @@ export class ClientDetailComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
   panelOpenState = false;
+
+  panelTitle: string;
+  clientAddress: string;
 
   displayedColumns: string[] = [
                                   'serial_number',
@@ -41,6 +48,9 @@ export class ClientDetailComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
+    private clientService: ClientService,
+    private clientDBService: ClientdbService,
+    private notificationService: NotificationService
   ) {
     this.matIconRegistry
     .addSvgIcon('back',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'back_icon.svg'))
@@ -48,26 +58,77 @@ export class ClientDetailComponent implements OnInit {
     .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
 
     this.selectedClientData = {
-      clientContact: '+91 9941677517',
-      clientLocation: '655/2B/45, Bharathi Avenue, Ponnegoundenpudur, Masagoundenchettipalayam, Coimbatore - 641107',
-      clientName: 'Sharan Industries',
+      clientID: '',
       clientType: EnumClientType.supplier,
-      createdDate: 'March 16th 2022',
-      clientID: '1456awd-awaewdwa-feafdawd',
+      clientName: '',
+      contactPerson: '',
+      description: '',
+      contact1: '',
+      contact2: '',
+      landline: '',
+      addressLine1: '',
+      addressLine2: '',
+      createdDate: '',
+      city: '',
+      state: '',
+      country: '',
+      pincode: '',
       remarks: ''
     };
    }
 
-  ngOnInit(): void {
 
+  getClientData(): void{
+    this.clientDBService.getClientByID(this.selectedClientID)
+    .then(data=>{
+      this.selectedClientData = data[0];
+      this.panelTitle = `CLIENT DATA - [ ${this.selectedClientData.clientType} ]`;
+      this.clientAddress = this.selectedClientData.addressLine1 + ', ' + this.selectedClientData.addressLine2;
+    });
+  }
+
+  openEditDialog(editClientData: IClientData): void {
+    console.log('INFO : Opening dialog box edit product');
+    const dialogRef = this.dialog.open(AddClientDialogComponent, {
+      width: '50%',
+      data: editClientData,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog box is closed');
+      if (result){
+        console.log(result);
+        this.clientDBService.updateClient(result);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.selectedClientID = this.clientService.getSelectedClientID();
+    this.getClientData();
   }
 
   onUpdateClient(): void {
-
+    const editClientData: IClientData = {
+      ...this.selectedClientData,
+      editCreate: 'Edit'
+    };
+    this.openEditDialog(editClientData);
   }
 
   onDeleteClient(): void {
+    this.clientDBService.deleteClient(this.selectedClientID)
+    .then(_=>{
+      console.log('INFO : deleted client');
+      this.notificationService.updateSnackBarMessageSubject('Deleted client from DB');
+      this.onBack();
 
+    })
+    .catch(err=>{
+      console.log(err);
+      this.notificationService.updateSnackBarMessageSubject('Unable to delete client from DB');
+
+    });
   }
 
   onRowClick(row: any): void {
@@ -75,10 +136,11 @@ export class ClientDetailComponent implements OnInit {
   }
 
   onRefresh(): void {
-
+    this.getClientData();
   }
 
   onBack(): void {
+    this.router.navigate(['clients']);
 
   }
 

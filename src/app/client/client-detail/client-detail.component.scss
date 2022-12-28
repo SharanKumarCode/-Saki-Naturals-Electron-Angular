@@ -44,7 +44,7 @@
  .client-details-data{
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: 33% 33% 33%;
+    grid-template-rows: 20% 20% 20% 20% 10% 10%;
  }
 
  .client-details-data-sections{
@@ -90,13 +90,13 @@
  }
 
  .client-details-data-section-two{
-    grid-column: 3 / 5;
+    grid-column: 4 / 6;
     grid-row: 1 / 2;
  }
 
  .client-details-data-section-three{
-    grid-column: 1 / 5;
-    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
  }
 
  .client-details-data-section-four{
@@ -105,19 +105,34 @@
  }
 
  .client-details-data-section-five{
-    grid-column: 3 / 4;
+    grid-column: 2 / 3;
     grid-row: 2 / 3;
  }
 
  .client-details-data-section-six{
-    grid-column: 4 / 5;
+    grid-column: 3 / 4;
     grid-row: 2 / 3;
  }
 
  .client-details-data-section-seven{
-    grid-column: 1 / 5;
-    grid-row: 4 / 5;
+    grid-column: 4 / 6;
+    grid-row: 2 / 3;
  }
+
+ .client-details-data-section-eight{
+   grid-column: 1 / 6;
+   grid-row: 3 / 4;
+}
+
+.client-details-data-section-twelve{
+   grid-column: 1 / 6;
+   grid-row: 5 / 6;
+}
+
+.client-details-data-section-thirteen{
+   grid-column: 1 / 6;
+   grid-row: 6 / 7;
+}
 
 .client-details-history-table-section{
     height: 100%;

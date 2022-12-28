@@ -10,7 +10,7 @@
                        (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
             <mat-panel-title>
-                CLIENT DATA
+                {{panelTitle}}
             </mat-panel-title>
             <mat-panel-description>
                 {{panelOpenState ? '' : 'Expand to update or delete Client data'}}
@@ -22,27 +22,51 @@
                     <span>{{selectedClientID}}</span>
                 </div>
                 <div class="client-details-data-section-two client-details-data-sections">
-                    <span>Create Date</span>
+                    <span>Created Date</span>
                     <span>{{(selectedClientData.createdDate ? selectedClientData.createdDate : '') | date:'medium'}}</span>
                 </div>
-                <div class="client-details-data-section-five client-details-data-sections">
-                    <span>Client Type</span>
-                    <span>{{selectedClientData.clientType ? selectedClientData.clientType : ''}}</span>
-                </div>
-                <div class="client-details-data-section-four client-details-data-sections">
+                <div class="client-details-data-section-three client-details-data-sections">
                     <span>Client Name</span>
                     <span>{{selectedClientData.clientName ? selectedClientData.clientName : ''}}</span>
                 </div>
-                <div class="client-details-data-section-three client-details-data-sections">
-                    <span>Location</span>
-                    <span>{{selectedClientData.clientLocation ? selectedClientData.clientLocation : ''}}</span>
+                <div class="client-details-data-section-four client-details-data-sections">
+                    <span>Primary Contact</span>
+                    <span>{{selectedClientData.contact1 ? selectedClientData.contact1 : ''}}</span>
+                </div>
+                <div class="client-details-data-section-five client-details-data-sections">
+                    <span>Secondary Contact</span>
+                    <span>{{selectedClientData.contact2 ? selectedClientData.contact2 : '(blank)'}}</span>
                 </div>
                 <div class="client-details-data-section-six client-details-data-sections">
-                    <span>Contact</span>
-                    <span>{{selectedClientData.clientContact ? selectedClientData.clientContact : ''}}</span>
+                    <span>Landline</span>
+                    <span>{{selectedClientData.landline ? selectedClientData.landline : '(blank)'}}</span>
+                </div>
+                <div class="client-details-data-section-seven client-details-data-sections">
+                    <span>Email</span>
+                    <span>{{selectedClientData.email ? selectedClientData.email : '(blank)'}}</span>
+                </div>
+                <div class="client-details-data-section-eight client-details-data-sections">
+                    <span>Address</span>
+                    <span>{{clientAddress ? clientAddress : ''}}</span>
+                </div>
+                <div class="client-details-data-section-nine client-details-data-sections">
+                    <span>City / District</span>
+                    <span>{{selectedClientData.city ? selectedClientData.city : ''}}</span>
+                </div>
+                <div class="client-details-data-section-ten client-details-data-sections">
+                    <span>State / Province</span>
+                    <span>{{selectedClientData.state ? selectedClientData.state : ''}}</span>
+                </div>
+                <div class="client-details-data-section-eleven client-details-data-sections">
+                    <span>Country</span>
+                    <span>{{selectedClientData.country ? selectedClientData.country : ''}}</span>
                 </div>
                 
-                <div class="client-details-data-section-seven client-details-data-sections">
+                <div class="client-details-data-section-twelve client-details-data-sections">
+                    <span>Description</span>
+                    <span>{{selectedClientData.description ? selectedClientData.description : ''}}</span>
+                </div>
+                <div class="client-details-data-section-thirteen client-details-data-sections">
                     <span>Remarks</span>
                     <span>{{selectedClientData.remarks ? selectedClientData.remarks : '(blank)'}}</span>
                 </div>
