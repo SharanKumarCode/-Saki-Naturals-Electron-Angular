@@ -114,7 +114,6 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
       console.log('The dialog box is closed');
       if (result){
         this.productDBService.updateProduct(result);
-        console.log(result);
       }
     });
   }
@@ -133,6 +132,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
   }
 
   onRefresh(){
+    this.getProductData();
   }
 
   onBack(){
