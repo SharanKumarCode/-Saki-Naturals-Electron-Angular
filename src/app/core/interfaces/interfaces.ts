@@ -85,16 +85,27 @@ export enum EnumSalaryFrequency {
 
 export interface IClientData {
   clientID?: string;
-  clientType: EnumClientType;
   clientName: string;
-  clientLocation: string;
-  clientContact: string;
+  contactPerson: string;
+  clientType: EnumClientType;
+  description: string;
+  contact1: string;
+  contact2?: string;
+  landline?: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  email?: string;
   remarks?: string;
+  editCreate?: string;
   createdDate: string;
 }
 
 export enum EnumClientType {
-  customer = 'Customer',
-  supplier = 'Supplier'
+  customer = 'CUSTOMER',
+  supplier = 'SUPPLIER'
 }
 
