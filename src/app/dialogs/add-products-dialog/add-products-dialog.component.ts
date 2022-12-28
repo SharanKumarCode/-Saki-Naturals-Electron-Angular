@@ -1,12 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, Validators, FormGroup} from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import { IProductData } from '../../products/interfaces/productdata.interface';
 import * as _moment from 'moment';
+import { IProductData, IProductGroup } from '../../core/interfaces/interfaces';
+import { Subject } from 'rxjs';
+import { ProductsService } from '../../core/services/products.service';
+import { ProductsdbService } from '../../core/services/productsdb.service';
 
 const moment = _moment;
 
@@ -17,15 +20,16 @@ const moment = _moment;
 })
 export class AddProductsDialogComponent implements OnInit {
   productName: string;
-  group: string;
+  productGroup: IProductGroup[];
   description: string;
-  stock: number;
   priceDirectSale: number;
   priceReseller: number;
   priceDealer: number;
-  sold: number;
+  remarks: string;
   editCreate: string;
   form: FormGroup;
+
+  private productGroupListObservable: Subject<IProductGroup[]>;
 
   private path = 'assets/icon/';
 
@@ -35,30 +39,35 @@ export class AddProductsDialogComponent implements OnInit {
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private domSanitizer: DomSanitizer,
-    private matIconRegistry: MatIconRegistry
+    private matIconRegistry: MatIconRegistry,
+    private productService: ProductsService,
+    private productsDBservice: ProductsdbService
   ) {
+    this.dialogRef.disableClose = true;
     this.productName = this.data.productName;
     this.description = this.data.description;
-    this.group = this.data.group;
-    this.stock = this.data.stock;
+    this.remarks = this.data.remarks;
     this.priceDirectSale = this.data.priceDirectSale;
     this.priceReseller = this.data.priceReseller;
     this.priceDealer = this.data.priceDealer;
-    this.sold = this.data.sold;
     this.editCreate = this.data.editCreate;
 
     this.form = this.fb.group(
       {
         productName: [this.productName, [Validators.required, Validators.maxLength(30)]],
-        group: [this.group, [Validators.required, Validators.maxLength(20)]],
-        description: [this.description, [Validators.required, Validators.maxLength(50)]],
-        stock: [this.stock, [Validators.required, Validators.min(0)]],
+        productGroup: [this.productGroup, [Validators.required]],
+        description: [this.description, [Validators.required, Validators.maxLength(100)]],
         priceDirectSale: [this.priceDirectSale, [Validators.required, Validators.min(0)]],
         priceReseller: [this.priceReseller, [Validators.required, Validators.min(0)]],
         priceDealer: [this.priceDealer, [Validators.required, Validators.min(0)]],
-        sold: [this.sold, [Validators.required, Validators.min(0)]],
+        remarks: [this.remarks, [Validators.maxLength(100)]]
       }
     );
+
+    if (this.data.productGroupName){
+      this.form.controls.productGroup.setValue(this.data.productGroupID);
+    }
+
 
     this.matIconRegistry
     .addSvgIcon('close',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'close_icon.svg'))
@@ -76,8 +85,9 @@ export class AddProductsDialogComponent implements OnInit {
         this.snackbar.open('Please provide alteast one Price.', 'close');
       } else {
         const finalProductData = value;
-        finalProductData.remarks = '';
-        finalProductData.createdDate = moment()['_d'].toString();
+        finalProductData.productGroupID = value.productGroup;
+        finalProductData.productGroupName = this.productGroup.filter(d=> d.productGroupID === value.productGroup)[0].productGroupName;
+        delete finalProductData.productGroup;
         this.dialogRef.close(finalProductData);
       }
     }
@@ -90,8 +100,11 @@ export class AddProductsDialogComponent implements OnInit {
         this.snackbar.open('Please provide alteast one Price.', 'close');
       } else {
         const finalProductData = value;
-        finalProductData.productID = this.data.productId;
+        finalProductData.productID = this.data.productID;
+        finalProductData.productGroupID = value.productGroup;
+        finalProductData.productGroupName = this.productGroup.filter(d=> d.productGroupID === value.productGroup)[0].productGroupName;
         finalProductData.editCreate = 'Edit';
+        delete finalProductData.productGroup;
         this.dialogRef.close(finalProductData);
       }
     }
@@ -99,12 +112,18 @@ export class AddProductsDialogComponent implements OnInit {
 
   onDelete(): void{
     this.dialogRef.close({
-      productID: this.data.productId,
+      productID: this.data.productID,
       editCreate: 'Delete'
     });
   }
 
   ngOnInit(): void {
+    this.productsDBservice.getAllProductGroups();
+    this.productGroupListObservable = this.productService.getProductGroupList();
+    this.productGroupListObservable.subscribe(productGroupData=>{
+      this.productGroup = productGroupData;
+    });
+
   }
 
 }
