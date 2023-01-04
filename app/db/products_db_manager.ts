@@ -1,16 +1,15 @@
 import { AppDataSource } from './db_manager';
-import { Product, ProductGroup } from "./data/models/items.schema"
 import { IProductData, IProductGroup } from '../../src/app/core/interfaces/interfaces';
+import { Product, ProductGroup } from './data/models/items.schema';
 
 async function getAllProducts(){
     console.log('INFO : Getting all products')
     const res = await AppDataSource.manager
-                    .getRepository(Product).find(
-                        {
-                            relations: {
-                                productGroup: true,
-                            }
+                    .getRepository(Product).find({
+                        relations: {
+                            productGroup: true
                         }
+                    }                        
                     )
     return res
 }
@@ -49,20 +48,25 @@ async function getProductByProductGroupID(productGroupID: string){
 
 async function insertProduct(product: IProductData){
     console.log("INFO: Inserting product data")
+
     const productGroupEntity = new ProductGroup()
     productGroupEntity.productGroupID = product.productGroupID
     productGroupEntity.productGroupName = product.productGroupName
 
-    const res = await AppDataSource.manager.insert(Product, {
-        productGroup: productGroupEntity,
-        productName: product.productName,
-        description: product.description,
-        priceDirectSale: product.priceDirectSale,
-        priceReseller: product.priceReseller,
-        priceDealer: product.priceDealer,
-        remarks: product.remarks
-    })
-    return res
+    await AppDataSource.getRepository(ProductGroup).save(productGroupEntity)
+
+    const productEntity = new Product()
+    productEntity.productName = product.productName
+    productEntity.description = product.description
+    productEntity.priceDirectSale = product.priceDirectSale
+    productEntity.priceReseller = product.priceReseller
+    productEntity.priceDealer = product.priceDealer
+    productEntity.remarks = product.remarks
+    productEntity.productGroup = productGroupEntity
+
+    return await AppDataSource.getRepository(Product).save(productEntity)
+
+    
 }
 
 async function updateProduct(product: IProductData){

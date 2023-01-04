@@ -1,349 +1,6 @@
-import { CreateDateColumn, JoinColumn, OneToOne } from "typeorm";
+import { CreateDateColumn, OneToMany } from "typeorm";
 
 const { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToOne } = require('typeorm');
-
-@Entity()
-export class ProductGroup
-{
-	@PrimaryGeneratedColumn('uuid')
-	productGroupID: string;
-
-	@Column()
-	productGroupName: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
-}
-
-@Entity()
-export class Product
-{
-	@PrimaryGeneratedColumn('uuid')
-	productID: string;
-
-	@OneToOne(()=>ProductGroup)
-	@JoinColumn()
-	productGroup: ProductGroup;
-
-    @Column()
-	productName: string;
-
-    @Column()
-	description: string;
-
-    @Column()
-	priceDirectSale: number;
-
-    @Column()
-	priceReseller: number;
-
-    @Column()
-	priceDealer: number;
-
-	@Column()
-	remarks: string;
-
-    @CreateDateColumn()
-	createdDate: Date;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
-}
-
-
-@Entity()
-export class Material
-{
-	@PrimaryGeneratedColumn('uuid')
-	materialID: string;
-
-    @Column()
-	materialName: string;
-
-    @Column()
-	description: string;
-
-	@Column()
-	remarks: string;
-
-    @CreateDateColumn()
-	createdDate: Date;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
-}
-
-@Entity()
-export class Client
-{
-	@PrimaryGeneratedColumn('uuid')
-	clientID: string;
-
-	@Column()
-	clientType: string;
-
-    @Column()
-	clientName: string;
-
-	@Column()
-	contactPerson: string;
-
-	@Column()
-	description: string;
-
-	@Column()
-	contact1: string;
-
-	@Column()
-	contact2: string;
-
-	@Column()
-	landline: string;
-
-	@Column()
-	email: string;
-
-	@Column()
-	addressLine1: string;
-
-	@Column()
-	addressLine2: string;
-
-	@Column()
-	city: string;
-
-	@Column()
-	state: string;
-
-	@Column()
-	country: string;
-
-	@Column()
-	pincode: string;
-
-	@CreateDateColumn()
-	createdDate: Date;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class Sales
-{
-	@PrimaryGeneratedColumn('uuid')
-	salesID: string;
-
-    @OneToOne(()=>Client)
-	customer: Client;
-
-    @Column()
-	saleType: string;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class SaleEntry
-{
-	
-	@PrimaryColumn()
-	@ManyToOne(() => Sales, (sales)=>sales.salesID, {
-		onDelete: "RESTRICT"
-	})
-	salesID: string;
-
-	@PrimaryColumn()
-	@ManyToOne(() => Product, (product)=>product.productID, {
-		onDelete: "RESTRICT"
-	})
-	productID: string;
-
-    @Column()
-	price: number;
-
-    @Column()
-	quantity: number;
-
-}
-
-@Entity()
-export class SaleTransaction
-{
-	@PrimaryGeneratedColumn('uuid')
-	transactionID: string;
-
-	@ManyToOne(() => Sales, (sales)=>sales.salesID, {
-		onDelete: "RESTRICT"
-	})
-	salesID: string;
-
-	@Column()
-	transactionType: string;
-
-    @Column()
-	amount: number;
-
-    @Column({
-		type: 'datetime'
-	})
-	transactionDate: Date;
-
-    @Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
-}
-
-@Entity()
-export class Production
-{
-	@PrimaryGeneratedColumn('uuid')
-	productionID: string;
-
-    @Column({
-		type: 'datetime'
-	})
-	productionDate: Date;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class ProductionEntry
-{
-	@PrimaryColumn()
-	@ManyToOne(() => Production, (production)=>production.productionID, {
-		onDelete: "RESTRICT"
-	})
-	productionID: string;
-
-	@PrimaryColumn()
-	@ManyToOne(() => Product, (product)=>product.productID, {
-		onDelete: "RESTRICT"
-	})
-	productID: string;
-
-	
-	@PrimaryColumn()
-	@ManyToOne(() => Material, (material)=>material.materialID, {
-		onDelete: "RESTRICT"
-	})
-	materialID: string;
-
-    @Column()
-	productQuantity: number;
-
-	@Column()
-	materialQuantity: number;
-
-}
-
-@Entity()
-export class Purchase
-{
-	@PrimaryGeneratedColumn('uuid')
-	purchaseID: string;
-
-    @OneToOne(()=>Client)
-	@JoinColumn()
-	supplier: Client;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class PurchaseEntry
-{
-	
-	@PrimaryColumn()
-	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseID, {
-		onDelete: "RESTRICT"
-	})
-	purchaseID: string;
-
-	@PrimaryColumn()
-	@ManyToOne(() => Material, (material)=>material.materialID, {
-		onDelete: "RESTRICT"
-	})
-	materialID: string;
-
-    @Column()
-	price: number;
-
-    @Column()
-	quantity: number;
-
-}
-
-@Entity()
-export class PurchaseTransaction
-{
-	@PrimaryGeneratedColumn('uuid')
-	transactionID: string;
-
-	@PrimaryColumn()
-	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseID, {
-		onDelete: "RESTRICT"
-	})
-	purchaseID: string;
-
-	@Column()
-	transactionType: string;
-
-    @Column()
-	amount: number;
-
-    @Column({
-		type: 'datetime'
-	})
-	transactionDate: Date;
-
-    @Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
-}
 
 @Entity()
 export class Company
@@ -441,11 +98,11 @@ export class EmployeeTransaction
 	@PrimaryGeneratedColumn('uuid')
 	transactionID: string;
 
-	@PrimaryColumn()
-	@ManyToOne(() => Employee, (employee)=>employee.employeeID, {
-		onDelete: "RESTRICT"
-	})
-	employeeID: string;
+	// @PrimaryColumn()
+	// @ManyToOne(() => Employee, (employee)=>employee.employeeID, {
+	// 	onDelete: "RESTRICT"
+	// })
+	// employeeID: Employee;
 
 	@Column()
 	transactionType: string;
@@ -467,3 +124,442 @@ export class EmployeeTransaction
 	deleteFlag: boolean;
 
 }
+
+@Entity()
+export class ProductGroup
+{
+	@PrimaryGeneratedColumn('uuid')
+	productGroupID: string;
+
+	@Column()
+	productGroupName: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+
+	@OneToMany(()=>Product, (product)=>product.productGroup)
+	products: Product[]
+
+}
+
+@Entity()
+export class Client
+{
+	@PrimaryGeneratedColumn('uuid')
+	clientID: string;
+
+	@OneToMany(()=>Sales, (sales)=>sales.customer)
+	sales: Sales[]
+
+	// @OneToMany(()=>Purchase, (purchase)=>purchase.supplier)
+	// purchases: Purchase[]
+
+	@Column()
+	clientType: string;
+
+    @Column()
+	clientName: string;
+
+	@Column()
+	contactPerson: string;
+
+	@Column()
+	description: string;
+
+	@Column()
+	contact1: string;
+
+	@Column()
+	contact2: string;
+
+	@Column()
+	landline: string;
+
+	@Column()
+	email: string;
+
+	@Column()
+	addressLine1: string;
+
+	@Column()
+	addressLine2: string;
+
+	@Column()
+	city: string;
+
+	@Column()
+	state: string;
+
+	@Column()
+	country: string;
+
+	@Column()
+	pincode: string;
+
+	@CreateDateColumn()
+	createdDate: Date;
+
+	@Column()
+	remarks: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+}
+
+
+@Entity()
+export class Product
+{
+	@PrimaryGeneratedColumn('uuid')
+	productID: string;
+
+	@ManyToOne(()=>ProductGroup, (productGroup)=>productGroup.products)
+	productGroup: ProductGroup;
+
+	@OneToMany(()=>SaleEntry, (saleEntry)=>saleEntry.product)
+	saleEntries: SaleEntry[]
+
+    // @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.product)
+    // productionEntries: ProductionEntry[]
+
+    @Column()
+	productName: string;
+
+    @Column()
+	description: string;
+
+    @Column()
+	priceDirectSale: number;
+
+    @Column()
+	priceReseller: number;
+
+    @Column()
+	priceDealer: number;
+
+	@Column()
+	remarks: string;
+
+    @CreateDateColumn()
+	createdDate: Date;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+
+}
+
+
+
+@Entity()
+export class Sales
+{
+	@PrimaryGeneratedColumn('uuid')
+	salesID: string;
+
+    @ManyToOne(()=>Client, (client)=>client.sales)
+	customer: Client;
+
+	@OneToMany(()=>SaleEntry, (saleEntry)=>saleEntry.sale)
+	saleEntries: SaleEntry[];
+
+	@OneToMany(()=>SaleTransaction, (saleTransaction)=>saleTransaction.sale)
+	saleTransactions: SaleTransaction[];
+
+    @Column()
+	saleType: string;
+
+	@Column()
+	overallDiscountPercentage: number;
+
+	@Column()
+	gstPercentage: number;
+
+	@Column()
+	transportCharges: number;
+
+	@Column()
+	miscCharges: number;
+
+	@Column()
+	paymentTerms: number;
+
+	@Column({
+		type: 'datetime'
+	})
+	salesDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	dispatchDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	deliveredDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	returnedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	refundedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	completedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	cancelledDate: Date;
+
+	@Column()
+	remarks: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+}
+
+@Entity()
+export class SaleEntry
+{
+	
+	@ManyToOne(() => Sales, (sales)=>sales.saleEntries)
+	sale: Sales;
+
+	@ManyToOne(() => Product, (product)=>product.saleEntries)
+	product: Product;
+
+	@PrimaryGeneratedColumn('uuid')
+	saleEntryID: string;
+
+    @Column()
+	price: number;
+
+    @Column()
+	quantity: number;
+
+	@Column()
+	discountPercentage: number;
+
+	@Column({
+		default: false
+	})
+	returnFlag: boolean
+
+}
+
+@Entity()
+export class SaleTransaction
+{
+	@PrimaryGeneratedColumn('uuid')
+	transactionID: string;
+
+	@ManyToOne(() => Sales, (sales)=>sales.saleTransactions)
+	sale: Sales;
+
+	@Column()
+	transactionType: string;
+
+    @Column()
+	transactionAmount: number;
+
+    @Column({
+		type: 'datetime'
+	})
+	transactionDate: Date;
+
+    @Column()
+	remarks: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+
+}
+
+// @Entity()
+// export class Material
+// {
+// 	@PrimaryGeneratedColumn('uuid')
+// 	materialID: string;
+
+//     @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.material)
+//     productionEntries: ProductionEntry[]
+
+//     @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.material)
+//     purchaseEntries: PurchaseEntry[]
+
+//     @Column()
+// 	materialName: string;
+
+//     @Column()
+// 	description: string;
+
+// 	@Column()
+// 	remarks: string;
+
+//     @CreateDateColumn()
+// 	createdDate: Date;
+
+// 	@Column({
+// 		default: false
+// 	})
+// 	deleteFlag: boolean;
+
+// }
+
+// @Entity()
+// export class Production
+// {
+// 	@PrimaryGeneratedColumn('uuid')
+// 	productionID: string;
+
+//     @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.production)
+//     productionEntries: ProductionEntry[]
+
+//     @Column({
+// 		type: 'datetime'
+// 	})
+// 	productionDate: Date;
+
+// 	@Column()
+// 	remarks: string;
+
+// 	@Column({
+// 		default: false
+// 	})
+// 	deleteFlag: boolean;
+// }
+
+// @Entity()
+// export class ProductionEntry
+// {
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Production, (production)=>production.productionEntries, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	production: Production;
+
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Product, (product)=>product.productionEntries, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	product: Product;
+
+	
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Material, (material)=>material.productionEntries, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	material: Material;
+
+//     @Column()
+// 	productQuantity: number;
+
+// 	@Column()
+// 	materialQuantity: number;
+
+// }
+
+// @Entity()
+// export class PurchaseEntry
+// {
+	
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseEntries, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	purchase: Purchase;
+
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Material, (material)=>material.purchaseEntries, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	material: Material;
+
+//     @Column()
+// 	price: number;
+
+//     @Column()
+// 	quantity: number;
+
+// }
+
+
+// @Entity()
+// export class PurchaseTransaction
+// {
+// 	@PrimaryGeneratedColumn('uuid')
+// 	transactionID: string;
+
+// 	@PrimaryColumn()
+// 	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseTransactions, {
+// 		onDelete: "RESTRICT"
+// 	})
+// 	purchase: string;
+
+// 	@Column()
+// 	transactionType: string;
+
+//     @Column()
+// 	amount: number;
+
+//     @Column({
+// 		type: 'datetime'
+// 	})
+// 	transactionDate: Date;
+
+//     @Column()
+// 	remarks: string;
+
+// 	@Column({
+// 		default: false
+// 	})
+// 	deleteFlag: boolean;
+
+// }
+
+// @Entity()
+// export class Purchase
+// {
+// 	@PrimaryGeneratedColumn('uuid')
+// 	purchaseID: string;
+
+//     @ManyToOne(()=>Client, (client)=>client.purchases)
+// 	supplier: Client;
+
+//     @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.purchase)
+//     purchaseEntries: PurchaseEntry[]
+
+//     @OneToMany(()=>PurchaseTransaction, (purchaseTransaction)=>purchaseTransaction.purchase)
+//     purchaseTransactions: PurchaseTransaction[]
+
+// 	@Column()
+// 	remarks: string;
+
+// 	@Column({
+// 		default: false
+// 	})
+// 	deleteFlag: boolean;
+// }

@@ -22,9 +22,9 @@ module.exports = {
                 return salesDB.updateSale(data);
             }),
 
-            global.share.ipcMain.handle('get-sales-transaction', async () => {
-              return salesDB.getAllSaleTransactions();
-            }),
+            // global.share.ipcMain.handle('get-sales-transaction', async () => {
+            //   return salesDB.getAllSaleTransactions();
+            // }),
 
             global.share.ipcMain.handle('get-sales-transaction-by-id', async (_, data) => {
               return salesDB.getSaleTransactionByID(data);
@@ -41,5 +41,9 @@ module.exports = {
             global.share.ipcMain.handle('update-sale-transaction', async (_, data) => {
                 return salesDB.updateSaleTransaction(data);
             }),
+
+            global.share.ipcMain.handle('delete-sale-entry', async (_, data) => {
+                return salesDB.deleteSaleEntry(data);
+            })
     ]
     }

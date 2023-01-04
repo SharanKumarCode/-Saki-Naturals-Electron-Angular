@@ -18,7 +18,7 @@ function getAllProducts() {
         const res = yield db_manager_1.AppDataSource.manager
             .getRepository(items_schema_1.Product).find({
             relations: {
-                productGroup: true,
+                productGroup: true
             }
         });
         return res;
@@ -60,16 +60,16 @@ function insertProduct(product) {
         const productGroupEntity = new items_schema_1.ProductGroup();
         productGroupEntity.productGroupID = product.productGroupID;
         productGroupEntity.productGroupName = product.productGroupName;
-        const res = yield db_manager_1.AppDataSource.manager.insert(items_schema_1.Product, {
-            productGroup: productGroupEntity,
-            productName: product.productName,
-            description: product.description,
-            priceDirectSale: product.priceDirectSale,
-            priceReseller: product.priceReseller,
-            priceDealer: product.priceDealer,
-            remarks: product.remarks
-        });
-        return res;
+        yield db_manager_1.AppDataSource.getRepository(items_schema_1.ProductGroup).save(productGroupEntity);
+        const productEntity = new items_schema_1.Product();
+        productEntity.productName = product.productName;
+        productEntity.description = product.description;
+        productEntity.priceDirectSale = product.priceDirectSale;
+        productEntity.priceReseller = product.priceReseller;
+        productEntity.priceDealer = product.priceDealer;
+        productEntity.remarks = product.remarks;
+        productEntity.productGroup = productGroupEntity;
+        return yield db_manager_1.AppDataSource.getRepository(items_schema_1.Product).save(productEntity);
     });
 }
 exports.insertProduct = insertProduct;

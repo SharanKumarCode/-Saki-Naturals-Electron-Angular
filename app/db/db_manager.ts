@@ -1,24 +1,23 @@
+
 import { DataSource } from "typeorm";
 
-import { Product,
-        ProductGroup, 
-        Material, 
-        Sales, 
-        SaleEntry, 
-        SaleTransaction, 
-        Production,
-        ProductionEntry,
-        Purchase,
-        PurchaseEntry,
-        PurchaseTransaction,
-        Client,
+import {
+    Client,
         Company,
         Employee,
-        EmployeeTransaction
+        EmployeeTransaction,
+        Product,
+        ProductGroup,
+        SaleEntry,
+        SaleTransaction,
+        Sales
         } from "./data/models/items.schema";
+
+
 import * as productsDB from './products_db_manager';
 import * as salesDB from './sales_db_manager';
 import * as clientDB from './clients_db_manager';
+
 
 const AppDataSource = new DataSource({
     type: 'sqlite',
@@ -28,15 +27,9 @@ const AppDataSource = new DataSource({
     database: 'app/db/data/saki_naturals_db.db',
     entities: [ Product,
         ProductGroup,
-        Material, 
         Sales, 
         SaleEntry, 
-        SaleTransaction, 
-        Production,
-        ProductionEntry,
-        Purchase,
-        PurchaseEntry,
-        PurchaseTransaction,
+        SaleTransaction,
         Client,
         Company,
         Employee,

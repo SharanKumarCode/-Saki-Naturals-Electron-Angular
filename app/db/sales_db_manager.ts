@@ -1,7 +1,6 @@
 import { AppDataSource } from "./db_manager";
-import { Client, SaleEntry, Sales, SaleTransaction } from "./data/models/items.schema";
-import { ISaleEntry, ISalesData, ISaleTransactionComplete, ISaleTransactions } from "../../src/app/core/interfaces/interfaces";
-
+import { ISaleEntry, ISalesData, ISaleTransactions } from "../../src/app/core/interfaces/interfaces";
+import { Sales, Client, ProductGroup, Product, SaleEntry, SaleTransaction } from "./data/models/items.schema";
 
 async function getAllSales(){
     console.log('INFO : Getting sales data')
@@ -9,8 +8,14 @@ async function getAllSales(){
     const res = await AppDataSource.getRepository(Sales).find(
         {
             relations: {
-                salesID: true
-            }
+                customer: true,
+                saleEntries: {
+                    product: {
+                        productGroup: true
+                    }
+                },
+                saleTransactions: true
+        }
         }
     )
 
@@ -22,8 +27,14 @@ async function getSaleByID(salesID: string){
     const res = await AppDataSource.getRepository(Sales).find(
         {
             relations: {
-                salesID: true
-            },
+                customer: true,
+                saleEntries: {
+                    product: {
+                        productGroup: true
+                    }
+                },
+                saleTransactions: true
+        },
             where: {
                 salesID: salesID
             }
@@ -43,6 +54,17 @@ async function softDeleteSale(salesID: string){
     return res
 }
 
+async function unDeleteSale(salesID: string){
+    console.log("INFO: reverting deleted sale by ID")
+    const res = await AppDataSource.manager.update(Sales, {
+        salesID: salesID
+    }, {
+        deleteFlag: false
+    })
+    return res
+}
+
+
 async function deleteSale(salesID: string){
     console.log("INFO: Hard deleting sale by ID")
     const res = await AppDataSource.manager.delete(Sales, {
@@ -51,48 +73,145 @@ async function deleteSale(salesID: string){
     return res
 }
 
-async function insertSale(saleCompleteData: ISaleTransactionComplete){
+async function insertSale(saleData: ISalesData){
     console.log("INFO: Inserting sale and transaction data..")
 
-    const clientEntity = new Client()
-
+    var clientEntity = new Client()
+    const ignoreClientPropList = ['editCreate', 'deleteFlag', 'createdDate']
+    for (let index = 0; index < Object.keys(saleData.customer).length; index++) {
+        if (!(ignoreClientPropList.includes(Object.keys(saleData.customer)[index]))) {
+            clientEntity[Object.keys(saleData.customer)[index]] = saleData.customer[Object.keys(saleData.customer)[index]];
+        }
+        
+    }
+    
     const saleEntity = new Sales()
     saleEntity.customer = clientEntity
-    saleEntity.saleType = saleCompleteData.saleData.saleType
-    saleEntity.remarks = saleCompleteData.saleData.remarks
+    saleEntity.saleType = saleData.saleType
+    saleEntity.salesDate = saleData.salesDate
+    saleEntity.remarks = saleData.remarks
+
+    saleEntity.gstPercentage = saleData.gstPercentage
+    saleEntity.overallDiscountPercentage = saleData.overallDiscountPercentage
+    saleEntity.transportCharges = saleData.transportCharges
+    saleEntity.miscCharges = saleData.miscCharges
+    saleEntity.paymentTerms = saleData.paymentTerms
     
-    const res = await AppDataSource.manager.save(saleEntity)
+    const res = await AppDataSource.getRepository(Sales).save(saleEntity)
+
+    for (let index = 0; index < saleData.saleEntries.length; index++) {
+        const element = saleData.saleEntries[index];
+        const productGroupEntity = new ProductGroup()
+        productGroupEntity.productGroupID = element.product.productGroupID
+        productGroupEntity.productGroupName = element.product.productGroupName
+
+        const productEntity = new Product()
+        productEntity.productGroup = productGroupEntity
+        productEntity.description = element.product.description
+        productEntity.productID = element.product.productID
+        productEntity.productName = element.product.productName
+        productEntity.priceDealer = element.product.priceDealer
+        productEntity.priceDirectSale = element.product.priceDirectSale
+        productEntity.priceReseller = element.product.priceReseller
+        productEntity.remarks = element.product.remarks
+
+        const saleEntryEntity = new SaleEntry()
+        saleEntryEntity.price = element.price
+        saleEntryEntity.quantity = element.quantity
+        saleEntryEntity.discountPercentage = element.discountPercentage
+        saleEntryEntity.product = productEntity
+        saleEntryEntity.sale = saleEntity
+
+        await AppDataSource.getRepository(SaleEntry).save(saleEntryEntity)
+        
+    }
 
     return res
 }
 
-async function updateSale(sale: ISalesData){
+async function updateSale(saleData: ISalesData){
     console.log("Updating sale data..")
-    const clientEntity = new Client()
+    console.log(saleData);
+    var clientEntity = new Client()
+    const ignoreClientPropList = ['editCreate', 'deleteFlag', 'createdDate']
+    for (let index = 0; index < Object.keys(saleData.customer).length; index++) {
+        if (!(ignoreClientPropList.includes(Object.keys(saleData.customer)[index]))) {
+            clientEntity[Object.keys(saleData.customer)[index]] = saleData.customer[Object.keys(saleData.customer)[index]];
+        }
+        
+    }
+
+    const saleEntity = new Sales()
+    saleEntity.salesID = saleData.salesID
+    saleEntity.customer = clientEntity
+    saleEntity.saleType = saleData.saleType
+    saleEntity.salesDate = saleData.salesDate
+    saleEntity.remarks = saleData.remarks
+
+    saleEntity.gstPercentage = saleData.gstPercentage
+    saleEntity.overallDiscountPercentage = saleData.overallDiscountPercentage
+    saleEntity.transportCharges = saleData.transportCharges
+    saleEntity.miscCharges = saleData.miscCharges
+    saleEntity.paymentTerms = saleData.paymentTerms
+
+    saleEntity.dispatchDate = saleData?.dispatchDate
+    saleEntity.deliveredDate = saleData?.deliveredDate
+    saleEntity.returnedDate = saleData?.returnedDate
+    saleEntity.refundedDate = saleData?.refundedDate
+    saleEntity.completedDate = saleData?.completedDate
+    saleEntity.cancelledDate = saleData?.cancelledDate
+    
     const res = await AppDataSource.manager.update(Sales,
         {
-            salesID: sale.salesID
+            salesID: saleData.salesID
         },
         {
-        customer: clientEntity,
-        remarks: sale.remarks
+            ...saleEntity
     })
-    return res
-}
 
-async function getSaleEntryBySaleID(salesID:string) {
-    console.log("INFO : Getting sale entry data by ID")
-    const res = await AppDataSource.getRepository(SaleEntry).find(
-        {
-            where: {
-                salesID: salesID
-            }
+    for (let index = 0; index < saleData.saleEntries.length; index++) {
+        const element = saleData.saleEntries[index];
+        const productGroupEntity = new ProductGroup()
+        productGroupEntity.productGroupID = element.product.productGroupID
+        productGroupEntity.productGroupName = element.product.productGroupName
+
+        const productEntity = new Product()
+        productEntity.productGroup = productGroupEntity
+        productEntity.description = element.product.description
+        productEntity.productID = element.product.productID
+        productEntity.productName = element.product.productName
+        productEntity.priceDealer = element.product.priceDealer
+        productEntity.priceDirectSale = element.product.priceDirectSale
+        productEntity.priceReseller = element.product.priceReseller
+        productEntity.remarks = element.product.remarks
+
+        const saleEntryEntity = new SaleEntry()
+        saleEntryEntity.price = element.price
+        saleEntryEntity.quantity = element.quantity
+        saleEntryEntity.discountPercentage = element.discountPercentage
+        saleEntryEntity.product = productEntity
+        saleEntryEntity.sale = saleEntity
+
+        if (element.returnFlag !== undefined) {
+            saleEntryEntity.returnFlag = element.returnFlag
         }
-    )
 
-    return res
+        if (element.saleEntryID === undefined) {
+            saleEntryEntity.saleEntryID = element.saleEntryID
+            await AppDataSource.getRepository(SaleEntry).save(saleEntryEntity)
+        } else {
+            await AppDataSource.getRepository(SaleEntry).update({
+                saleEntryID: element.saleEntryID
+            },{
+                ...saleEntryEntity
+            })
+        }       
+
+    }
     
+    return res
 }
+
 
 async function insertSaleEntry(salesEntryList: ISaleEntry[]) {
     console.log("INFO : Inserting sale entry data")
@@ -105,51 +224,27 @@ async function insertSaleEntry(salesEntryList: ISaleEntry[]) {
 }
 
 
-async function deleteSaleEntry(saleEntry:ISaleEntry) {
+async function deleteSaleEntry(saleEntry) {
     console.log("INFO : Deleting sale entry data")
     return await AppDataSource
                     .getRepository(SaleEntry)
-                    .createQueryBuilder("saleEntry")
-                    .delete()
-                    .where(`saleEntry.salesID = ${saleEntry.salesID}`)
-                    .andWhere(`saleEntry.productID = ${saleEntry.productID}`)
-                    .execute()
+                    .delete(saleEntry)
     
 }
 
-async function getAllSaleTransactions(){
-    console.log('INFO : Getting sale transaction data')
-    const res = await AppDataSource.getRepository(SaleTransaction).find(
-        {
-            relations: {
-                salesID: true
-            }
-        }
-    )
-
-    return res
-}
-
-async function getSaleTransactionByID(transactionID: string){
-    console.log('INFO : Getting sale transaction data by ID')
-    const res = await AppDataSource.getRepository(SaleTransaction).find(
-        {
-            where: {
-                transactionID: transactionID
-            }
-        }
-    )
-
-    return res
-}
 
 async function insertSaleTransaction(transaction: ISaleTransactions){
     console.log("INFO : Inserting sale transaction data")
 
+    const saleEntity = new Sales()
+    saleEntity.salesID = transaction.sales.salesID
+    saleEntity.saleType = transaction.sales.saleType
+    saleEntity.remarks = transaction.sales.remarks
+
     const saleTransactionEntity = new SaleTransaction()
-    saleTransactionEntity.salesID = transaction.salesID
+    saleTransactionEntity.sale = saleEntity
     saleTransactionEntity.transactionType = transaction.transactionType
-    saleTransactionEntity.amount = transaction.amount
+    saleTransactionEntity.transactionAmount = transaction.transactionAmount
     saleTransactionEntity.transactionDate = transaction.transactionDate
     saleTransactionEntity.remarks = transaction.remarks
 
@@ -159,14 +254,14 @@ async function insertSaleTransaction(transaction: ISaleTransactions){
 
 async function updateSaleTransaction(transaction: ISaleTransactions){
     console.log("INFO : Updating sale transaction data")
-    const res = await AppDataSource.manager.update(SaleTransaction,
-        {
-            transactionID: transaction.transactionID
-        },
-        {
-            amount: transaction.amount,
-            transactionDate: transaction.transactionDate,
-            remarks: transaction.remarks,
+
+    const res = await AppDataSource.manager.update(SaleTransaction,{
+        transactionID: transaction.transactionID
+    },{
+        transactionType: transaction.transactionType,
+        transactionAmount: transaction.transactionAmount,
+        transactionDate: transaction.transactionDate,
+        remarks: transaction.remarks
     })
     return res
 }
@@ -187,12 +282,9 @@ export {
     deleteSale, 
     insertSale, 
     updateSale, 
-    getSaleEntryBySaleID,
     insertSaleEntry,
     deleteSaleEntry,
-    getAllSaleTransactions, 
-    getSaleTransactionByID,
-    deleteSaleTransaction,
     insertSaleTransaction,
-    updateSaleTransaction
+    updateSaleTransaction,
+    deleteSaleTransaction
 }
