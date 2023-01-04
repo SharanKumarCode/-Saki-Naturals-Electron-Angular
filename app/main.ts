@@ -1,10 +1,13 @@
 import {app, BrowserWindow, screen} from 'electron';
+import { ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
+
+global.share = {ipcMain}
 
 function createWindow(): BrowserWindow {
 
@@ -16,6 +19,7 @@ function createWindow(): BrowserWindow {
     y: 0,
     width: size.width,
     height: size.height,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
@@ -27,7 +31,7 @@ function createWindow(): BrowserWindow {
     const debug = require('electron-debug');
     debug();
 
-    require('electron-reloader')(module);
+    require('electron-reloader')(module,{ignore: [/node_modules|[\/\\]\./, /data|[\/\\]\./]});
     win.loadURL('http://localhost:4200');
   } else {
     // Path when running electron executable
@@ -58,7 +62,17 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(createWindow, 400)
+  });
+
+  ipcMain.handle('close-main-window', async () => {
+    console.log("closing window")
+    win.close();
+  });
+
+  // import all ipc handlers
+  require('./ipc_handlers/index');
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {

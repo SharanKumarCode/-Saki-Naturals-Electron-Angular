@@ -53,4 +53,22 @@ export class ElectronService {
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
   }
+
+  getIpcRenderer(): typeof ipcRenderer{
+    return this.ipcRenderer;
+  }
+
+  dummyHandler(dummy: string): void{
+    console.log('Angular dummy handler..');
+    this.ipcRenderer.invoke('dummy-handle', dummy);
+    this.ipcRenderer.once('dummy-handle-recv',(_, data)=>{
+      console.log('Angular on receiving ipcRenderer response after dummy handling');
+      console.log(data);
+    });
+  }
+
+  closeApp(): void{
+    this.ipcRenderer.invoke('close-main-window');
+  }
+
 }

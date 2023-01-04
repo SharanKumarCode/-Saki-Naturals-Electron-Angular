@@ -1,0 +1,65 @@
+.price-right-align {
+    text-align: right;
+  }
+  
+  input.price-right-align::-webkit-outer-spin-button,
+  input.price-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.price-right-align {
+    -moz-appearance: textfield;
+  }
+
+.form-container  {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+.stock-sold-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-content: stretch;
+}
+
+.stock-sold-container > mat-form-field:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+}
+
+.form-button-container  {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: stretch;
+}
+
+.form-button-container > button:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+}
+
+.form-button-container > button:nth-child(2) {
+    flex-grow: 7;
+}
+
+.form-button-edit-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: stretch;
+}
+
+.form-button-edit-container > button:first-child {
+  flex-grow: 1;
+}
+
+.form-button-edit-container > button:nth-child(2) {
+  flex-grow: 7;
+}
+
+.form-button-edit-container > button:nth-child(3) {
+  flex-grow: 1;
+}
