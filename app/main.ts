@@ -20,6 +20,7 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     frame: false,
+    icon: 'src/assets/icon/saki_naturals.png',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
