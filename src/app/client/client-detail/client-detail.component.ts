@@ -68,7 +68,7 @@ export class ClientDetailComponent implements OnInit {
       landline: '',
       addressLine1: '',
       addressLine2: '',
-      createdDate: '',
+      createdDate: new Date(),
       city: '',
       state: '',
       country: '',

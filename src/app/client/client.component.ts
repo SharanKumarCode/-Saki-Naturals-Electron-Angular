@@ -73,7 +73,7 @@ export class ClientComponent implements OnInit, AfterViewInit {
       contact2: '',
       addressLine1: '',
       addressLine2: '',
-      createdDate: '',
+      createdDate: new Date(),
       city: '',
       state: '',
       country: '',
