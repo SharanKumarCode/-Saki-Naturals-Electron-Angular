@@ -57,6 +57,8 @@ import { AddClientDialogComponent } from './dialogs/add-client-dialog/add-client
 import { MaterialModule } from '../material.module';
 import { SaleProgressTrackerComponent } from './sales/sale-progress-tracker/sale-progress-tracker/sale-progress-tracker.component';
 import { SalesTransactionTableComponent } from './sales/sales-transaction-table/sales-transaction-table.component';
+import { MaterialComponent } from './material/material.component';
+import { AddUpdateMaterialDialogComponent } from './dialogs/add-update-material-dialog/add-update-material-dialog.component';
 
 
 // AoT requires an exported function for factories
@@ -99,6 +101,8 @@ const lang = 'en-US';
     AddClientDialogComponent,
     SaleProgressTrackerComponent,
     SalesTransactionTableComponent,
+    MaterialComponent,
+    AddUpdateMaterialDialogComponent,
 
     ],
   imports: [

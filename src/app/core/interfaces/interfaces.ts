@@ -15,6 +15,17 @@ export interface IProductData {
     editCreate?: string;
   }
 
+  export interface IMaterialData {
+    materialID?: string;
+    materialName: string;
+    description: string;
+    stock?: number;
+    createdDate?: Date;
+    consumed?: number;
+    remarks?: string;
+    editCreate?: string;
+  }
+
   export interface IProductGroup {
     productGroupID?: string;
     productGroupName: string;

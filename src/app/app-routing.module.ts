@@ -15,6 +15,7 @@ import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.
 import { ClientComponent } from './client/client.component';
 import { ClientDetailComponent } from './client/client-detail/client-detail.component';
 import { SaleDataResolverService } from './core/services/sales/sale-data-resolver.service';
+import { MaterialComponent } from './material/material.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
   },
   { path: 'products', component: ProductsComponent },
   { path: 'product/detail', component: ProductsDetailComponent },
+  { path: 'materials', component: MaterialComponent },
   { path: 'production', component: ProductionComponent },
   { path: 'clients', component: ClientComponent },
   { path: 'clients/details', component: ClientDetailComponent },
