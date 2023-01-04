@@ -1,0 +1,61 @@
+.materials-button-section {
+    height: 15%;
+    width: 28%;
+    float: right;
+    margin-top: 1%;
+}
+
+.materials-button-row{
+    width: 45%;
+    height: 50%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-content: stretch;
+
+    margin: 4% auto 8px auto;
+  }
+
+.materials-button-row > button:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+    background-color: greenyellow;
+}
+
+.materials-button-row > button:nth-child(2) {
+    flex-grow: 1;
+}
+
+.materials-table-section{
+    height: 70%;
+    width: 95%;
+    margin: 1% auto 8px auto;
+    overflow: auto;
+}
+
+table{
+    width: 100%;
+    color: black;
+
+}
+
+th{
+    background-color: #e0e0e0;
+    color: black;
+}
+
+td{
+    color: black;
+}
+
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+.mat-row:hover .mat-cell {
+    border-color: currentColor;
+}
