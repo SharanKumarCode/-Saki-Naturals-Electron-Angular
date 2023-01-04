@@ -6,6 +6,7 @@ import {
         Company,
         Employee,
         EmployeeTransaction,
+        Material,
         Product,
         ProductGroup,
         SaleEntry,
@@ -17,6 +18,7 @@ import {
 import * as productsDB from './products_db_manager';
 import * as salesDB from './sales_db_manager';
 import * as clientDB from './clients_db_manager';
+import * as materialDB from './materials_db_manager';
 
 
 const AppDataSource = new DataSource({
@@ -27,6 +29,7 @@ const AppDataSource = new DataSource({
     database: 'app/db/data/saki_naturals_db.db',
     entities: [ Product,
         ProductGroup,
+        Material,
         Sales, 
         SaleEntry, 
         SaleTransaction,
@@ -48,5 +51,6 @@ export {
     AppDataSource,
     productsDB,
     salesDB,
-    clientDB
+    clientDB,
+    materialDB
 }

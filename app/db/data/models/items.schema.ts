@@ -1,6 +1,6 @@
 import { CreateDateColumn, OneToMany } from "typeorm";
 
-const { Entity, PrimaryGeneratedColumn, PrimaryColumn, Column, ManyToOne } = require('typeorm');
+const { Entity, PrimaryGeneratedColumn, Column, ManyToOne } = require('typeorm');
 
 @Entity()
 export class Company
@@ -398,36 +398,36 @@ export class SaleTransaction
 
 }
 
-// @Entity()
-// export class Material
-// {
-// 	@PrimaryGeneratedColumn('uuid')
-// 	materialID: string;
+@Entity()
+export class Material
+{
+	@PrimaryGeneratedColumn('uuid')
+	materialID: string;
 
-//     @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.material)
-//     productionEntries: ProductionEntry[]
+    // @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.material)
+    // productionEntries: ProductionEntry[]
 
-//     @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.material)
-//     purchaseEntries: PurchaseEntry[]
+    // @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.material)
+    // purchaseEntries: PurchaseEntry[]
 
-//     @Column()
-// 	materialName: string;
+    @Column()
+	materialName: string;
 
-//     @Column()
-// 	description: string;
+    @Column()
+	description: string;
 
-// 	@Column()
-// 	remarks: string;
+	@Column()
+	remarks: string;
 
-//     @CreateDateColumn()
-// 	createdDate: Date;
+    @CreateDateColumn()
+	createdDate: Date;
 
-// 	@Column({
-// 		default: false
-// 	})
-// 	deleteFlag: boolean;
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
 
-// }
+}
 
 // @Entity()
 // export class Production
