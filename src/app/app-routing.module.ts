@@ -14,6 +14,7 @@ import { ProductsDetailComponent } from './products/products-detail/products-det
 import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.component';
 import { ClientComponent } from './client/client.component';
 import { ClientDetailComponent } from './client/client-detail/client-detail.component';
+import { SaleDataResolverService } from './core/services/sales/sale-data-resolver.service';
 
 const routes: Routes = [
   {
@@ -31,8 +32,17 @@ const routes: Routes = [
   { path: 'purchase', component: PurchaseComponent },
   { path: 'employee', component: EmployeeComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'sale/transaction', component: SalesTransactionComponent},
-  { path: 'sale/add_update_sale', component: AddUpdateSaleComponent},
+  { path: 'sale/transaction/:selectedSalesID',
+    component: SalesTransactionComponent,
+    resolve: {
+      saleData: SaleDataResolverService
+    }},
+  { path: 'sale/add_update_sale/:createOrUpdate', component: AddUpdateSaleComponent},
+  { path: 'sale/add_update_sale/:createOrUpdate/:selectedSalesID',
+  component: AddUpdateSaleComponent,
+  resolve: {
+    saleData: SaleDataResolverService
+  }},
   {
     path: '**',
     component: PageNotFoundComponent
