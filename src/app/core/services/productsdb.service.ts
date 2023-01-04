@@ -119,7 +119,6 @@ export class ProductsdbService {
   }
 
   deleteProductGroup(productGroupID: string): void {
-    console.log(productGroupID);
     this.getProductByProductGroupID(productGroupID).then(productData=>{
       let DELETE_TYPE = 'hard-delete-product-group';
 
