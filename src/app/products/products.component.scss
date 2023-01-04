@@ -1,5 +1,9 @@
 .products-button-section {
     height: 15%;
+    width: 33%;
+    float: right;
+    margin-right: 1.5%;
+    margin-top: 1%;
 }
 
 .products-button-row{
@@ -18,9 +22,17 @@
 .products-button-row > button:first-child {
     flex-grow: 7;
     margin-right: 10%;
+
 }
 
 .products-button-row > button:nth-child(2) {
+    flex-grow: 1;
+    margin-right: 3%;
+    background-color: greenyellow;
+
+}
+
+.products-button-row > button:nth-child(3) {
     flex-grow: 1;
 }
 

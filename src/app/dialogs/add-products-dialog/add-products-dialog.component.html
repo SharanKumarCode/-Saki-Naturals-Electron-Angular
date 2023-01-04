@@ -6,39 +6,41 @@
     <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
   </mat-form-field>
   <mat-form-field appearance="outline">
-    <mat-label>Group</mat-label>
-    <input matInput #input maxlength="30" formControlName="group" value="{{group}}"/>
-    <mat-hint align="end">{{input.value?.length || 0}}/30</mat-hint>
+    <mat-label>Product Group</mat-label>
+    <mat-select formControlName="productGroup" >
+        <mat-option *ngFor="let group of productGroup" [value]="group.productGroupID">
+          {{group.productGroupName}}
+        </mat-option>
+      </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>Description</mat-label>
-    <textarea matInput #input maxlength="100" formControlName="description" value="{{description}}"></textarea>
-    <mat-hint align="end">{{input.value?.length || 0}}/100</mat-hint>
+    <textarea matInput #inputdesc maxlength="100" formControlName="description" value="{{description}}"></textarea>
+    <mat-hint align="end">{{inputdesc.value?.length || 0}}/100</mat-hint>
   </mat-form-field>
-  <div class="stock-sold-container">
-    <mat-form-field appearance="outline">
-      <mat-label>Stock</mat-label>
-      <input matInput type="number" min="0" placeholder="0" formControlName="stock" value="{{stock}}"/>
+  
+  <div class="price-container">
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Price - Direct Sale</mat-label>
+      <input matInput type="number" min="0" class="price-right-align" formControlName="priceDirectSale" value="{{priceDirectSale}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Sold</mat-label>
-      <input matInput type="number" min="0" placeholder="0" formControlName="sold" value="{{sold}}"/>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Price - Reseller</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="priceReseller" value="{{priceReseller}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
     </mat-form-field>
-  </div>  
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>Price - Direct Sale</mat-label>
-    <input matInput type="number" min="0" class="price-right-align" formControlName="priceDirectSale" value="{{priceDirectSale}}"/>
-    <span matPrefix>&#8377;&nbsp;</span>
-  </mat-form-field>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>Price - Reseller</mat-label>
-    <input matInput type="number" class="price-right-align" formControlName="priceReseller" value="{{priceReseller}}"/>
-    <span matPrefix>&#8377;&nbsp;</span>
-  </mat-form-field>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>Price - Dealer</mat-label>
-    <input matInput type="number" class="price-right-align" formControlName="priceDealer" value="{{priceDealer}}"/>
-    <span matPrefix>&#8377;&nbsp;</span>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Price - Dealer</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="priceDealer" value="{{priceDealer}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+  </div>
+  
+  <mat-form-field appearance="outline">
+    <mat-label>Remarks</mat-label>
+    <textarea matInput #inputremarks maxlength="100" formControlName="remarks" value="{{remarks}}"></textarea>
+    <mat-hint align="end">{{inputremarks.value?.length || 0}}/100</mat-hint>
   </mat-form-field>
 </mat-dialog-content>
 <div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
@@ -48,5 +50,4 @@
 <div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
   <button mat-button (click)="onNoClick()"><mat-icon svgIcon="close"></mat-icon></button>
   <button mat-button cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE PRODUCT</button>
-  <button mat-button cdkFocusInitial (click)="onDelete()" color="warn"><mat-icon svgIcon="delete"></mat-icon></button>
 </div>

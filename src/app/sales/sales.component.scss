@@ -1,10 +1,15 @@
 .sales-button-section {
     height: 15%;
+    width: 30%;
+    float: right;
+    margin-right: 3%;
+    margin-top: 1%;
 }
 
 .sales-button-row{
-    width: 90%;
+    width: 50%;
     height: 50%;
+    float: right;
 
     display: flex;
     flex-direction: row;
@@ -16,8 +21,9 @@
   }
 
 .sales-button-row > button:first-child {
-    flex-grow: 7;
+    flex-grow: 1;
     margin-right: 10%;
+    background-color: greenyellow;
 }
 
 .sales-button-row > button:nth-child(2) {
