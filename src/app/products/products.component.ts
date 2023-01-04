@@ -65,7 +65,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
       this.matIconRegistry
         .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'))
-        .addSvgIcon('add',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'));
+        .addSvgIcon('plus',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'));
 
     }
 
