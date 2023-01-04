@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -22,7 +22,7 @@ const moment = _moment;
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
+export class ProductsComponent implements OnInit, AfterViewInit{
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -69,18 +69,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
     }
 
-  ngOnInit(): void {
-    this.productListObservable = this.productService.getProductList();
-    this.getProducts();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  ngOnDestroy(): void {
-    // this.productListObservalble.unsubscribe();
-  }
 
   openProductGroupDialog(): void {
     console.log('INFO : Opening dialog box add product group..');
@@ -102,7 +90,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('INFO : The dialog box is closed');
-      console.log(result);
       if (result){
         this.productdbservice.insertProduct(result);
       }
@@ -138,6 +125,15 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   onRowClick(e: any){
     this.productService.updateSelectedProductID(e.productID);
     this.router.navigate(['product/detail']);
+  }
+
+  ngOnInit(): void {
+    this.productListObservable = this.productService.getProductList();
+    this.getProducts();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   announceSortChange(sortState: Sort) {
