@@ -21,6 +21,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatStepperModule } from '@angular/material/stepper';
+
 
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -41,7 +43,7 @@ import { PurchaseComponent } from './purchase/purchase.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AddProductsDialogComponent } from './dialogs/add-products-dialog/add-products-dialog.component';
-import { SalesDialogComponent } from './dialogs/sales-dialog/sales-dialog.component';
+import { SalesReturnDialogComponent } from './dialogs/sales-return-dialog/sales-return-dialog.component';
 import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
 import { SalesTransactionDialogComponent } from './dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
 import { SplashPageComponent } from './splash-page/splash-page.component';
@@ -53,6 +55,9 @@ import { ClientDetailComponent } from './client/client-detail/client-detail.comp
 import { ProductGroupDialogComponent } from './dialogs/product-group-dialog/product-group-dialog.component';
 import { AddClientDialogComponent } from './dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
 import { MaterialModule } from '../material.module';
+import { SaleProgressTrackerComponent } from './sales/sale-progress-tracker/sale-progress-tracker/sale-progress-tracker.component';
+import { SalesTransactionTableComponent } from './sales/sales-transaction-table/sales-transaction-table.component';
+
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -68,6 +73,8 @@ const MY_FORMATS = {
   },
 };
 
+const lang = 'en-US';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,7 +86,7 @@ const MY_FORMATS = {
     EmployeeComponent,
     SettingsComponent,
     AddProductsDialogComponent,
-    SalesDialogComponent,
+    SalesReturnDialogComponent,
     SalesTransactionComponent,
     SalesTransactionDialogComponent,
     SplashPageComponent,
@@ -90,6 +97,8 @@ const MY_FORMATS = {
     ClientDetailComponent,
     ProductGroupDialogComponent,
     AddClientDialogComponent,
+    SaleProgressTrackerComponent,
+    SalesTransactionTableComponent,
 
     ],
   imports: [
@@ -119,6 +128,7 @@ const MY_FORMATS = {
     MatCardModule,
     MatTabsModule,
     MaterialModule,
+    MatStepperModule,
 
     TranslateModule.forRoot({
       loader: {
