@@ -4,7 +4,6 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
-import { SalesDialogComponent } from '../dialogs/sales-dialog/sales-dialog.component';
 import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
 
@@ -13,7 +12,7 @@ import { ProductsdbService } from '../core/services/productsdb.service';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ISalesData, EnumSaleType, ISaleTransactions } from '../core/interfaces/interfaces';
+import { ISalesData, EnumSaleType, ISaleTransactions, EnumRouteActions } from '../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-sales',
@@ -26,12 +25,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [
                                 'serial_number',
-                                'purchaser',
-                                'supplier',
-                                'productGroup',
-                                'productName',
+                                'customer',
+                                'numberOfProducts',
                                 'saleType',
-                                'sellingPrice',
                                 'soldQuantity',
                                 'totalAmount',
                                 'paidAmount',
@@ -55,21 +51,19 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private matIconRegistry: MatIconRegistry
   ) {
     this.salesData = {
-      productID: '',
-      productName: '',
+      salesDate: new Date(),
       currentStock: 0,
-      group: '',
-      saleDate: '',
-      saleTime: '',
-      purchaser: '',
-      supplier: '',
       saleType: EnumSaleType.dealer,
-      sellingPrice: 0,
-      sellingQuantity: 0,
+      gstPercentage: 0,
+      overallDiscountPercentage: 0,
+      transportCharges: 0,
+      miscCharges: 0,
+      paymentTerms: 0,
       remarks: ''
     };
 
     this.matIconRegistry
+        .addSvgIcon('plus',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'))
         .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
@@ -90,74 +84,41 @@ export class SalesComponent implements OnInit, AfterViewInit {
   setTableData(){
     this.salesDataListObservable.subscribe(data=>{
       this.dataSource = new MatTableDataSource();
-
-      // getting product data
-      const tmp = new Subject<ISalesData[]>();
-      const tmpTableList = [];
+      console.log(data);
+      const tmpSaleList = [];
       data.forEach((element, index)=>{
-        this.productdbService.getProductByID(element.productID)
-        .then(f=>{
-          element.productGroup = f[0].group;
-          element.productName = f[0].product_name;
-          element.productDescription = f[0].description;
-
-          // setting transaction data
-          element.paid = this.calcTransactionData(element.saleTransactions);
-          element.totalAmount = element.sellingPrice * element.sellingQuantity;
-          element.balance = element.totalAmount - element.paid;
-          tmp.next([{
-            ...element,
-            serialNumber: index + 1
-          }]);
-        })
-        .catch(err=>{
-          console.error(err);
-        });
+        const tmpSaleData = {
+          salesID: element.salesID,
+          serialNumber: index + 1,
+          customer: element.customer.clientName,
+          saleType: element.saleType,
+          remarks: element.remarks,
+          salesDate: element.salesDate,
+          numberOfProducts: element.saleEntries.length,
+          sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+          totalAmount: element.saleEntries.map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+          paid: element.saleTransactions.map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0),
+          balance: 0
+        };
+        tmpSaleData.balance = tmpSaleData.totalAmount - tmpSaleData.paid;
+        tmpSaleList.push(tmpSaleData);
       });
+      this.dataSource.data = tmpSaleList;
 
-      // setting data to table
-      tmp.subscribe(g=>{
-        tmpTableList.push(g[0]);
-        this.dataSource.data = tmpTableList;
-      });
     });
   }
 
   calcTransactionData(transactionData: ISaleTransactions[]): any{
-    const paidAmounts = transactionData.map(e=>e.amount);
+    const paidAmounts = transactionData.map(e=>e.transactionAmount);
     return paidAmounts.reduce((a, b)=> a+b, 0);
   }
 
-  openAddDialog(): void {
-    console.log('opening dialog box add sales..');
-    const dialogRef = this.dialog.open(SalesDialogComponent, {
-      width: '50%',
-      data: this.salesData,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed');
-      if (result){
-        this.salesdbService.insertSales(result)
-        .then(_=>{
-          console.log('INFO: Created new sale');
-          this.onRefresh();
-        })
-        .catch(err=>{
-          console.error(err);
-        });
-      }
-    });
-  }
-
   onAddSales(): void {
-    this.router.navigate(['sale/transaction']);
+    this.router.navigate(['sale/add_update_sale', EnumRouteActions.create]);
   }
 
   onRowClick(e: any){
-    console.log(e);
-    this.salesService.updateSelectedSalesID(e.salesID);
-    this.router.navigate(['sale/transaction']);
+    this.router.navigate(['sale/transaction', e.salesID]);
   }
 
   onRefresh(){

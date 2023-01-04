@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ISalesData } from '../../interfaces/interfaces';
+import { EnumSaleStatus, ISalesData } from '../../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +9,11 @@ export class SalesService {
 
   private salesListSubject$: Subject<ISalesData[]>;
   private selectedSalesID: string;
+  private selectedSaleDataSubject$: Subject<ISalesData>;
 
   constructor() {
     this.salesListSubject$ = new Subject<ISalesData[]>();
+    this.selectedSaleDataSubject$ = new Subject<ISalesData>();
    }
 
    getSalesList(): Subject<ISalesData[]>{
@@ -28,5 +30,43 @@ export class SalesService {
 
    updateSelectedSalesID(salesID: string){
     this.selectedSalesID = salesID;
+   }
+
+   getSelectedSaleData(): Subject<ISalesData>{
+    return this.selectedSaleDataSubject$;
+   }
+
+   updateSelectedSaleData(data: ISalesData): void {
+      this.selectedSaleDataSubject$.next(data);
+   }
+
+   getSaleStatus(saleData: ISalesData): EnumSaleStatus {
+
+    if (saleData.cancelledDate) {
+      return EnumSaleStatus.cancelled;
+    }
+
+    if (saleData.completedDate) {
+      return EnumSaleStatus.completed;
+    }
+
+    if (saleData.refundedDate) {
+      return EnumSaleStatus.refunded;
+    }
+
+    if (saleData.returnedDate) {
+      return EnumSaleStatus.returned;
+    }
+
+    if (saleData.deliveredDate) {
+      return EnumSaleStatus.delivered;
+    }
+
+    if (saleData.dispatchDate) {
+      return EnumSaleStatus.dispatched;
+    }
+
+    return EnumSaleStatus.initiated;
+
    }
 }

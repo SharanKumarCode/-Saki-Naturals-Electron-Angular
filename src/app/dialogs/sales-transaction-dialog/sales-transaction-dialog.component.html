@@ -4,32 +4,39 @@
 <mat-dialog-content class="form-container" [formGroup]="form">
   
   <!-- Sale Data -->
-  <div class="sale-transaction-details-contianer">
+  <div class="sale-transaction-details-container">
     <mat-form-field appearance="outline">
-      <mat-label>Transaction date</mat-label>
-      <input matInput [matDatepicker]="dp" [formControl]="date">
-      <mat-hint align="end">MMMM DD, YYYY</mat-hint>
-      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-      <mat-datepicker #dp></mat-datepicker>
+      <input matInput [min]="minTransactionDate" [matDatepicker]="picker" formControlName="transactionDate" placeholder="Transaction Date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+    <div>
+      <input class="timepicker" type="time" [value]="transactionTime" formControlName="transactionTime">
+    </div>
     <mat-form-field appearance="outline" floatLabel="always">
-        <mat-label>Total Amount</mat-label>
-        <input matInput type="number" class="price-right-align" formControlName="totalAmount" value="{{totalAmount}}"/>
+        <mat-label>Total Price</mat-label>
+        <input matInput type="number" class="price-right-align" formControlName="totalPrice" value="{{totalPrice}}"/>
         <span matPrefix>&#8377;&nbsp;</span>
       </mat-form-field>
   </div> 
 
   <!-- Payment Details -->
   <div class="payment-detail-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Transaction Type</mat-label>
+      <mat-select formControlName="transactionType" >
+          <mat-option *ngFor="let transactionType of transactionTypeList" [value]="transactionType">
+              {{transactionType}}
+          </mat-option>
+          </mat-select>
+    </mat-form-field>
+
     <mat-form-field appearance="outline" floatLabel="always">
-      <mat-label>Paid Amount</mat-label>
-      <input matInput type="number" class="price-right-align" formControlName="paidAmount" value="{{paid}}"/>
+      <mat-label>Transaction Amount</mat-label>
+      <input matInput type="number" class="price-right-align" formControlName="transactionAmount" value="{{transactionAmount}}"/>
       <span matPrefix>&#8377;&nbsp;</span>
     </mat-form-field>
   </div>
-
-  <mat-divider></mat-divider>
-  <br>
 
   <div class="remarks-details-container">
     <mat-form-field appearance="outline">

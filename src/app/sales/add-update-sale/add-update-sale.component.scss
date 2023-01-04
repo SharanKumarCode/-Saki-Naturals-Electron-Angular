@@ -30,6 +30,11 @@
     background-color: #673BB7;
 }
 
+.add-update-sale-add-entry-container {
+    width: 95%;
+    height: 10%;
+}
+
 .icon-display {
     transform: scale(1);
     color: white;
@@ -79,6 +84,90 @@
     width: 90%;
 }
 
+.add-update-sale-add-entry-container {
+    width: 95%;
+    height: 19%;
+
+    margin: auto;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-content: space-around;
+
+    overflow: hidden;
+    border: 2px solid green;
+    border-style: dashed;
+}
+
+.add-update-sale-add-entry-container > mat-card {
+    width: 100%;
+}
+
+.add-update-sale-add-entry-container-row-one {
+    display: flex;
+    flex-direction: row;
+}
+
+.add-update-sale-add-entry-container-row-one> mat-form-field:nth-child(1) {
+    flex-grow: 1;
+}
+
+.add-update-sale-add-entry-container-row-one > mat-form-field:nth-child(2) {
+    flex-grow: 1;
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.add-update-sale-add-entry-container-row-one > mat-form-field:nth-child(3) {
+    flex-grow: 1;
+    margin-right: 2%;
+}   
+
+.add-update-sale-add-entry-container-row-one > mat-form-field:nth-child(4) {
+    flex-grow: 1; 
+    margin-right: 2%;  
+}
+
+.add-update-sale-add-entry-container-row-one > mat-form-field:nth-child(5) {
+    flex-grow: 1;
+    margin-right: 2%;   
+}
+
+.add-update-sale-add-entry-container-row-one > mat-form-field:nth-child(6) {
+    flex-grow: 1;
+    margin-right: 2%; 
+}
+
+.add-update-sale-add-entry-container-row-second{
+    display: flex;
+    flex-direction: row;
+    width: 97%;
+    justify-content: stretch;
+    align-content: stretch;
+}
+
+.sale-entry-total-price {
+    flex: 0.5;
+}
+
+.sale-entry-dummy-div {
+    flex-grow: 0.6;
+}
+
+.sale-entry-add-btn {
+    flex-grow: 0.05;
+    height: 80%;
+    padding-bottom: 0.3%;
+    margin-top: 0.5%;
+    background-color: greenyellow;
+}
+
+.sale-entry-cancel-btn {
+    flex-grow: 0.05;
+    margin-top: 0.5%;
+}
+
 .add-update-sale-container-two {
     width: 95%;
     height: 55%;
@@ -89,36 +178,74 @@
 
 .add-update-sale-container-three {
     width: 95%;
-    height: 10%;
+    height: 20%;
     margin: auto;
+
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 33% 33% 33% 33%;
+    grid-column-gap: 0.5%;
+    grid-row-gap: 0.5%;
 }
 
-.remarks-details-container {
-    width: 96%;
-    margin: auto;
-    margin-top: 1%;
+.grid-element-1 {
+    grid-column: 2 / 4;
+    grid-row: 3 / 4;
 }
 
+.grid-element-2 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
 
-.payment-detail-container, .product-details-container, .remarks-details-container{
+.grid-element-3 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.grid-element-4 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.grid-element-5 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.grid-element-6 {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.grid-element-7 {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+}
+
+.grid-element-8 {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+}
+
+.grid-element-9 {
+    grid-column: 4 / 6;
+    grid-row: 3 / 4;
+
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-content: stretch;
+    flex-direction: column;
+    justify-content: stretch;
+
+    margin-left: 2.9%;
 }
 
-.payment-detail-container > mat-form-field, .product-details-container > mat-form-field, .remarks-details-container > mat-form-field{
+.grid-element-9 > mat-card {
     flex-grow: 1;
-}
-
-.payment-detail-container > mat-form-field{
-    margin-right: 2%;
-    margin-left: 2%;
+    margin-top: 1%;
 }
 
 .product-list-table {
     box-shadow: none;
-
 }
 
 .product-list-table > table {
@@ -131,4 +258,17 @@
     margin-top: 2%;
     font-style: italic;
     text-align: center;
+}
+
+.sales-transact-total-section{
+    float: right;
+    width: 25%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+}
+
+.sales-transact-total-section > mat-card{
+    font-size: 0.8em;
+    background-color: #f0f0f0;
+    margin-top: 1%;
 }

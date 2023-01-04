@@ -1,139 +1,163 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { ISalesData, EnumSaleType, ISaleTransactions } from '../../core/interfaces/interfaces';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, EnumSaleStatus } from '../../core/interfaces/interfaces';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
-import { SalesDialogComponent } from '../../dialogs/sales-dialog/sales-dialog.component';
 import { SalesTransactionDialogComponent } from '../../dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
+import { Subject } from 'rxjs';
+import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
+import { NotificationService } from '../../core/services/notification/notification.service';
 
 @Component({
   selector: 'app-sales-transaction',
   templateUrl: './sales-transaction.component.html',
   styleUrls: ['./sales-transaction.component.scss']
 })
-export class SalesTransactionComponent implements OnInit, AfterViewInit {
+export class SalesTransactionComponent implements OnInit {
 
-  @ViewChild(MatSort) sort: MatSort;
+
   panelOpenState = false;
+  productPanelOpenState = false;
+  returnPanelOpenState = false;
 
-  displayedColumns: string[] = [
-                                'serial_number',
-                                'transactionDate',
-                                'paidAmount',
-                                'remarks'
-                              ];
-  dataSource = new MatTableDataSource([]);
   selectedSalesID: string;
-  selectedSaleData: ISalesData = {
-    productID: '',
-    saleDate: '',
-    purchaser: '',
-    supplier: '',
-    saleType: EnumSaleType.directSale,
-    sellingPrice: 0,
-    sellingQuantity: 0
-  };
+  selectedSaleData: ISalesData;
+  selectedSaleDataSubject: Subject<ISalesData>;
+  salesDetail: any;
   totalPaidAmount = 0;
   balanceAmount = 0;
+  totalRefundAmount = 0;
+  saleStatus: EnumSaleStatus;
   private path = 'assets/icon/';
 
   constructor(
     public dialog: MatDialog,
-    private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
+
     private salesdbService: SalesdbService,
-    private productsdbService: ProductsdbService,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
+    private notificationService: NotificationService
   ) {
+
     this.matIconRegistry
     .addSvgIcon('back',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'back_icon.svg'))
+    .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'))
     .addSvgIcon('delete',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'delete_icon.svg'));
   }
 
-  ngOnInit(): void {
-    console.log(this.salesService.getSelectedSalesID());
-    this.selectedSalesID = this.salesService.getSelectedSalesID();
-    this.getSalesData();
+  setSaleStatus(){
+    this.saleStatus = this.selectedSaleData ? this.salesService.getSaleStatus(this.selectedSaleData) : EnumSaleStatus.initiated;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  getSalesData(){
-    this.salesdbService.getSalesByID(this.selectedSalesID)
-    .then(data=>{
-      console.log(data);
-      this.selectedSaleData = data[0];
-      this.productsdbService.getProductByID(this.selectedSaleData.productID)
-      .then(prodData=>{
-        console.log(prodData);
-        this.selectedSaleData.group = prodData[0].group;
-        this.setTableData();
-      })
-      .catch(err=>{
-        console.error(err);
-      });
-    })
-    .catch(err=>{
-      console.error(err);
+  getSaleReturnEntriesToBeDeleted(currentSaleReturn, prevSaleReturn) {
+    const saleEntriesToBeDeleted = [];
+    const currentSalesEntryIDs = currentSaleReturn.map(d => d.saleEntryID);
+    const prevSalesEntryIDs = prevSaleReturn.map(d => d.saleEntryID);
+    prevSalesEntryIDs.forEach(data => {
+      if (!currentSalesEntryIDs.includes(data)) {
+        saleEntriesToBeDeleted.push(data);
+      }
     });
+    return saleEntriesToBeDeleted;
   }
 
-  setTableData(): void{
-    const tmp = [];
-    console.log(this.selectedSaleData);
-    this.selectedSaleData.saleTransactions.forEach((element, index) => {
-      tmp.push({
-        ...element,
-        serialNumber: index + 1
-      });
-    });
-    this.dataSource.data = tmp;
-    this.totalPaidAmount = this.calcTransactionData(this.selectedSaleData.saleTransactions);
-    this.balanceAmount = (this.selectedSaleData.sellingPrice * this.selectedSaleData.sellingQuantity) - this.totalPaidAmount;
+  setSaleDetails(): void {
+    let totPrice = this.selectedSaleData
+                        ?.saleEntries
+                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+    totPrice -= this.selectedSaleData
+                ?.saleEntries.filter(d=>d.returnFlag === true).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+
+    let totSoldQuantity = this.selectedSaleData
+                            ?.saleEntries
+                            .filter(d=>d.returnFlag === false).map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+    totSoldQuantity -= this.selectedSaleData
+                ?.saleEntries.filter(d=>d.returnFlag === true).map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+
+    this.salesDetail = {
+      saleType: this.selectedSaleData?.saleType,
+      saleDate: this.selectedSaleData?.salesDate,
+      clienID: this.selectedSaleData?.customer.clientID,
+      clientName: this.selectedSaleData?.customer.clientName,
+      totalSoldQuantity: totSoldQuantity,
+      totalPrice: totPrice,
+      overallDiscountPercentage: this.selectedSaleData?.overallDiscountPercentage,
+      gstPercentage: this.selectedSaleData?.gstPercentage,
+      transportCharges: this.selectedSaleData?.transportCharges,
+      miscCharges: this.selectedSaleData?.miscCharges,
+      paymentTerms: this.selectedSaleData?.paymentTerms,
+      remarks: this.selectedSaleData?.remarks,
+      productList: this.selectedSaleData?.saleEntries.filter(d=>d.returnFlag === false).map(d=>({
+          productGroupName: d.product.productGroup.productGroupName,
+          productName: d.product.productName,
+          price: d.price,
+          quantity: d.quantity,
+          amount: d.price * d.quantity
+        })),
+      returnedProductList: this.selectedSaleData?.saleEntries.filter(d=>d.returnFlag === true).map(d=>({
+        productGroupName: d.product.productGroup.productGroupName,
+        productName: d.product.productName,
+        price: d.price,
+        quantity: d.quantity,
+        amount: d.price * d.quantity
+      }))
+    };
+    this.setTotalAmounts();
   }
 
-  calcTransactionData(transactionData: ISaleTransactions[]): any{
-    const paidAmounts = transactionData.map(e=>e.amount);
-    return paidAmounts.reduce((a, b)=> a+b, 0);
+  setTotalAmounts(): void {
+    this.totalPaidAmount = this.selectedSaleData.saleTransactions
+                                .filter(d=>d.transactionType !== EnumTransactionType.refund)
+                                .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+    this.totalRefundAmount = this.selectedSaleData.saleTransactions
+                                .filter(d=>d.transactionType === EnumTransactionType.refund)
+                                .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+    this.balanceAmount = this.salesDetail.totalPrice - this.totalPaidAmount - this.totalRefundAmount;
   }
 
-  openAddDialog(): void {
-    console.log('opening dialog box add transaction..');
+  openAddTransactionDialog(): void {
+
+    if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
+      const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
+    console.log('INFO : Opening dialog box add transaction');
     const dialogRef = this.dialog.open(SalesTransactionDialogComponent, {
       width: '50%',
       data: {
-        sellingPrice: this.selectedSaleData.sellingPrice,
-        sellingQuantity: this.selectedSaleData.sellingQuantity,
+        totalPrice: this.salesDetail.totalPrice,
         paid: 0,
         remarks: '',
         editCreate: 'Create',
-        transactionDate: ''
+        transactionDate: '',
+        salesDate: this.selectedSaleData.salesDate,
+        returnDate: this.selectedSaleData.returnedDate
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed');
+      console.log('INFO : The dialog box is closed');
       if (result){
-        console.log(result);
         const saleTransactionData: ISaleTransactions = {
           transactionDate: result.transactionDate,
-          amount: result.amount,
+          transactionType: result.transactionType,
+          transactionAmount: result.transactionAmount,
           remarks: result.remarks,
-          salesID: this.selectedSalesID
+          sales: this.selectedSaleData
         };
+        console.log(saleTransactionData);
+
         this.salesdbService.insertSaleTransaction(saleTransactionData)
-        .then(_=>{
+        .then(data=>{
+          console.log(data);
           console.log('INFO: Created new sale transaction data');
           this.onRefresh();
         })
@@ -144,97 +168,32 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openEditDeleteDialog(transactionData: any): void {
-    console.log('opening dialog box edit/delete transaction..');
-    const dialogRef = this.dialog.open(SalesTransactionDialogComponent, {
-      width: '50%',
-      data: {
-        sellingPrice: this.selectedSaleData.sellingPrice,
-        sellingQuantity: this.selectedSaleData.sellingQuantity,
-        paid: transactionData.paid,
-        remarks: transactionData.remarks,
-        editCreate: 'Edit',
-        transactionDate: transactionData.transactionDate,
-        transactionID: transactionData.transactionID,
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed');
-      if (result){
-        console.log(result);
-        if (result.editCreate === 'Edit'){
-          const saleTransactionData: ISaleTransactions = {
-            transactionDate: result.transactionDate,
-            amount: result.amount,
-            remarks: result.remarks,
-            transactionID: transactionData.transactionID
-          };
-          this.salesdbService.updateSaleTransaction(saleTransactionData)
-          .then(_=>{
-            console.log('INFO: Updated sale transaction data');
-            this.onRefresh();
-          })
-          .catch(err=>{
-            console.log(err);
-          });
-        } else {
-          this.salesdbService.deleteSaleTransaction(transactionData.transactionID)
-          .then(_=>{
-            console.log('INFO: Deleted sale transaction data');
-            this.onRefresh();
-          })
-          .catch(err=>{
-            console.log(err);
-          });
-        }
-      }
-    });
-  }
-
   openEditSaleDialog(): void {
-    console.log('opening dialog box edit/delete sale..');
-    console.log(this.selectedSaleData);
-    const dialogRef = this.dialog.open(SalesDialogComponent, {
-      width: '50%',
-      data: {
-        productID: this.selectedSaleData.productID,
-        productName: this.selectedSaleData.productName,
-        currentStock: this.selectedSaleData.currentStock,
-        group: this.selectedSaleData.group,
-        saleDate: this.selectedSaleData.saleDate,
-        saleTime: '',
-        purchaser: this.selectedSaleData.purchaser,
-        supplier: this.selectedSaleData.supplier,
-        saleType: this.selectedSaleData.saleType,
-        sellingPrice: this.selectedSaleData.sellingPrice,
-        sellingQuantity: this.selectedSaleData.sellingQuantity,
-        remarks: this.selectedSaleData.remarks,
-        editCreate: 'Edit'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed after update');
-      if (result){
-        result.saleData.salesID = this.selectedSalesID;
-        this.salesdbService.updateSales(result.saleData)
-        .then(_=>{
-          console.log('INFO: Updated sales data');
-          this.onRefresh();
-        })
-        .catch(err=>{
-          console.log(err);
-        });
-      }
-    });
+    this.router.navigate(['sale/add_update_sale',
+                        {createOrUpdate: EnumRouteActions.update,
+                          selectedSaleData : this.selectedSaleData.salesID}]);
+    this.router.navigate(['sale/add_update_sale',
+                        EnumRouteActions.update,
+                        this.selectedSaleData.salesID]);
   }
 
   onUpdateSale(){
+    if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
+      const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
     this.openEditSaleDialog();
   }
 
   onDeleteSale(){
+    if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
+      const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
     this.salesdbService.deleteSales(this.selectedSalesID)
     .then(_=>{
       console.log('INFO: Deleted sale');
@@ -246,25 +205,158 @@ export class SalesTransactionComponent implements OnInit, AfterViewInit {
 
   }
 
-  onRowClick(e: any){
-    console.log(e);
-    this.openEditDeleteDialog(e);
+  onInitiateReturn() {
+
+    if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
+      const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
+    if (!this.selectedSaleData.deliveredDate){
+      this.notificationService.updateSnackBarMessageSubject('Cannot initiate RETURN without completion of Delivery');
+      return;
+    }
+
+    console.log('INFO : Opening dialog box initital return');
+    const dialogRef = this.dialog.open(SalesReturnDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        data: this.selectedSaleData.saleEntries.filter(d=>d.returnFlag === false),
+        salesDate: this.selectedSaleData.salesDate,
+        deliveredDate: this.selectedSaleData.deliveredDate,
+        editCreateFlag: 'Create'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog box is closed');
+      if (result){
+        const tmp = {...this.selectedSaleData};
+        tmp.saleEntries = result.saleEntries;
+        tmp.returnedDate = result.returnedDate.toDate();
+        this.updateSales(tmp);
+      }
+    });
+  }
+
+  onUpdateCancelReturn(): void {
+
+    if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
+      const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
+    console.log('opening dialog box edit/delete transaction..');
+    const returnDataEntries = this.selectedSaleData.saleEntries.filter(d=>d.returnFlag === true);
+    const dialogRef = this.dialog.open(SalesReturnDialogComponent, {
+      width: '50%',
+      height: 'auto',
+      data: {
+        data: this.selectedSaleData.saleEntries.filter(d=>d.returnFlag === false),
+        returnData: returnDataEntries,
+        salesDate: this.selectedSaleData.salesDate,
+        returnedDate: this.selectedSaleData.returnedDate,
+        deliveredDate: this.selectedSaleData.deliveredDate,
+        editCreateFlag: 'Edit'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog box is closed');
+      if (result){
+        if (result.editCreateFlag === 'Edit'){
+
+          const tmpD = {...this.selectedSaleData};
+          tmpD.saleEntries = result.saleEntries;
+          tmpD.returnedDate = result.returnedDate.toDate();
+          const saleReturnEntriesToBeDeleted = this.getSaleReturnEntriesToBeDeleted(
+                                                result.saleEntries.filter(d=>d.returnFlag === true), returnDataEntries);
+          if (saleReturnEntriesToBeDeleted.length > 0) {
+              this.salesdbService.deleteSalesEntry(saleReturnEntriesToBeDeleted)
+              .then(_=>{
+                  this.updateSales(tmpD);
+              })
+              .catch(err=>{
+                console.log(err);
+                this.notificationService.updateSnackBarMessageSubject('Unable to update sale');
+              });
+          } else {
+            this.updateSales(tmpD);
+          }
+        } else {
+
+          const tmpD = {...this.selectedSaleData};
+          tmpD.saleEntries = this.selectedSaleData.saleEntries.filter(d=>d.returnFlag === false);
+          tmpD.returnedDate = null;
+          const saleReturnEntriesToBeDeleted = returnDataEntries.map(d=>d.saleEntryID);
+
+          if (saleReturnEntriesToBeDeleted.length > 0) {
+            this.salesdbService.deleteSalesEntry(saleReturnEntriesToBeDeleted)
+            .then(_=>{
+                this.updateSales(tmpD);
+            })
+            .catch(err=>{
+              console.log(err);
+              this.notificationService.updateSnackBarMessageSubject('Unable to update sale');
+            });
+        } else {
+          this.updateSales(tmpD);
+        }
+        }
+      }
+    });
+  }
+
+  updateSales(data): void {
+    this.salesdbService.updateSales(data)
+        .then(_=>{
+          this.notificationService.updateSnackBarMessageSubject('Operation successfully');
+          this.onRefresh();
+        })
+        .catch(err=>{
+          console.log(err);
+          this.notificationService.updateSnackBarMessageSubject('Unable to Initiate Return');
+        });
+  }
+
+  onCancelSale(){
+    if (this.selectedSaleData.completedDate) {
+      const message = `Unable to make changes as Sale is marked as COMPLETED`;
+      this.notificationService.updateSnackBarMessageSubject(message);
+      return;
+    }
+
+    const tmp = {...this.selectedSaleData};
+    tmp.cancelledDate = this.selectedSaleData.cancelledDate ? null : new Date();
+    this.updateSales(tmp);
+
   }
 
   onRefresh(){
-    this.getSalesData();
+    this.salesdbService.getSalesByID(this.selectedSalesID);
+    this.setSaleStatus();
   }
 
   onBack(){
     this.router.navigate(['sales']);
   }
 
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this.liveAnnouncer.announce('Sorting cleared');
-    }
+  ngOnInit(): void {
+    this.setSaleStatus();
+    this.selectedSalesID = this.salesService.getSelectedSalesID();
+    this.activatedRoute.data.subscribe(data=>{
+      this.selectedSaleData = data.saleData;
+      this.setSaleDetails();
+      this.setSaleStatus();
+      this.salesService.getSelectedSaleData().subscribe(d=>{
+        this.selectedSaleData = d;
+        this.setSaleDetails();
+        this.setSaleStatus();
+      });
+    });
   }
 
 }

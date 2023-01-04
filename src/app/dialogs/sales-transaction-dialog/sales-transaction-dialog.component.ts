@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
-import { ISaleTransactions } from '../../core/interfaces/interfaces';
+import { EnumTransactionType, ISaleTransactions } from '../../core/interfaces/interfaces';
+import { NotificationService } from '../../core/services/notification/notification.service';
 
 const moment = _moment;
 
@@ -17,12 +17,15 @@ const moment = _moment;
 export class SalesTransactionDialogComponent implements OnInit {
 
   form: FormGroup;
-  transactionDate: string;
-  totalAmount: number;
-  paid: number;
+  transactionDate: Date;
+  transactionTime: string;
+  totalPrice: number;
+  transactionAmount: number;
+  transactionTypeList = [EnumTransactionType.advance, EnumTransactionType.paid];
+  selectedTransactionType: EnumTransactionType;
   remarks: string;
   editCreate: string;
-  date = new FormControl(moment());
+  minTransactionDate: Date;
 
   private path = 'assets/icon/';
 
@@ -32,19 +35,24 @@ export class SalesTransactionDialogComponent implements OnInit {
     private fb: FormBuilder,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
-    private snackbar: MatSnackBar
+    private notificationService: NotificationService
   ) {
-    this.totalAmount = this.data.sellingPrice * this.data.sellingQuantity;
-    this.paid = this.data.paid;
+    this.totalPrice = this.data.totalPrice;
+    this.transactionAmount = this.data.transactionAmount;
     this.remarks = this.data.remarks;
     this.editCreate = this.data.editCreate;
-    this.date.setValue = this.data.transactionDate;
+    this.transactionTime = this.data.transactionTime;
+    this.transactionDate = this.data.transactionDate;
+    this.selectedTransactionType = this.data.transactionType;
 
     this.form = this.fb.group(
       {
-        totalAmount: [{value:this.totalAmount, disabled: true}, [Validators.required]],
-        paidAmount: [this.paid, [Validators.required]],
-        remarks: [this.remarks]
+        totalPrice: [{value:this.totalPrice, disabled: true}, [Validators.required]],
+        transactionAmount: [this.transactionAmount, [Validators.required]],
+        remarks: [this.remarks],
+        transactionDate: [this.transactionDate, [Validators.required]],
+        transactionTime: [this.transactionTime, [Validators.required]],
+        transactionType: [this.selectedTransactionType, [Validators.required]]
       }
     );
 
@@ -56,16 +64,32 @@ export class SalesTransactionDialogComponent implements OnInit {
   }
 
   setFinalTransactionData(): ISaleTransactions{
+    const {value} = this.form;
+    let transactionDate = value.transactionDate;
+    if ('year' in transactionDate){
+      transactionDate = transactionDate.toDate();
+    }
+    const transactionTime = value.transactionTime.split(':');
+    const transactionDateTime = new Date( transactionDate.getFullYear(),
+                                          transactionDate.getMonth(),
+                                          transactionDate.getDate(),
+                                          parseInt(transactionTime[0], 10),
+                                          parseInt(transactionTime[1], 10));
     const transactionData: ISaleTransactions = {
-      transactionDate: this.date.value.toDate(),
-      amount: this.form.controls.paidAmount.value,
-      remarks: this.form.controls.remarks.value
+      transactionDate: transactionDateTime,
+      transactionAmount: value.transactionAmount,
+      transactionType: value.transactionType,
+      remarks: value.remarks
     };
 
     return transactionData;
   }
 
   ngOnInit(): void {
+    this.minTransactionDate = moment(this.data.salesDate).toDate();
+    if (this.data.returnDate) {
+      this.transactionTypeList = [EnumTransactionType.advance, EnumTransactionType.paid, EnumTransactionType.refund];
+    }
   }
 
   onNoClick(): void {
@@ -74,6 +98,15 @@ export class SalesTransactionDialogComponent implements OnInit {
 
   onSave(): void{
     const {value, valid} = this.form;
+    if (this.data.returnDate && value.transactionType === EnumTransactionType.refund) {
+      const transacDate = moment(value.transactionDate).toDate().getTime();
+      const returnedDate = moment(this.data.returnDate).toDate().getTime();
+      if (transacDate - returnedDate < 0){
+        this.notificationService.updateSnackBarMessageSubject('Refund Transaction date cannot be before Return Date');
+        return;
+      }
+    }
+
     if (valid) {
       const finalTransactionData = this.setFinalTransactionData();
       finalTransactionData.editCreate = 'Create';
@@ -83,8 +116,19 @@ export class SalesTransactionDialogComponent implements OnInit {
 
   onUpdate(): void {
     const {value, valid} = this.form;
+
+    if (this.data.returnDate && value.transactionType === EnumTransactionType.refund) {
+      const transacDate = moment(value.transactionDate).toDate().getTime();
+      const returnedDate = moment(this.data.returnDate).toDate().getTime();
+      if (transacDate - returnedDate < 0){
+        this.notificationService.updateSnackBarMessageSubject('Refund Transaction date cannot be before Return Date');
+        return;
+      }
+    }
+
     if (valid && value.paidAmount !== 0) {
       const finalTransactionData = this.setFinalTransactionData();
+      finalTransactionData.transactionID = this.data.transactionID;
       finalTransactionData.editCreate = 'Edit';
       this.dialogRef.close(finalTransactionData);
     }

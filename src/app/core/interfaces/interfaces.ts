@@ -1,6 +1,7 @@
 export interface IProductData {
     productID?: string;
     productName: string;
+    productGroup?: IProductGroup;
     productGroupID: string;
     productGroupName: string;
     description: string;
@@ -21,41 +22,53 @@ export interface IProductData {
 
   export interface ISalesData {
     salesID?: string;
-    productID: string;
-    productName?: string;
-    productGroup?: string;
-    productDescription?: string;
-    currentStock?: number;
-    group?: string;
-    saleDate: string;
-    saleTime?: string;
-    purchaser: string;
-    supplier: string;
     saleType: EnumSaleType;
-    sellingPrice: number;
-    sellingQuantity: number;
-    totalAmount?: number;
+    customer?: IClientData;
+    saleEntries?: ISaleEntry[];
+    saleTransactions?: ISaleTransactions[];
+    salesDate: Date;
+
+    gstPercentage: number;
+    overallDiscountPercentage: number;
+    transportCharges: number;
+    miscCharges: number;
+    paymentTerms: number;
+
+    currentStock?: number;
+    sellingPrice?: number;
+    sellingQuantity?: number;
     paid?: number;
+    totalAmount?: number;
     balance?: number;
     remarks?: string;
-    saleTransactions?: ISaleTransactions[];
     editCreate?: string;
     serialNumber?: number;
+
+    dispatchDate?: Date;
+    deliveredDate?: Date;
+    returnedDate?: Date;
+    refundedDate?: Date;
+    completedDate?: Date;
+    cancelledDate?: Date;
 }
 
 export interface ISaleEntry {
-  salesID: string;
-  productID: string;
+  saleEntryID?: string;
+  salesID?: string;
+  product: IProductData;
+  returnFlag?: boolean;
   price?: number;
   quantity?: number;
+  discountPercentage?: number;
 }
 
 export interface ISaleTransactions {
     transactionID?: string;
+    sales?: ISalesData;
     salesID?: string;
     transactionDate: Date;
     transactionType?: EnumTransactionType;
-    amount: number;
+    transactionAmount: number;
     balance?: number;
     remarks?: string;
     editCreate?: string;
@@ -64,23 +77,6 @@ export interface ISaleTransactions {
 export interface ISaleTransactionComplete {
     saleData: ISalesData;
     transactionData: ISaleTransactions;
-}
-
-export enum EnumSaleType {
-    directSale = 'Direct_Sale',
-    reseller = 'Reseller',
-    dealer = 'Dealer'
-}
-
-export enum EnumTransactionType {
-  credit = 'Credit',
-  debit = 'Debit'
-}
-
-export enum EnumSalaryFrequency {
-  monthly = 'Monthly',
-  weekly = 'Weekly',
-  others = 'Others'
 }
 
 export interface IClientData {
@@ -101,11 +97,45 @@ export interface IClientData {
   email?: string;
   remarks?: string;
   editCreate?: string;
-  createdDate: string;
+  deleteFlag?: boolean;
+  createdDate: Date;
 }
 
 export enum EnumClientType {
   customer = 'CUSTOMER',
   supplier = 'SUPPLIER'
+}
+
+export enum EnumSaleType {
+  directSale = 'Direct Sale',
+  reseller = 'Reseller',
+  dealer = 'Dealer'
+}
+
+export enum EnumTransactionType {
+advance = 'Advance',
+paid = 'Paid',
+refund = 'Refund'
+}
+
+export enum EnumSalaryFrequency {
+monthly = 'Monthly',
+weekly = 'Weekly',
+others = 'Others'
+}
+
+export enum EnumRouteActions {
+  update = 'Update',
+  create = 'Create'
+}
+
+export enum EnumSaleStatus {
+  initiated = 'Sale Initiated',
+  dispatched = 'Dispatched',
+  delivered = 'Delivered',
+  returned = 'Returned',
+  refunded = 'Refunded',
+  completed = 'Completed',
+  cancelled = 'Cancelled'
 }
 
