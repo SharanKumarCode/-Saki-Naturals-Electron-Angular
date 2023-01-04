@@ -3,3 +3,23 @@
 // @import '@angular/material/prebuilt-themes/indigo-pink.css';
 // @import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 // @import '@angular/material/prebuilt-themes/purple-green.css';
+
+@font-face {
+    font-family: "Rajdhani";
+    src: local("Rajdhani"), url(./assets/fonts/Indie_Flower/IndieFlower-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Revamped";
+    src: local("Revamped"), url(./assets/fonts/revamped/Revamped.otf) format("truetype");
+}
+
+@font-face {
+    font-family: "Typewriter";
+    src: local("Typewriter"), url(./assets/fonts/another_typewriter/atwriter.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "Fragment";
+    src: local("Fragment"), url(./assets/fonts/fragment_core/Fragmentcore.otf) format("truetype");
+}
