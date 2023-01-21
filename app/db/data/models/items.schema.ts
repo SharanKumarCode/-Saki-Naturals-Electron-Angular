@@ -1,4 +1,4 @@
-import { CreateDateColumn, OneToMany } from "typeorm";
+import { CreateDateColumn, OneToMany, PrimaryColumn } from "typeorm";
 
 const { Entity, PrimaryGeneratedColumn, Column, ManyToOne } = require('typeorm');
 
@@ -153,8 +153,8 @@ export class Client
 	@OneToMany(()=>Sales, (sales)=>sales.customer)
 	sales: Sales[]
 
-	// @OneToMany(()=>Purchase, (purchase)=>purchase.supplier)
-	// purchases: Purchase[]
+	@OneToMany(()=>Purchase, (purchase)=>purchase.supplier)
+	purchases: Purchase[]
 
 	@Column()
 	clientType: string;
@@ -407,8 +407,8 @@ export class Material
     // @OneToMany(()=>ProductionEntry, (productionEntry)=>productionEntry.material)
     // productionEntries: ProductionEntry[]
 
-    // @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.material)
-    // purchaseEntries: PurchaseEntry[]
+    @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.material)
+    purchaseEntries: PurchaseEntry[]
 
     @Column()
 	materialName: string;
@@ -421,6 +421,146 @@ export class Material
 
     @CreateDateColumn()
 	createdDate: Date;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+
+}
+
+@Entity()
+export class Purchase
+{
+	@PrimaryGeneratedColumn('uuid')
+	purchaseID: string;
+
+    @ManyToOne(()=>Client, (client)=>client.purchases)
+	supplier: Client;
+
+    @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.purchase)
+    purchaseEntries: PurchaseEntry[]
+
+    @OneToMany(()=>PurchaseTransaction, (purchaseTransaction)=>purchaseTransaction.purchase)
+    purchaseTransactions: PurchaseTransaction[]
+
+	@Column()
+	overallDiscountPercentage: number;
+
+	@Column()
+	gstPercentage: number;
+
+	@Column()
+	transportCharges: number;
+
+	@Column()
+	miscCharges: number;
+
+	@Column()
+	paymentTerms: number;
+
+	@Column({
+		type: 'datetime'
+	})
+	purchaseDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	dispatchDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	deliveredDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	returnedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	refundedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	completedDate: Date;
+
+	@Column({
+		type: 'date',
+		nullable: true
+	})
+	cancelledDate: Date;
+
+	@Column()
+	remarks: string;
+
+	@Column({
+		default: false
+	})
+	deleteFlag: boolean;
+}
+
+@Entity()
+export class PurchaseEntry
+{
+	
+	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseEntries)
+	purchase: Purchase;
+
+	@ManyToOne(() => Material, (material)=>material.purchaseEntries)
+	material: Material;
+
+	@PrimaryGeneratedColumn('uuid')
+	purchaseEntryID: string;
+
+    @Column()
+	price: number;
+
+    @Column()
+	quantity: number;
+
+	@Column()
+	discountPercentage: number;
+
+	@Column({
+		default: false
+	})
+	returnFlag: boolean
+
+}
+
+
+@Entity()
+export class PurchaseTransaction
+{
+	@PrimaryGeneratedColumn('uuid')
+	transactionID: string;
+
+	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseTransactions)
+	purchase: Purchase;
+
+	@Column()
+	transactionType: string;
+
+    @Column()
+	transactionAmount: number;
+
+    @Column({
+		type: 'datetime'
+	})
+	transactionDate: Date;
+
+    @Column()
+	remarks: string;
 
 	@Column({
 		default: false
@@ -480,86 +620,4 @@ export class Material
 // 	@Column()
 // 	materialQuantity: number;
 
-// }
-
-// @Entity()
-// export class PurchaseEntry
-// {
-	
-// 	@PrimaryColumn()
-// 	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseEntries, {
-// 		onDelete: "RESTRICT"
-// 	})
-// 	purchase: Purchase;
-
-// 	@PrimaryColumn()
-// 	@ManyToOne(() => Material, (material)=>material.purchaseEntries, {
-// 		onDelete: "RESTRICT"
-// 	})
-// 	material: Material;
-
-//     @Column()
-// 	price: number;
-
-//     @Column()
-// 	quantity: number;
-
-// }
-
-
-// @Entity()
-// export class PurchaseTransaction
-// {
-// 	@PrimaryGeneratedColumn('uuid')
-// 	transactionID: string;
-
-// 	@PrimaryColumn()
-// 	@ManyToOne(() => Purchase, (purchase)=>purchase.purchaseTransactions, {
-// 		onDelete: "RESTRICT"
-// 	})
-// 	purchase: string;
-
-// 	@Column()
-// 	transactionType: string;
-
-//     @Column()
-// 	amount: number;
-
-//     @Column({
-// 		type: 'datetime'
-// 	})
-// 	transactionDate: Date;
-
-//     @Column()
-// 	remarks: string;
-
-// 	@Column({
-// 		default: false
-// 	})
-// 	deleteFlag: boolean;
-
-// }
-
-// @Entity()
-// export class Purchase
-// {
-// 	@PrimaryGeneratedColumn('uuid')
-// 	purchaseID: string;
-
-//     @ManyToOne(()=>Client, (client)=>client.purchases)
-// 	supplier: Client;
-
-//     @OneToMany(()=>PurchaseEntry, (purchaseEntry)=>purchaseEntry.purchase)
-//     purchaseEntries: PurchaseEntry[]
-
-//     @OneToMany(()=>PurchaseTransaction, (purchaseTransaction)=>purchaseTransaction.purchase)
-//     purchaseTransactions: PurchaseTransaction[]
-
-// 	@Column()
-// 	remarks: string;
-
-// 	@Column({
-// 		default: false
-// 	})
-// 	deleteFlag: boolean;
 // }

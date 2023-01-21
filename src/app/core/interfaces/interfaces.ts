@@ -85,9 +85,57 @@ export interface ISaleTransactions {
     editCreate?: string;
 }
 
-export interface ISaleTransactionComplete {
-    saleData: ISalesData;
-    transactionData: ISaleTransactions;
+export interface IPurchaseData {
+  purchaseID?: string;
+  supplier?: IClientData;
+  purchaseEntries?: IPurchaseEntry[];
+  purchaseTransactions?: IPurchaseTransactions[];
+  purchaseDate: Date;
+
+  gstPercentage: number;
+  overallDiscountPercentage: number;
+  transportCharges: number;
+  miscCharges: number;
+  paymentTerms: number;
+
+  currentStock?: number;
+  purchasePrice?: number;
+  purchaseQuantity?: number;
+  paidAmount?: number;
+  totalPrice?: number;
+  balance?: number;
+  remarks?: string;
+  editCreate?: string;
+  serialNumber?: number;
+
+  dispatchDate?: Date;
+  deliveredDate?: Date;
+  returnedDate?: Date;
+  refundedDate?: Date;
+  completedDate?: Date;
+  cancelledDate?: Date;
+}
+
+export interface IPurchaseEntry {
+purchaseEntryID?: string;
+purchaseID?: string;
+material: IMaterialData;
+returnFlag?: boolean;
+price?: number;
+quantity?: number;
+discountPercentage?: number;
+}
+
+export interface IPurchaseTransactions {
+  transactionID?: string;
+  purchase?: IPurchaseData;
+  purchaseID?: string;
+  transactionDate: Date;
+  transactionType?: EnumTransactionType;
+  transactionAmount: number;
+  balance?: number;
+  remarks?: string;
+  editCreate?: string;
 }
 
 export interface IClientData {
@@ -150,3 +198,12 @@ export enum EnumSaleStatus {
   cancelled = 'Cancelled'
 }
 
+export enum EnumPurchaseStatus {
+  initiated = 'Purchase Initiated',
+  dispatched = 'Dispatched',
+  delivered = 'Delivered',
+  returned = 'Returned',
+  refunded = 'Refunded',
+  completed = 'Completed',
+  cancelled = 'Cancelled'
+}
