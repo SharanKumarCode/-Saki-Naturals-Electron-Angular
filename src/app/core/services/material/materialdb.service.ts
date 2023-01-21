@@ -48,7 +48,21 @@ export class MaterialdbService {
   }
 
   getMaterialByID(materialID: string): Promise<any>{
-    return this.ipcRenderer.invoke('get-material-by-id', materialID);
+    return this.ipcRenderer.invoke('get-material-by-id', materialID)
+    .then(data=>{
+      this.materialService.updateSelectedMaterialData(data[0]);
+
+      return new Promise((res, rej)=>{
+        res(true);
+      });
+    })
+    .catch(err=>{
+      console.error(err);
+
+      return new Promise((res, rej)=>{
+        rej(true);
+      });
+    });
   }
 
   insertMaterial(material: IMaterialData): void{
@@ -70,7 +84,7 @@ export class MaterialdbService {
     .then(_=>{
       console.log('INFO : updated material');
       this.notificationService.updateSnackBarMessageSubject('Updated material data to DB');
-
+      this.getMaterialByID(material.materialID);
     })
     .catch(err=>{
       console.log(err);

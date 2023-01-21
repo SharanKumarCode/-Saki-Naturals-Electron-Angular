@@ -39,7 +39,6 @@ async function insertMaterial(material: IMaterialData){
 
 async function updateMaterial(material: IMaterialData){
     console.log("INFO: Updating material data")
-
     const res = await AppDataSource.manager.update(Material, {
         materialID: material.materialID
     }, {

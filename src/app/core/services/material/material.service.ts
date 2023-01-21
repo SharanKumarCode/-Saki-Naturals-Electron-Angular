@@ -9,9 +9,11 @@ export class MaterialService {
 
   private materialListSubject$: Subject<IMaterialData[]>;
   private selectedMaterialID: string;
+  private selectedMaterialDataSubject$: Subject<IMaterialData>;
 
   constructor() {
     this.materialListSubject$ = new Subject<IMaterialData[]>();
+    this.selectedMaterialDataSubject$ = new Subject<IMaterialData>();
    }
 
   getMaterialList(): Subject<IMaterialData[]>{
@@ -28,5 +30,13 @@ export class MaterialService {
 
    updateSelectedMaterialID(materialID: string){
     this.selectedMaterialID = materialID;
+   }
+
+   getSelectedMaterialData(): Subject<IMaterialData>{
+    return this.selectedMaterialDataSubject$;
+   }
+
+   updateSelectedMaterialData(data: IMaterialData): void {
+      this.selectedMaterialDataSubject$.next(data);
    }
 }

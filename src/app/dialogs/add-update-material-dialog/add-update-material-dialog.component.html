@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>ADD MATERIALS</h1>
+<h1 mat-dialog-title *ngIf="editCreate !== 'Edit'">ADD MATERIAL</h1>
+<h1 mat-dialog-title *ngIf="editCreate === 'Edit'">UPDATE MATERIAL</h1>
 <mat-dialog-content class="form-container" [formGroup]="form">
   <mat-form-field appearance="outline">
     <mat-label>Material Name</mat-label>

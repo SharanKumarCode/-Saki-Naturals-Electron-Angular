@@ -31,6 +31,7 @@ export class AddUpdateMaterialDialogComponent implements OnInit {
     this.materialName = this.data.materialName;
     this.description = this.data.description;
     this.remarks = this.data.remarks;
+    this.editCreate = this.data.editCreate;
 
     this.form = this.fb.group(
       {
