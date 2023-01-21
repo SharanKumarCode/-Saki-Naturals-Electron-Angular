@@ -62,8 +62,6 @@ export class AddUpdateSaleComponent implements OnInit {
   productName: string;
   currentStock: number;
   saleDate: string;
-  saleTime: string;
-  purchaser: string;
   supplier: string;
   saleType: EnumSaleType;
   sellingPrice: number;
@@ -486,7 +484,6 @@ export class AddUpdateSaleComponent implements OnInit {
   }
 
   updateSale(saleData: ISalesData): void {
-    console.log(saleData);
     this.salesDBservice.updateSales(saleData)
           .then(__=>{
             this.notificationService.updateSnackBarMessageSubject('Sale Updated successfully');

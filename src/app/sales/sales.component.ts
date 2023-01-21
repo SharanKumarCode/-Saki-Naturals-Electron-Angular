@@ -45,7 +45,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
     private salesdbService: SalesdbService,
-    private productdbService: ProductsdbService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -84,7 +83,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
   setTableData(){
     this.salesDataListObservable.subscribe(data=>{
       this.dataSource = new MatTableDataSource();
-      console.log(data);
       const tmpSaleList = [];
       data.forEach((element, index)=>{
         const tmpSaleData = {
