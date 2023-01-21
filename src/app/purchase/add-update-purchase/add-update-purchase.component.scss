@@ -1,0 +1,261 @@
+.add-update-purchase-button-section {
+    width: 15%;
+    height: 10%;
+    margin-left: 80%;
+}
+
+.add-update-purchase-button-row{
+    width: 90%;
+    height: 50%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-content: stretch;
+
+    margin: 8% auto 8px auto;
+  }
+
+.add-update-purchase-button-row > button:first-child {
+    flex-grow: 1;
+    margin-right: 2%;
+}
+
+.add-update-purchase-button-row > button:nth-child(2) {
+    flex-grow: 0.7;
+    height: 100%;
+    border-radius: 5%;
+    margin-left: 1%;
+    background-color: #673BB7;
+}
+
+.add-update-purchase-add-entry-container {
+    width: 95%;
+    height: 10%;
+}
+
+.icon-display {
+    transform: scale(1);
+    color: white;
+ }
+
+
+.price-right-align {
+    text-align: right;
+  }
+  
+  input.price-right-align::-webkit-outer-spin-button,
+  input.price-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.price-right-align {
+    -moz-appearance: textfield;
+  }
+
+.add-update-purchase-container-one {
+    width: 95%;
+    height: 10%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-content: space-around;
+}
+
+.add-update-purchase-container-one > div {
+    flex-grow: 1;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.add-update-purchase-container-one > div > mat-form-field {
+    width: 100%;
+}
+
+.add-material-button-container {
+    height: 50%;
+    margin-top: 0.3%;
+    border-radius: 5%;
+}
+
+.add-material-button-container > button {
+    width: 90%;
+}
+
+.add-update-purchase-add-entry-container {
+    width: 95%;
+    height: 19%;
+
+    margin: auto;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-content: space-around;
+
+    overflow: hidden;
+    border: 2px solid green;
+    border-style: dashed;
+}
+
+.add-update-purchase-add-entry-container > mat-card {
+    width: 100%;
+}
+
+.add-update-purchase-add-entry-container-row-one {
+    display: flex;
+    flex-direction: row;
+}
+
+.add-update-purchase-add-entry-container-row-one> mat-form-field:nth-child(1) {
+    flex-grow: 1;
+}
+
+.add-update-purchase-add-entry-container-row-one > mat-form-field:nth-child(2) {
+    flex-grow: 1;
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.add-update-purchase-add-entry-container-row-one > mat-form-field:nth-child(3) {
+    flex-grow: 1;
+    margin-right: 2%;
+}   
+
+.add-update-purchase-add-entry-container-row-one > mat-form-field:nth-child(4) {
+    flex-grow: 1; 
+    margin-right: 2%;  
+}
+
+.add-update-purchase-add-entry-container-row-one > mat-form-field:nth-child(5) {
+    flex-grow: 1;
+    margin-right: 2%;   
+}
+
+.add-update-purchase-add-entry-container-row-one > mat-form-field:nth-child(6) {
+    flex-grow: 1;
+    margin-right: 2%; 
+}
+
+.add-update-purchase-add-entry-container-row-second{
+    display: flex;
+    flex-direction: row;
+    width: 97%;
+    justify-content: stretch;
+    align-content: stretch;
+}
+
+.purchase-entry-total-price {
+    flex: 0.5;
+}
+
+.purchase-entry-dummy-div {
+    flex-grow: 0.6;
+}
+
+.purchase-entry-add-btn {
+    flex-grow: 0.05;
+    height: 80%;
+    padding-bottom: 0.3%;
+    margin-top: 0.5%;
+    background-color: greenyellow;
+}
+
+.purchase-entry-cancel-btn {
+    flex-grow: 0.05;
+    margin-top: 0.5%;
+}
+
+.add-update-purchase-container-two {
+    width: 95%;
+    height: 55%;
+    margin: auto;
+    overflow: auto;
+
+}
+
+.add-update-purchase-container-three {
+    width: 95%;
+    height: 20%;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 33% 33% 33% 33%;
+    grid-column-gap: 0.5%;
+    grid-row-gap: 0.5%;
+}
+
+.grid-element-1 {
+    grid-column: 2 / 4;
+    grid-row: 3 / 4;
+}
+
+.grid-element-2 {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.grid-element-3 {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.grid-element-4 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.grid-element-5 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.grid-element-6 {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+
+.grid-element-7 {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+}
+
+.grid-element-8 {
+    grid-column: 1 / 2;
+    grid-row: 3 / 4;
+}
+
+.grid-element-9 {
+    grid-column: 4 / 6;
+    grid-row: 3 / 4;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+
+    margin-left: 2.9%;
+}
+
+.grid-element-9 > mat-card {
+    flex-grow: 1;
+    margin-top: 1%;
+}
+
+.material-list-table {
+    box-shadow: none;
+}
+
+.material-list-table > table {
+    width: 100%;
+    margin-top: 2%;
+}
+
+.no-materials-div {
+    width: 100%;
+    margin-top: 2%;
+    font-style: italic;
+    text-align: center;
+}

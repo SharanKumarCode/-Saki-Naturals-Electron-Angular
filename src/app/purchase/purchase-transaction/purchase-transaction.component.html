@@ -1,0 +1,178 @@
+<section class="purchase-transact-button-section">
+    <div class="purchase-status">
+      <span style="font-size: 1.5em; font-family: Roboto; text-align: center;">STATUS :</span>
+      <span *ngIf="purchaseStatus === 'Completed'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left; color: green;">{{purchaseStatus}}</span>
+      <span *ngIf="purchaseStatus === 'Cancelled'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left; color: red;">{{purchaseStatus}}</span>
+      <span *ngIf="purchaseStatus !== 'Cancelled' && purchaseStatus !== 'Completed'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left;">{{purchaseStatus}}</span>
+    </div>
+      <div class="purchase-transact-button-row">
+        <button mat-raised-button color="accent" (click)="openAddTransactionDialog()">ADD PURCHASE TRANSACTION</button>
+        <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+        <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+      </div>
+  </section>
+  <section class="purchase-data-section">
+      <mat-accordion multi>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                PURCHASE DATA
+            </mat-panel-title>
+            <mat-panel-description>
+                {{panelOpenState ? '' : 'Expand to update or delete Purchase data'}}
+            </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="purchase-data">
+                <mat-card class="purchase-data-section-1">
+                  <span class="purchase-data-key-sections">Purchase ID</span>
+                  <span style="float: right; font-size: 1.1em;">{{(purchaseDetail.purchaseID ? purchaseDetail.purchaseID : '')}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-3">
+                  <span class="purchase-data-key-sections">Purchase Date</span>
+                  <span style="float: right; font-size: 1.1em;">{{(purchaseDetail.purchaseDate ? purchaseDetail.purchaseDate : '') | date:'MMMM dd, YYY'}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-4">
+                  <span class="purchase-data-key-sections">Supplier ID</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.clienID ? purchaseDetail.clienID : ''}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-5">
+                  <span class="purchase-data-key-sections">Supplier Name</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.clientName ? purchaseDetail.clientName : ''}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-6">
+                  <span class="purchase-data-key-sections">Total Sold Quantity</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.totalSoldQuantity ? purchaseDetail.totalSoldQuantity : ''}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-7">
+                  <span class="purchase-data-key-sections">Discount %</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.overallDiscountPercentage ? purchaseDetail.overallDiscountPercentage : 0}} %</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-8">
+                  <span class="purchase-data-key-sections">GST %</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.gstPercentage ? purchaseDetail.gstPercentage : 0}} %</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-9">
+                  <span class="purchase-data-key-sections">Transportation charges</span>
+                  <span style="float: right; font-size: 1.1em;">&#8377;&nbsp; {{purchaseDetail.transportCharges ? purchaseDetail.transportCharges : 0}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-10">
+                  <span class="purchase-data-key-sections">Miscellaneous charges</span>
+                  <span style="float: right; font-size: 1.1em;">&#8377;&nbsp; {{purchaseDetail.miscCharges ? purchaseDetail.miscCharges : 0}}</span>
+                </mat-card>
+                <mat-card class="purchase-data-section-11">
+                  <span class="purchase-data-key-sections">Payment Terms</span>
+                  <span style="float: right; font-size: 1.1em;">{{purchaseDetail.paymentTerms ? purchaseDetail.paymentTerms : 0}} days</span>
+                </mat-card>
+                <div class="purchase-data-section-12">
+                  <span class="purchase-data-key-sections">Remarks</span>
+                  <span style="margin-left : 2%; font-size: 1em;">{{purchaseDetail.remarks ? purchaseDetail.remarks : '(blank)'}}</span>
+                </div>
+                
+            </div>
+            <mat-action-row>
+                <button mat-button color="primary" (click)="onUpdatePurchase()">UPDATE</button>
+                <button mat-button color="warn" (click)="onDeletePurchase()"><mat-icon svgIcon="delete"></mat-icon></button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        <mat-expansion-panel (opened)="materialPanelOpenState = true"
+                      (closed)="materialPanelOpenState = false">
+          <mat-expansion-panel-header>
+          <mat-panel-title>
+              PURCHASE MATERIALS LIST
+          </mat-panel-title>
+          <mat-panel-description>
+              {{materialPanelOpenState ? '' : 'Expand to view purchase material list'}}
+          </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="material-list-container">
+            <table class="material-list-table">
+              <thead>
+                <tr>
+                  <th>Material Name</th>
+                  <th>Selling Price</th>
+                  <th>Quantity</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let material of purchaseDetail.materialList">
+                    <td>{{material.materialName}}</td>
+                    <td>&#8377;&nbsp; {{material.price}}</td>
+                    <td>{{material.quantity}}</td>
+                    <td>&#8377;&nbsp; {{material.amount}}</td>
+                </tr>
+            </tbody>
+              
+              </table>
+          </div>
+          </mat-expansion-panel>
+        <mat-expansion-panel *ngIf="purchaseDetail.returnedMaterialList.length > 0" (opened)="returnPanelOpenState = true"
+                      (closed)="returnPanelOpenState = false">
+          <mat-expansion-panel-header>
+          <mat-panel-title>
+              RETURN MATERIALS LIST
+          </mat-panel-title>
+          <mat-panel-description>
+              {{materialPanelOpenState ? '' : 'Expand to view returned material list'}}
+          </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="material-list-container">
+            <table class="material-list-table">
+              <thead>
+                <tr>
+                  <th>Material Name</th>
+                  <th>Selling Price</th>
+                  <th>Quantity</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let material of purchaseDetail.returnedMaterialList">
+                    <td>{{material.materialName}}</td>
+                    <td>&#8377;&nbsp; {{material.price}}</td>
+                    <td>{{material.quantity}}</td>
+                    <td>&#8377;&nbsp; {{material.amount}}</td>
+                </tr>
+            </tbody>
+              
+              </table>
+          </div>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </section>
+  <section class="purchase-status-container">
+    <mat-card>
+      <app-purchase-progress-tracker [purchaseData]="selectedPurchaseData" (refreshParent)="onRefresh()"></app-purchase-progress-tracker>
+    </mat-card>
+  </section>
+  <section class="purchase-transact-table-section">
+    <app-purchase-transaction-table [selectedPurchaseData]="selectedPurchaseData"></app-purchase-transaction-table>
+  <section class="purchase-transact-total-section">
+      <mat-card>
+          <span>Total Payments</span>
+          <span style="float: right; font-size: 1.1em;">&#8377; {{totalPaidAmount | number : '1.2-2'}}</span>
+      </mat-card>
+      <mat-card>
+        <span>Total Price</span>
+        <span style="float: right; font-size: 1.1em;">&#8377; {{purchaseDetail.totalPrice | number : '1.2-2'}}</span>
+      </mat-card>
+      <mat-card *ngIf="totalRefundAmount > 0">
+        <span>Total Refund</span>
+        <span style="float: right; font-size: 1.1em;">&#8377; {{totalRefundAmount | number : '1.2-2'}}</span>
+      </mat-card>
+      <mat-card [ngStyle]="{'background-color': (balanceAmount > 0) ? 'rgb(252,103,112)' : 'greenyellow'}">
+          <span>Balance Amount</span>
+          <span style="float: right; font-size: 1.1em;">&#8377; {{balanceAmount | number : '1.2-2'}}</span>
+      </mat-card>
+      <div class="purchase-return-cancel-btn-container">
+        <button mat-raised-button *ngIf="purchaseDetail.returnedMaterialList.length === 0" (click)="onInitiateReturn()">INITIATE RETURN</button>
+        <button mat-raised-button *ngIf="purchaseDetail.returnedMaterialList.length > 0" (click)="onUpdateCancelReturn()">UPDATE / CANCEL RETURN</button>
+        <button mat-raised-button *ngIf="!selectedPurchaseData.cancelledDate" color="warn" (click)="onCancelPurchase()">CANCEL PURCHASE</button>
+        <button mat-raised-button *ngIf="selectedPurchaseData.cancelledDate" style="background-color: rgb(140, 238, 140); color: black;" (click)="onCancelPurchase()">UNCANCEL PURCHASE</button>
+      </div>
+      
+  </section>
+  </section>
+  
+  

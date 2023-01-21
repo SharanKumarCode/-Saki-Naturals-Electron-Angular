@@ -11,12 +11,13 @@ const moment = _moment;
 
 @Component({
   selector: 'app-sales-transaction-dialog',
-  templateUrl: './sales-transaction-dialog.component.html',
-  styleUrls: ['./sales-transaction-dialog.component.scss']
+  templateUrl: './sales-purchase-transaction-dialog.component.html',
+  styleUrls: ['./sales-purchase-transaction-dialog.component.scss']
 })
-export class SalesTransactionDialogComponent implements OnInit {
+export class SalesPurchaseTransactionDialogComponent implements OnInit {
 
   form: FormGroup;
+  saleFlag: boolean;
   transactionDate: Date;
   transactionTime: string;
   totalPrice: number;
@@ -30,13 +31,14 @@ export class SalesTransactionDialogComponent implements OnInit {
   private path = 'assets/icon/';
 
   constructor(
-    public dialogRef: MatDialogRef<SalesTransactionDialogComponent>,
+    public dialogRef: MatDialogRef<SalesPurchaseTransactionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private notificationService: NotificationService
   ) {
+    this.saleFlag = this.data.saleFlag;
     this.totalPrice = this.data.totalPrice;
     this.transactionAmount = this.data.transactionAmount;
     this.remarks = this.data.remarks;

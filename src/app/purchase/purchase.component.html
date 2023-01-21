@@ -1,1 +1,85 @@
-<p>purchase works!</p>
+<section class="purchase-button-section">
+    <div class="purchase-button-row">
+      <button mat-raised-button color="accent" (click)="onAddPurchase()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+    </div>
+</section>
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="purchase-table-section">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    class="mat-elevation-z8">
+
+  <!-- Serial Number Column -->
+  <ng-container matColumnDef="serial_number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+      
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+  </ng-container>
+
+  <!-- Supplier Column -->
+  <ng-container matColumnDef="supplier">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by supplier">
+      Supplier
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.supplier}} </td>
+  </ng-container>
+
+  <!-- Number of Materials Column -->
+  <ng-container matColumnDef="numberOfMaterials">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by numberOfMaterials">
+      Number of Materials
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.numberOfMaterials}} </td>
+  </ng-container>
+
+  <!-- Purchased Quantity Column -->
+  <ng-container matColumnDef="purchasedQuantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchased quantity">
+        Purchased Quantity
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.purchasedQuantity}} </td>
+  </ng-container>
+
+  <!-- Total Price Column -->
+  <ng-container matColumnDef="totalPrice">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total price">
+      Total Price
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.totalPrice}} </td>
+  </ng-container>
+
+  <!-- Paid Amount Column -->
+  <ng-container matColumnDef="paidAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+      Paid Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.paidAmount}} </td>
+  </ng-container>
+
+  <!-- Balance Amount Column -->
+  <ng-container matColumnDef="balanceAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
+      Balance Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
+  </ng-container>
+
+  <!-- Date Column -->
+  <ng-container matColumnDef="purchaseDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+      Purchase Date
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.purchaseDate | date:'medium'}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr 
+      mat-row 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClick(row)">
+    </tr>
+</table>
+</section>
+<div class="no-purchase-div" *ngIf="!dataSource.data.length">
+  No purchase added yet..
+</div>
