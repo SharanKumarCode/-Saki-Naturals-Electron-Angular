@@ -92,8 +92,8 @@ export class MaterialComponent implements OnInit, AfterViewInit {
   }
 
   onRowClick(e): void {
-    this.materialService.updateSelectedMaterialID(e.productID);
-    // this.router.navigate(['material/detail']);
+    this.materialService.updateSelectedMaterialID(e.materialID);
+    this.router.navigate(['materials/detail', e.materialID]);
   }
 
   ngOnInit(): void {
