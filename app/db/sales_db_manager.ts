@@ -278,10 +278,10 @@ async function deleteSaleTransaction(transactionID: string){
 export {
     getAllSales, 
     getSaleByID,
-    softDeleteSale, 
-    deleteSale, 
     insertSale, 
     updateSale, 
+    softDeleteSale, 
+    deleteSale,
     insertSaleEntry,
     deleteSaleEntry,
     insertSaleTransaction,

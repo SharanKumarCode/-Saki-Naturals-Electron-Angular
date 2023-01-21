@@ -94,28 +94,6 @@ export class SalesdbService {
     return this.ipcRenderer.invoke('delete-sale', salesID);
   }
 
-  getSaleTransactionsList(): void{
-    console.log('INFO: Getting all transaction data');
-    this.ipcRenderer.invoke('get-sales-transaction')
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
-  }
-
-  getSaleTransactionByID(transactionID: string): void{
-    console.log('INFO: Getting sale transaction by ID');
-    this.ipcRenderer.invoke('get-sales-transaction-by-id', transactionID)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
-  }
-
   insertSaleTransaction(transaction: ISaleTransactions): Promise<any>{
     console.log('INFO: Inserting sale transaction data');
     return this.ipcRenderer.invoke('insert-sale-transaction', transaction);
