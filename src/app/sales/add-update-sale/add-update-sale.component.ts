@@ -90,13 +90,9 @@ export class AddUpdateSaleComponent implements OnInit {
   tmplist = [];
 
   displayedColumnsProductList: string[] = [
-    'productGroup',
-    'productName',
-    'sellingPrice',
+    'materialName',
     'quantity',
-    'discountPercentage',
-    'discountAmount',
-    'amount',
+    'stock',
     'action'
   ];
 

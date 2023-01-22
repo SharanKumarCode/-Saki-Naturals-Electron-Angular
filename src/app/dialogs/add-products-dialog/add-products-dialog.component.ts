@@ -65,7 +65,6 @@ export class AddProductsDialogComponent implements OnInit {
       this.form.controls.productGroup.setValue(this.data.productGroupID);
     }
 
-
     this.matIconRegistry
     .addSvgIcon('close',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'close_icon.svg'))
     .addSvgIcon('delete',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'delete_icon.svg'));

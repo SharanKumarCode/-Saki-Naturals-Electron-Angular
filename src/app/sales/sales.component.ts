@@ -66,16 +66,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
         .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
-  ngOnInit(): void {
-    this.getSalesList();
-    this.salesDataListObservable = this.salesService.getSalesList();
-    this.setTableData();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   getSalesList(){
     this.salesdbService.getSalesList();
   }
@@ -121,6 +111,16 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onRefresh(){
     this.getSalesList();
+  }
+
+  ngOnInit(): void {
+    this.getSalesList();
+    this.salesDataListObservable = this.salesService.getSalesList();
+    this.setTableData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   announceSortChange(sortState: Sort) {
