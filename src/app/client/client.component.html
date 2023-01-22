@@ -13,7 +13,7 @@
     </mat-select>
   </mat-form-field>
 </section>
-<section class="client-table-section">
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="client-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
 

@@ -4,7 +4,7 @@
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
     </div>
 </section>
-<section class="materials-table-section">
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="materials-table-section">
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
       class="mat-elevation-z8">
   
