@@ -14,7 +14,9 @@ import {
         Sales,
         Purchase,
         PurchaseEntry,
-        PurchaseTransaction
+        PurchaseTransaction,
+        Production,
+        ProductionEntry
         } from "./data/models/items.schema";
 
 
@@ -23,6 +25,7 @@ import * as salesDB from './sales_db_manager';
 import * as clientDB from './clients_db_manager';
 import * as materialDB from './materials_db_manager';
 import * as purchaseDB from './purchase_db_manager';
+import * as productionDB from './production_db_manager';
 
 
 const AppDataSource = new DataSource({
@@ -43,7 +46,9 @@ const AppDataSource = new DataSource({
         EmployeeTransaction,
         Purchase,
         PurchaseEntry,
-        PurchaseTransaction ],
+        PurchaseTransaction,
+        Production,
+        ProductionEntry ],
 })
 
 AppDataSource.initialize()
@@ -60,5 +65,6 @@ export {
     salesDB,
     clientDB,
     materialDB,
-    purchaseDB
+    purchaseDB,
+    productionDB
 }
