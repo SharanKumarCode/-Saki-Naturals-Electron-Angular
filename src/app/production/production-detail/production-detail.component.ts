@@ -65,8 +65,6 @@ export class ProductionDetailComponent implements OnInit {
 
   setProductionDetails(): void {
 
-    console.log(this.selectedProductionData);
-
     this.productionDetail = {
       productionID: this.selectedProductionData?.productionID,
       productionDate: this.selectedProductionData?.productionDate,

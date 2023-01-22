@@ -5,9 +5,9 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IProductGroup } from '../../core/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ProductsdbService } from '../../core/services/products/productsdb.service';
 import { Subject } from 'rxjs';
-import { ProductsService } from '../../core/services/products.service';
+import { ProductsService } from '../../core/services/products/products.service';
 
 
 @Component({

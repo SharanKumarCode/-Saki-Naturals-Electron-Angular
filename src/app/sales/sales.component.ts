@@ -8,11 +8,10 @@ import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
 
 import { Subject } from 'rxjs';
-import { ProductsdbService } from '../core/services/productsdb.service';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ISalesData, EnumSaleType, ISaleTransactions, EnumRouteActions } from '../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions, EnumRouteActions } from '../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-sales',

@@ -13,8 +13,8 @@ import {
   ISaleEntry,
   ISalesData
 } from '../../core/interfaces/interfaces';
-import { ProductsService } from '../../core/services/products.service';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ProductsService } from '../../core/services/products/products.service';
+import { ProductsdbService } from '../../core/services/products/productsdb.service';
 import { Subject } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ClientdbService } from '../../core/services/client/clientdb.service';
