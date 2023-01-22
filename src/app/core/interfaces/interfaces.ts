@@ -117,13 +117,13 @@ export interface IPurchaseData {
 }
 
 export interface IPurchaseEntry {
-purchaseEntryID?: string;
-purchaseID?: string;
-material: IMaterialData;
-returnFlag?: boolean;
-price?: number;
-quantity?: number;
-discountPercentage?: number;
+  purchaseEntryID?: string;
+  purchaseID?: string;
+  material: IMaterialData;
+  returnFlag?: boolean;
+  price?: number;
+  quantity?: number;
+  discountPercentage?: number;
 }
 
 export interface IPurchaseTransactions {
@@ -136,6 +136,28 @@ export interface IPurchaseTransactions {
   balance?: number;
   remarks?: string;
   editCreate?: string;
+}
+
+export interface IProductionData {
+  productionID?: string;
+  productionEntries?: IProductionEntry[];
+  productionDate: Date;
+  product?: IProductData;
+  productQuantity?: number;
+
+  remarks?: string;
+  editCreate?: string;
+  serialNumber?: number;
+
+  completedDate?: Date;
+  cancelledDate?: Date;
+}
+
+export interface IProductionEntry {
+  productionEntryID?: string;
+  productionID?: string;
+  material: IMaterialData;
+  materialQuantity?: number;
 }
 
 export interface IClientData {
@@ -204,6 +226,12 @@ export enum EnumPurchaseStatus {
   delivered = 'Delivered',
   returned = 'Returned',
   refunded = 'Refunded',
+  completed = 'Completed',
+  cancelled = 'Cancelled'
+}
+
+export enum EnumProductionStatus {
+  initiated = 'Production Initiated',
   completed = 'Completed',
   cancelled = 'Cancelled'
 }

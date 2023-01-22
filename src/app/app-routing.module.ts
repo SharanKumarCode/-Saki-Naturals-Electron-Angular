@@ -21,6 +21,9 @@ import { MaterialDataResolverService } from './core/services/material/material-d
 import { AddUpdatePurchaseComponent } from './purchase/add-update-purchase/add-update-purchase.component';
 import { PurchaseDataResolverService } from './core/services/purchase/purchase-data-resolver.service';
 import { PurchaseTransactionComponent } from './purchase/purchase-transaction/purchase-transaction.component';
+import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
+import { ProductionDataResolverService } from './core/services/production/production-data-resolver.service';
+import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 
 const routes: Routes = [
   {
@@ -37,6 +40,17 @@ const routes: Routes = [
       materialData: MaterialDataResolverService
     } },
   { path: 'production', component: ProductionComponent },
+  { path: 'production/add_update_production/:createOrUpdate', component: AddUpdateProductionComponent},
+  { path: 'production/add_update_production/:createOrUpdate/:selectedProductionID',
+  component: AddUpdateProductionComponent,
+  resolve: {
+    productionData: ProductionDataResolverService
+  }},
+  { path: 'production/detail/:selectedProductionID',
+    component: ProductionDetailComponent,
+    resolve: {
+      productionData: ProductionDataResolverService
+    }},
   { path: 'clients', component: ClientComponent },
   { path: 'clients/details', component: ClientDetailComponent },
   { path: 'expense', component: ExpenseComponent },

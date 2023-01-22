@@ -68,6 +68,9 @@ import { PurchaseTransactionComponent } from './purchase/purchase-transaction/pu
 import { PurchaseTransactionTableComponent } from './purchase/purchase-transaction-table/purchase-transaction-table.component';
 import { PurchaseReturnDialogComponent } from './dialogs/purchase-return-dialog/purchase-return-dialog.component';
 import { PurchaseProgressTrackerComponent } from './purchase/purchase-progress-tracker/purchase-progress-tracker.component';
+import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
+import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
+import { ProductionProgressTrackerComponent } from './production/production-progress-tracker/production-progress-tracker.component';
 
 
 // AoT requires an exported function for factories
@@ -118,7 +121,10 @@ const lang = 'en-US';
     PurchaseTransactionComponent,
     PurchaseTransactionTableComponent,
     PurchaseReturnDialogComponent,
-    PurchaseProgressTrackerComponent
+    PurchaseProgressTrackerComponent,
+    AddUpdateProductionComponent,
+    ProductionDetailComponent,
+    ProductionProgressTrackerComponent
 
     ],
   imports: [

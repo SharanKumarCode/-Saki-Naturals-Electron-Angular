@@ -1,1 +1,77 @@
-<p>production works!</p>
+<section class="production-button-section">
+    <div class="production-button-row">
+      <button mat-raised-button color="accent" (click)="onAddProduction()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+    </div>
+</section>
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="production-table-section">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    class="mat-elevation-z8">
+
+  <!-- Serial Number Column -->
+  <ng-container matColumnDef="serial_number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+      
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+  </ng-container>
+
+    <!-- Production Date Column -->
+    <ng-container matColumnDef="productionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+            Production Date
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.productionDate | date:'medium'}} </td>
+    </ng-container>
+
+  <!-- Product Name Column -->
+  <ng-container matColumnDef="product_name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+        Product Name
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.product.productName}} </td>
+    </ng-container>
+
+    <!-- Product Group Column -->
+    <ng-container matColumnDef="group">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
+        Product Group
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.product.productGroup.productGroupName}} </td>
+  </ng-container>
+
+  <!-- Production Quantity Column -->
+  <ng-container matColumnDef="productionQuantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sold productionQuantity">
+      Quantity
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.productionQuantity}} </td>
+  </ng-container>
+
+  <!-- Production Status Column -->
+  <ng-container matColumnDef="productionStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productionStatus">
+        Production Status
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.productionStatus}} </td>
+  </ng-container>
+
+  <!-- Remarks Column -->
+  <ng-container matColumnDef="remarks">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by remarks">
+      Remarks
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr 
+      mat-row 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClick(row)">
+    </tr>
+</table>
+</section>
+<div class="no-production-div" *ngIf="!dataSource.data.length">
+  No production added yet..
+</div>
