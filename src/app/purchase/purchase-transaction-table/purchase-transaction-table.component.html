@@ -1,0 +1,58 @@
+<table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    class="mat-elevation-z8">
+
+  <!-- Serial Number Column -->
+  <ng-container matColumnDef="serial_number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+      
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+  </ng-container>
+
+  <!-- Advance Amount Column -->
+  <ng-container matColumnDef="advanceAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by advance amount">
+      Advance Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.advanceAmount}} </td>
+  </ng-container>
+
+  <!-- Paid Amount Column -->
+  <ng-container matColumnDef="paidAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+      Paid Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.paidAmount}} </td>
+  </ng-container>
+
+  <!-- Refund Amount Column -->
+  <ng-container matColumnDef="refundAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by refund amount">
+      Refund Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.refundAmount}} </td>
+  </ng-container>
+
+  <!-- Remarks Column -->
+  <ng-container matColumnDef="remarks">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by remarks">
+      Remarks
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+  </ng-container>
+
+  <!-- Date Column -->
+  <ng-container matColumnDef="transactionDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+      Transaction Date
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.transactionDate | date:'medium'}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr 
+      mat-row 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClick(row)">
+    </tr>
+</table>

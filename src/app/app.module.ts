@@ -45,7 +45,9 @@ import { SettingsComponent } from './settings/settings.component';
 import { AddProductsDialogComponent } from './dialogs/add-products-dialog/add-products-dialog.component';
 import { SalesReturnDialogComponent } from './dialogs/sales-return-dialog/sales-return-dialog.component';
 import { SalesTransactionComponent } from './sales/sales-transaction/sales-transaction.component';
-import { SalesTransactionDialogComponent } from './dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
+import {
+  SalesPurchaseTransactionDialogComponent
+ } from './dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { SplashPageComponent } from './splash-page/splash-page.component';
 import { ProductionComponent } from './production/production.component';
 import { ProductsDetailComponent } from './products/products-detail/products-detail.component';
@@ -57,6 +59,18 @@ import { AddClientDialogComponent } from './dialogs/add-client-dialog/add-client
 import { MaterialModule } from '../material.module';
 import { SaleProgressTrackerComponent } from './sales/sale-progress-tracker/sale-progress-tracker/sale-progress-tracker.component';
 import { SalesTransactionTableComponent } from './sales/sales-transaction-table/sales-transaction-table.component';
+import { MaterialComponent } from './material/material.component';
+import { AddUpdateMaterialDialogComponent } from './dialogs/add-update-material-dialog/add-update-material-dialog.component';
+import { MaterialDetailComponent } from './material/material-detail/material-detail.component';
+import { PromptDialogComponent } from './dialogs/prompt-dialog/prompt-dialog.component';
+import { AddUpdatePurchaseComponent } from './purchase/add-update-purchase/add-update-purchase.component';
+import { PurchaseTransactionComponent } from './purchase/purchase-transaction/purchase-transaction.component';
+import { PurchaseTransactionTableComponent } from './purchase/purchase-transaction-table/purchase-transaction-table.component';
+import { PurchaseReturnDialogComponent } from './dialogs/purchase-return-dialog/purchase-return-dialog.component';
+import { PurchaseProgressTrackerComponent } from './purchase/purchase-progress-tracker/purchase-progress-tracker.component';
+import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
+import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
+import { ProductionProgressTrackerComponent } from './production/production-progress-tracker/production-progress-tracker.component';
 
 
 // AoT requires an exported function for factories
@@ -88,7 +102,7 @@ const lang = 'en-US';
     AddProductsDialogComponent,
     SalesReturnDialogComponent,
     SalesTransactionComponent,
-    SalesTransactionDialogComponent,
+    SalesPurchaseTransactionDialogComponent,
     SplashPageComponent,
     ProductionComponent,
     ProductsDetailComponent,
@@ -99,6 +113,18 @@ const lang = 'en-US';
     AddClientDialogComponent,
     SaleProgressTrackerComponent,
     SalesTransactionTableComponent,
+    MaterialComponent,
+    AddUpdateMaterialDialogComponent,
+    MaterialDetailComponent,
+    PromptDialogComponent,
+    AddUpdatePurchaseComponent,
+    PurchaseTransactionComponent,
+    PurchaseTransactionTableComponent,
+    PurchaseReturnDialogComponent,
+    PurchaseProgressTrackerComponent,
+    AddUpdateProductionComponent,
+    ProductionDetailComponent,
+    ProductionProgressTrackerComponent
 
     ],
   imports: [

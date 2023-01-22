@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>SALES</h1>
+<h1 mat-dialog-title *ngIf="saleFlag">SALES</h1>
+<h1 mat-dialog-title *ngIf="!saleFlag">PURCHASE</h1>
 
 <!-- Product Details -->
 <mat-dialog-content class="form-container" [formGroup]="form">

@@ -1,0 +1,107 @@
+<section class="production-transact-button-section">
+    <div class="production-status">
+      <span style="font-size: 1.5em; font-family: Roboto; text-align: center;">STATUS :</span>
+      <span *ngIf="productionStatus === 'Completed'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left; color: green;">{{productionStatus}}</span>
+      <span *ngIf="productionStatus === 'Cancelled'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left; color: red;">{{productionStatus}}</span>
+      <span *ngIf="productionStatus !== 'Cancelled' && productionStatus !== 'Completed'" style="font-size: 1.5em; font-family: Fragment; font-weight: 600; text-align: left;">{{productionStatus}}</span>
+    </div>
+      <div class="production-transact-button-row">
+        <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+        <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+      </div>
+  </section>
+  <section class="production-data-section">
+      <mat-accordion multi>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                        (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                PRODUCTION DATA
+            </mat-panel-title>
+            <mat-panel-description>
+                {{panelOpenState ? '' : 'Expand to update or delete Production data'}}
+            </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="production-data">
+                <mat-card class="production-data-section-1">
+                  <span class="production-data-key-sections">Production ID</span>
+                  <span style="float: right; font-size: 1.1em;">{{(productionDetail.productionID ? productionDetail.productionID : '')}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-2">
+                  <span class="production-data-key-sections">Production Date</span>
+                  <span style="float: right; font-size: 1.1em;">{{(productionDetail.productionDate ? productionDetail.productionDate : '') | date:'MMMM dd, YYY'}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-3">
+                  <span class="production-data-key-sections">Product ID</span>
+                  <span style="float: right; font-size: 1.1em;">{{productionDetail.productID ? productionDetail.productID : ''}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-4">
+                  <span class="production-data-key-sections">Product Name</span>
+                  <span style="float: right; font-size: 1.1em;">{{productionDetail.productName ? productionDetail.productName : ''}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-5">
+                  <span class="production-data-key-sections">Product Group</span>
+                  <span style="float: right; font-size: 1.1em;">{{productionDetail.productGroupName ? productionDetail.productGroupName : ''}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-6">
+                  <span class="production-data-key-sections">Product Quantity</span>
+                  <span style="float: right; font-size: 1.1em;">{{productionDetail.productQuantity ? productionDetail.productQuantity : 0}}</span>
+                </mat-card>
+                <mat-card class="production-data-section-7">
+                    <span class="production-data-key-sections">Materials Used</span>
+                    <span style="float: right; font-size: 1.1em;">{{productionDetail.materialsUsed ? productionDetail.materialsUsed : 0}}</span>
+                  </mat-card>
+                <div class="production-data-section-8">
+                  <span class="production-data-key-sections">Remarks</span>
+                  <span style="margin-left : 2%; font-size: 1em;">{{productionDetail.remarks ? productionDetail.remarks : '(blank)'}}</span>
+                </div>
+                
+            </div>
+            <mat-action-row>
+                <button mat-button color="primary" (click)="onUpdateProduction()">UPDATE</button>
+                <button mat-button color="warn" (click)="onDeleteProduction()"><mat-icon svgIcon="delete"></mat-icon></button>
+            </mat-action-row>
+          </mat-expansion-panel>
+        <mat-expansion-panel (opened)="materialPanelOpenState = true"
+                      (closed)="materialPanelOpenState = false">
+          <mat-expansion-panel-header>
+          <mat-panel-title>
+              PRODUCTION MATERIALS LIST
+          </mat-panel-title>
+          <mat-panel-description>
+              {{materialPanelOpenState ? '' : 'Expand to view production material list'}}
+          </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="material-list-container">
+            <table class="material-list-table">
+              <thead>
+                <tr>
+                  <th>Material Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let material of productionDetail.materialList">
+                    <td>{{material.materialName}}</td>
+                    <td>{{material.materialQuantity}}</td>
+                </tr>
+            </tbody>
+              
+              </table>
+          </div>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </section>
+  <section class="production-status-container">
+    <mat-card>
+      <app-production-progress-tracker [productionData]="selectedProductionData" (refreshParent)="onRefresh()"></app-production-progress-tracker>
+    </mat-card>
+  </section>
+  <section class="production-cancel-btn-section">
+      <div class="production-cancel-btn-container">
+        <button mat-raised-button *ngIf="!selectedProductionData.cancelledDate" color="warn" (click)="onCancelProduction()">CANCEL PRODUCTION</button>
+        <button mat-raised-button *ngIf="selectedProductionData.cancelledDate" style="background-color: rgb(140, 238, 140); color: black;" (click)="onCancelProduction()">UNCANCEL PRODUCTION</button>
+      </div>
+  </section>
+  
+  

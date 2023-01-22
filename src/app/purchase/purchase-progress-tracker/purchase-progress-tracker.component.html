@@ -1,0 +1,123 @@
+<mat-stepper [linear]="true" #stepper>
+    <ng-template matStepperIcon="edit" let-index="index">
+		{{index +1}}
+	</ng-template>
+  <ng-template matStepperIcon="done">
+		<mat-icon svgIcon="tick"></mat-icon>
+	</ng-template>
+  <ng-template matStepperIcon="home">
+		<mat-icon svgIcon="tick"></mat-icon>
+	</ng-template>
+    <mat-step [stepControl]="purchaseInitiateFormGroup" label="Purchase intiated date">
+        <form [formGroup]="purchaseInitiateFormGroup">
+        <ng-template matStepLabel>Purchase Initiated</ng-template>
+        <mat-form-field appearance="outline">
+            <mat-label>Purchase initated Date</mat-label>
+            <input matInput [matDatepicker]="dp" formControlName="purchaseInitiatedDate">
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+          <button mat-button (click)="resetDates(stepper);">Reset</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="dispatchFormGroup" label="Dispatched date">
+      <form [formGroup]="dispatchFormGroup">
+        <mat-form-field appearance="outline">
+            <mat-label>Dispatched Date</mat-label>
+            <input matInput [min]="minDispatchDate" [matDatepicker]="dp2" formControlName="dispatchedDate">
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+            <mat-datepicker #dp2></mat-datepicker>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="onDispatchDateChange()" matStepperNext>Next</button>
+          <button mat-button (click)="resetDates(stepper);">Reset</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="deliveredFormGroup" label="Delievered date">
+        <form [formGroup]="deliveredFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Delivered Date</mat-label>
+                <input matInput [min]="minDeliveredDate" [matDatepicker]="dp3" formControlName="deliveredDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                <mat-datepicker #dp3></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onDeliveredDateChange()" matStepperNext>Next</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step *ngIf="returnFlag" [stepControl]="returnedFormGroup" label="Returned date">
+        <form [formGroup]="returnedFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Returned Date</mat-label>
+                <input matInput [matDatepicker]="dp4" formControlName="returnedDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                <mat-datepicker #dp4></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step *ngIf="returnFlag" [stepControl]="refundedFormGroup" label="Refunded date">
+        <form [formGroup]="refundedFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Refunded Date</mat-label>
+                <input matInput [min]="minRefundedDate" [matDatepicker]="dp5" formControlName="refundedDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                <mat-datepicker #dp5></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onRefundedDateChange()" matStepperNext>Next</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step *ngIf="!purchaseData.cancelledDate" [stepControl]="completedFormGroup" label="Completed date">
+        <form [formGroup]="completedFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Completed Date</mat-label>
+                <input matInput [min]="minCompletedDate" [matDatepicker]="dp6" formControlName="completedDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                <mat-datepicker #dp6></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onPurchaseComplete()">Done</button>
+            <button mat-button *ngIf="purchaseData.completedDate" (click)="onPurchaseInComplete()">Mark as InComplete</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step *ngIf="purchaseData.cancelledDate" [stepControl]="cancelledFormGroup" label="Cancelled date">
+        <form [formGroup]="cancelledFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Cancelled Date</mat-label>
+                <input matInput [matDatepicker]="dp7" formControlName="cancelledDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp7"></mat-datepicker-toggle>
+                <mat-datepicker #dp7></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+  </mat-stepper>

@@ -6,7 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, EnumSaleStatus } from '../../core/interfaces/interfaces';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
-import { SalesTransactionDialogComponent } from '../../dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
+import {
+  SalesPurchaseTransactionDialogComponent
+ } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { Subject } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
@@ -130,13 +132,14 @@ export class SalesTransactionComponent implements OnInit {
     }
 
     console.log('INFO : Opening dialog box add transaction');
-    const dialogRef = this.dialog.open(SalesTransactionDialogComponent, {
+    const dialogRef = this.dialog.open(SalesPurchaseTransactionDialogComponent, {
       width: '50%',
       data: {
+        editCreate: 'Create',
+        saleFlag: true,
         totalPrice: this.salesDetail.totalPrice,
         paid: 0,
         remarks: '',
-        editCreate: 'Create',
         transactionDate: '',
         salesDate: this.selectedSaleData.salesDate,
         returnDate: this.selectedSaleData.returnedDate
@@ -169,9 +172,6 @@ export class SalesTransactionComponent implements OnInit {
   }
 
   openEditSaleDialog(): void {
-    this.router.navigate(['sale/add_update_sale',
-                        {createOrUpdate: EnumRouteActions.update,
-                          selectedSaleData : this.selectedSaleData.salesID}]);
     this.router.navigate(['sale/add_update_sale',
                         EnumRouteActions.update,
                         this.selectedSaleData.salesID]);

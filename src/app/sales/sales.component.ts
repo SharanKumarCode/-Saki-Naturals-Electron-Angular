@@ -45,7 +45,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
     private salesdbService: SalesdbService,
-    private productdbService: ProductsdbService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -67,16 +66,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
         .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
-  ngOnInit(): void {
-    this.getSalesList();
-    this.salesDataListObservable = this.salesService.getSalesList();
-    this.setTableData();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   getSalesList(){
     this.salesdbService.getSalesList();
   }
@@ -84,7 +73,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
   setTableData(){
     this.salesDataListObservable.subscribe(data=>{
       this.dataSource = new MatTableDataSource();
-      console.log(data);
       const tmpSaleList = [];
       data.forEach((element, index)=>{
         const tmpSaleData = {
@@ -123,6 +111,16 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   onRefresh(){
     this.getSalesList();
+  }
+
+  ngOnInit(): void {
+    this.getSalesList();
+    this.salesDataListObservable = this.salesService.getSalesList();
+    this.setTableData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   announceSortChange(sortState: Sort) {

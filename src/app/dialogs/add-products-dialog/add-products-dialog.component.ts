@@ -5,13 +5,10 @@ import { FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
-import * as _moment from 'moment';
 import { IProductData, IProductGroup } from '../../core/interfaces/interfaces';
 import { Subject } from 'rxjs';
 import { ProductsService } from '../../core/services/products.service';
 import { ProductsdbService } from '../../core/services/productsdb.service';
-
-const moment = _moment;
 
 @Component({
   selector: 'app-add-products-dialog',
@@ -67,7 +64,6 @@ export class AddProductsDialogComponent implements OnInit {
     if (this.data.productGroupName){
       this.form.controls.productGroup.setValue(this.data.productGroupID);
     }
-
 
     this.matIconRegistry
     .addSvgIcon('close',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'close_icon.svg'))

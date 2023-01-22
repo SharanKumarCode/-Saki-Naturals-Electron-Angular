@@ -78,7 +78,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" floatLabel="always">
           <mat-label>Discount Amount</mat-label>
-          <input matInput min="1" type="number" class="price-right-align" formControlName="discountAmount" (input)="onDiscountAmountChange()" value="{{discountAmount}}"/>
+          <input matInput min="0" type="number" class="price-right-align" formControlName="discountAmount" (input)="onDiscountAmountChange()" value="{{discountAmount}}"/>
           <span matPrefix>&#8377;&nbsp;</span>
         </mat-form-field>
       </div>

@@ -4,7 +4,7 @@
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
     </div>
 </section>
-<section class="sales-table-section">
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="sales-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
 
@@ -16,9 +16,9 @@
     <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
   </ng-container>
 
-  <!-- Purchaser Column -->
+  <!-- Customer Column -->
   <ng-container matColumnDef="customer">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by customer">
       Customer
     </th>
     <td mat-cell *matCellDef="let element"> {{element.customer}} </td>
@@ -96,3 +96,6 @@
     </tr>
 </table>
 </section>
+<div class="no-sales-div" *ngIf="!dataSource.data.length">
+  No sales added yet..
+</div>

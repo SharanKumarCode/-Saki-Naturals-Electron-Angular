@@ -15,6 +15,15 @@ import { AddUpdateSaleComponent } from './sales/add-update-sale/add-update-sale.
 import { ClientComponent } from './client/client.component';
 import { ClientDetailComponent } from './client/client-detail/client-detail.component';
 import { SaleDataResolverService } from './core/services/sales/sale-data-resolver.service';
+import { MaterialComponent } from './material/material.component';
+import { MaterialDetailComponent } from './material/material-detail/material-detail.component';
+import { MaterialDataResolverService } from './core/services/material/material-data-resolver.service';
+import { AddUpdatePurchaseComponent } from './purchase/add-update-purchase/add-update-purchase.component';
+import { PurchaseDataResolverService } from './core/services/purchase/purchase-data-resolver.service';
+import { PurchaseTransactionComponent } from './purchase/purchase-transaction/purchase-transaction.component';
+import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
+import { ProductionDataResolverService } from './core/services/production/production-data-resolver.service';
+import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 
 const routes: Routes = [
   {
@@ -24,12 +33,40 @@ const routes: Routes = [
   },
   { path: 'products', component: ProductsComponent },
   { path: 'product/detail', component: ProductsDetailComponent },
+  { path: 'materials', component: MaterialComponent },
+  { path: 'materials/detail/:materialID',
+    component: MaterialDetailComponent,
+    resolve: {
+      materialData: MaterialDataResolverService
+    } },
   { path: 'production', component: ProductionComponent },
+  { path: 'production/add_update_production/:createOrUpdate', component: AddUpdateProductionComponent},
+  { path: 'production/add_update_production/:createOrUpdate/:selectedProductionID',
+  component: AddUpdateProductionComponent,
+  resolve: {
+    productionData: ProductionDataResolverService
+  }},
+  { path: 'production/detail/:selectedProductionID',
+    component: ProductionDetailComponent,
+    resolve: {
+      productionData: ProductionDataResolverService
+    }},
   { path: 'clients', component: ClientComponent },
   { path: 'clients/details', component: ClientDetailComponent },
   { path: 'expense', component: ExpenseComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'purchase', component: PurchaseComponent },
+  { path: 'purchase/transaction/:selectedPurchaseID',
+    component: PurchaseTransactionComponent,
+    resolve: {
+      purchaseData: PurchaseDataResolverService
+    }},
+  { path: 'purchase/add_update_purchase/:createOrUpdate', component: AddUpdatePurchaseComponent},
+  { path: 'purchase/add_update_purchase/:createOrUpdate/:selectedPurchaseID',
+  component: AddUpdatePurchaseComponent,
+  resolve: {
+    purchaseData: PurchaseDataResolverService
+  }},
   { path: 'employee', component: EmployeeComponent },
   { path: 'settings', component: SettingsComponent },
   { path: 'sale/transaction/:selectedSalesID',

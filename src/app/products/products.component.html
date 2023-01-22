@@ -5,7 +5,7 @@
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
     </div>
 </section>
-<section class="products-table-section">
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="products-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
 
@@ -90,3 +90,6 @@
     </tr>
 </table>
 </section>
+<div class="no-products-div" *ngIf="!dataSource.data.length">
+  No products added yet..
+</div>
