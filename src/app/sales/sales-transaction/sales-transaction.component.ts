@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
 
@@ -18,7 +18,7 @@ import { NotificationService } from '../../core/services/notification/notificati
   templateUrl: './sales-transaction.component.html',
   styleUrls: ['./sales-transaction.component.scss']
 })
-export class SalesTransactionComponent implements OnInit {
+export class SalesTransactionComponent implements OnInit, OnDestroy {
 
 
   panelOpenState = false;
@@ -27,12 +27,13 @@ export class SalesTransactionComponent implements OnInit {
 
   selectedSalesID: string;
   selectedSaleData: ISalesData;
-  selectedSaleDataSubject: Subject<ISalesData>;
   salesDetail: any;
   totalPaidAmount = 0;
   balanceAmount = 0;
   totalRefundAmount = 0;
   saleStatus: EnumSaleStatus;
+
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -351,12 +352,16 @@ export class SalesTransactionComponent implements OnInit {
       this.selectedSaleData = data.saleData;
       this.setSaleDetails();
       this.setSaleStatus();
-      this.salesService.getSelectedSaleData().subscribe(d=>{
+      this.salesService.getSelectedSaleData().pipe(takeUntil(this.destroy$)).subscribe(d=>{
         this.selectedSaleData = d;
         this.setSaleDetails();
         this.setSaleStatus();
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

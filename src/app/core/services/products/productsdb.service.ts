@@ -62,8 +62,11 @@ export class ProductsdbService {
   getProductByID(productID: string): Promise<any>{
     return this.ipcRenderer.invoke('get-product-by-id', productID)
     .then(data=>{
-
-      this.productService.updateSelectedProductData(data[0]);
+      const productData = data[0];
+      productData.stock = this.commonService.getProductStock(productData);
+      productData.sold = this.commonService.getProductSold(productData);
+      productData.inProduction = this.commonService.getProductInProduction(productData);
+      this.productService.updateSelectedProductData(productData);
 
       return new Promise((res, rej)=>{
         res(true);

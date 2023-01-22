@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -6,7 +6,7 @@ import {MatTableDataSource} from '@angular/material/table';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
 import { ProductsService } from '../core/services/products/products.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductsdbService } from '../core/services/products/productsdb.service';
 import * as _moment from 'moment';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ const moment = _moment;
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit{
+export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -39,7 +39,7 @@ export class ProductsComponent implements OnInit, AfterViewInit{
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
-  private productListObservable: Subject<IProductData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -69,7 +69,6 @@ export class ProductsComponent implements OnInit, AfterViewInit{
 
     }
 
-
   openProductGroupDialog(): void {
     console.log('INFO : Opening dialog box add product group..');
     const dialogRef = this.dialog.open(ProductGroupDialogComponent, {
@@ -96,26 +95,23 @@ export class ProductsComponent implements OnInit, AfterViewInit{
     });
   }
 
-  getProducts(){
-    this.productdbservice.getProducts();
-    this.productListObservable.subscribe(d=>{
-      d.map((value, index)=>{
-        value.createdDate = value.createdDate;
-        return {
-          ...value,
-          serialNumber: index
-        };
-      }
-      );
-      const tmp = [];
-      d.forEach((element, index)=>{
-        tmp.push({
-          ...element,
-          serialNumber: index + 1
-        });
+  setProductsData(data: IProductData[]){
+    data.map((value, index)=>{
+      value.createdDate = value.createdDate;
+      return {
+        ...value,
+        serialNumber: index
+      };
+    }
+    );
+    const tmp = [];
+    data.forEach((element, index)=>{
+      tmp.push({
+        ...element,
+        serialNumber: index + 1
       });
-      this.dataSource = new MatTableDataSource(tmp);
     });
+    this.dataSource = new MatTableDataSource(tmp);
   }
 
   onRefresh(){
@@ -127,12 +123,18 @@ export class ProductsComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.productListObservable = this.productService.getProductList();
-    this.getProducts();
+    this.productdbservice.getProducts();
+    this.productService.getProductList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setProductsData(data);
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

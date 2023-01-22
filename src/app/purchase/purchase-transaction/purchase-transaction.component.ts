@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EnumPurchaseStatus,
           EnumRouteActions,
           EnumTransactionType,
           IPurchaseData,
           IPurchaseTransactions
         } from '../../core/interfaces/interfaces';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PurchasedbService } from '../../core/services/purchase/purchasedb.service';
 import { PurchaseService } from '../../core/services/purchase/purchase.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -24,7 +24,7 @@ import { PromptDialogComponent } from '../../dialogs/prompt-dialog/prompt-dialog
   templateUrl: './purchase-transaction.component.html',
   styleUrls: ['./purchase-transaction.component.scss']
 })
-export class PurchaseTransactionComponent implements OnInit {
+export class PurchaseTransactionComponent implements OnInit, OnDestroy {
 
   panelOpenState = false;
   materialPanelOpenState = false;
@@ -32,12 +32,13 @@ export class PurchaseTransactionComponent implements OnInit {
 
   selectedPurchaseID: string;
   selectedPurchaseData: IPurchaseData;
-  selectedPurchaseDataSubject: Subject<IPurchaseData>;
   purchaseDetail: any;
   totalPaidAmount = 0;
   balanceAmount = 0;
   totalRefundAmount = 0;
   purchaseStatus: EnumPurchaseStatus;
+
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -374,12 +375,16 @@ export class PurchaseTransactionComponent implements OnInit {
       this.selectedPurchaseData = data.purchaseData;
       this.setPurchaseDetails();
       this.setPurchaseStatus();
-      this.purchaseService.getSelectedPurchaseData().subscribe(d=>{
+      this.purchaseService.getSelectedPurchaseData().pipe(takeUntil(this.destroy$)).subscribe(d=>{
         this.selectedPurchaseData = d;
         this.setPurchaseDetails();
         this.setPurchaseStatus();
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

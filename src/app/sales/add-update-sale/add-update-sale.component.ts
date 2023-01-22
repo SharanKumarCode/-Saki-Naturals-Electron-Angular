@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,7 +15,7 @@ import {
 } from '../../core/interfaces/interfaces';
 import { ProductsService } from '../../core/services/products/products.service';
 import { ProductsdbService } from '../../core/services/products/productsdb.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ClientdbService } from '../../core/services/client/clientdb.service';
 import { ClientService } from '../../core/services/client/client.service';
@@ -47,7 +47,7 @@ interface ISaleType {
   ]
 })
 
-export class AddUpdateSaleComponent implements OnInit {
+export class AddUpdateSaleComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   formSaleEntry: FormGroup;
@@ -119,8 +119,7 @@ export class AddUpdateSaleComponent implements OnInit {
 
   componentBehaviourFlag: boolean;
 
-  private productListObservable: Subject<IProductData[]>;
-  private clientListObservable: Subject<IClientData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -511,9 +510,7 @@ export class AddUpdateSaleComponent implements OnInit {
 
       this.productsDBservice.getProducts();
       this.clientDBservice.getClients();
-      this.productListObservable = this.productService.getProductList();
-      this.clientListObservable = this.clientService.getClientList();
-      this.productListObservable.subscribe(data => {
+      this.productService.getProductList().pipe(takeUntil(this.destroy$)).subscribe(data => {
 
         // Assign list of products for drop down
         this.products = data;
@@ -534,7 +531,7 @@ export class AddUpdateSaleComponent implements OnInit {
         });
       });
 
-      this.clientListObservable.subscribe(data => {
+      this.clientService.getClientList().pipe(takeUntil(this.destroy$)).subscribe(data => {
         this.customers = data.filter(d => d.clientType === EnumClientType.customer);
       });
 
@@ -545,6 +542,10 @@ export class AddUpdateSaleComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

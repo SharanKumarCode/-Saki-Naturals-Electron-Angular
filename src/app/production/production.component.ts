@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EnumProductionStatus, EnumRouteActions, IProductionData } from '../core/interfaces/interfaces';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ProductionService } from '../core/services/production/production.service';
@@ -16,7 +16,7 @@ import { MatIconRegistry } from '@angular/material/icon';
   templateUrl: './production.component.html',
   styleUrls: ['./production.component.scss']
 })
-export class ProductionComponent implements OnInit, AfterViewInit {
+export class ProductionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -31,7 +31,7 @@ export class ProductionComponent implements OnInit, AfterViewInit {
                               ];
   dataSource = new MatTableDataSource([]);
 
-  private productionListObservable: Subject<IProductionData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -58,9 +58,8 @@ export class ProductionComponent implements OnInit, AfterViewInit {
     return EnumProductionStatus.initiated;
   }
 
-  setTableData(){
-    this.productionListObservable.subscribe(data=>{
-      this.dataSource = new MatTableDataSource();
+  setTableData(data: IProductionData[]){
+    this.dataSource = new MatTableDataSource();
       const tmpProductionList = [];
       data.forEach((element, index)=>{
 
@@ -82,8 +81,6 @@ export class ProductionComponent implements OnInit, AfterViewInit {
         tmpProductionList.push(tmpProductionData);
       });
       this.dataSource.data = tmpProductionList;
-
-    });
   }
 
   onAddProduction(): void {
@@ -100,12 +97,17 @@ export class ProductionComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getProductionList();
-    this.productionListObservable = this.productionService.getProductionList();
-    this.setTableData();
+    this.productionService.getProductionList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+    this.setTableData(data);
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -7,7 +7,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { SalesService } from '../core/services/sales/sales.service';
 import { SalesdbService } from '../core/services/sales/salesdb.service';
 
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -18,7 +18,7 @@ import { ISalesData, ISaleTransactions, EnumRouteActions } from '../core/interfa
   templateUrl: './sales.component.html',
   styleUrls: ['./sales.component.scss']
 })
-export class SalesComponent implements OnInit, AfterViewInit {
+export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -36,7 +36,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
                               ];
   dataSource = new MatTableDataSource([]);
 
-  private salesDataListObservable: Subject<ISalesData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -58,39 +58,36 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.salesdbService.getSalesList();
   }
 
-  setTableData(){
-    this.salesDataListObservable.subscribe(data=>{
-      this.dataSource = new MatTableDataSource();
-      const tmpSaleList = [];
-      data.forEach((element, index)=>{
+  setTableData(data: ISalesData[]){
+    this.dataSource = new MatTableDataSource();
+    const tmpSaleList = [];
+    data.forEach((element, index)=>{
 
-        const salesStatus = this.salesService.getSaleStatus(element);
+      const salesStatus = this.salesService.getSaleStatus(element);
 
-        const salesStatusCompleteFlag = element.completedDate ? true : false;
-        const salesStatusCancelledFlag = element.cancelledDate ? true : false;
+      const salesStatusCompleteFlag = element.completedDate ? true : false;
+      const salesStatusCancelledFlag = element.cancelledDate ? true : false;
 
-        const tmpSaleData = {
-          salesID: element.salesID,
-          serialNumber: index + 1,
-          customer: element.customer.clientName,
-          saleType: element.saleType,
-          remarks: element.remarks,
-          salesDate: element.salesDate,
-          numberOfProducts: element.saleEntries.length,
-          sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
-          totalAmount: element.saleEntries.map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0),
-          paid: element.saleTransactions.map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0),
-          balance: 0,
-          salesStatus,
-          salesStatusCompleteFlag,
-          salesStatusCancelledFlag
-        };
-        tmpSaleData.balance = tmpSaleData.totalAmount - tmpSaleData.paid;
-        tmpSaleList.push(tmpSaleData);
-      });
-      this.dataSource.data = tmpSaleList;
-
+      const tmpSaleData = {
+        salesID: element.salesID,
+        serialNumber: index + 1,
+        customer: element.customer.clientName,
+        saleType: element.saleType,
+        remarks: element.remarks,
+        salesDate: element.salesDate,
+        numberOfProducts: element.saleEntries.length,
+        sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+        totalAmount: element.saleEntries.map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+        paid: element.saleTransactions.map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0),
+        balance: 0,
+        salesStatus,
+        salesStatusCompleteFlag,
+        salesStatusCancelledFlag
+      };
+      tmpSaleData.balance = tmpSaleData.totalAmount - tmpSaleData.paid;
+      tmpSaleList.push(tmpSaleData);
     });
+    this.dataSource.data = tmpSaleList;
   }
 
   calcTransactionData(transactionData: ISaleTransactions[]): any{
@@ -112,12 +109,17 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getSalesList();
-    this.salesDataListObservable = this.salesService.getSalesList();
-    this.setTableData();
+    this.salesService.getSalesList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setTableData(data);
+    });
   }
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

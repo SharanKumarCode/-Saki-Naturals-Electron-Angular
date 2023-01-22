@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef} from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { IProductGroup } from '../../core/interfaces/interfaces';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductsdbService } from '../../core/services/products/productsdb.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductsService } from '../../core/services/products/products.service';
 
 
@@ -15,13 +15,13 @@ import { ProductsService } from '../../core/services/products/products.service';
   templateUrl: './product-group-dialog.component.html',
   styleUrls: ['./product-group-dialog.component.scss']
 })
-export class ProductGroupDialogComponent implements OnInit {
+export class ProductGroupDialogComponent implements OnInit, OnDestroy {
 
   productGroup: string;
   productGroupList: IProductGroup[];
   form: FormGroup;
 
-  private productGroupListObservable: Subject<IProductGroup[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -48,10 +48,13 @@ export class ProductGroupDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.productsDBservice.getAllProductGroups();
-    this.productGroupListObservable = this.productService.getProductGroupList();
-    this.productGroupListObservable.subscribe(productGroupData=>{
+    this.productService.getProductGroupList().pipe(takeUntil(this.destroy$)).subscribe(productGroupData=>{
       this.productGroupList = productGroupData;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   onAddProductGroup(): void {

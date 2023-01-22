@@ -22,9 +22,13 @@ export interface IProductData {
     materialID?: string;
     materialName: string;
     description: string;
+    productionEntries?: IProductionEntry[];
+    purchaseEntries?: IPurchaseEntry[];
     stock?: number;
+    toBeInStock?: number;
     createdDate?: Date;
     consumed?: number;
+    toBeConsumed?: number;
     remarks?: string;
     editCreate?: string;
   }
@@ -122,6 +126,7 @@ export interface IPurchaseData {
 export interface IPurchaseEntry {
   purchaseEntryID?: string;
   purchaseID?: string;
+  purchase?: IPurchaseData;
   material: IMaterialData;
   returnFlag?: boolean;
   price?: number;
@@ -159,6 +164,7 @@ export interface IProductionData {
 export interface IProductionEntry {
   productionEntryID?: string;
   productionID?: string;
+  production?: IProductionData;
   material: IMaterialData;
   materialQuantity?: number;
 }

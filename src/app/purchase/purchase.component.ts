@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EnumRouteActions, EnumTransactionType, IPurchaseData, IPurchaseTransactions } from '../core/interfaces/interfaces';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +16,7 @@ import { PurchasedbService } from '../core/services/purchase/purchasedb.service'
   templateUrl: './purchase.component.html',
   styleUrls: ['./purchase.component.scss']
 })
-export class PurchaseComponent implements OnInit, AfterViewInit {
+export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -33,7 +33,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
                               ];
   dataSource = new MatTableDataSource([]);
 
-  private purchaseDataListObservable: Subject<IPurchaseData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -51,67 +51,54 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
         .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
-  ngOnInit(): void {
-    this.getPurchaseList();
-    this.purchaseDataListObservable = this.purchaseService.getPurchaseList();
-    this.setTableData();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   getPurchaseList(){
     this.purchaseDBservice.getPurchaseList();
   }
 
-  setTableData(){
-    this.purchaseDataListObservable.subscribe(data=>{
-      this.dataSource = new MatTableDataSource();
+  setTableData(data: IPurchaseData[]){
+    this.dataSource = new MatTableDataSource();
       const tmpPurchaseList = [];
       data.forEach((element, index)=>{
 
-        let totalPrice = element
-                        ?.purchaseEntries
-                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
-                        totalPrice -= element
-                        ?.purchaseEntries.filter(d=>d.returnFlag === true)
-                        .map(d=>d.price * d.quantity)
-                        .reduce((partialSum, a) => partialSum + a, 0);
+      let totalPrice = element
+                      ?.purchaseEntries
+                      .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+                      totalPrice -= element
+                      ?.purchaseEntries.filter(d=>d.returnFlag === true)
+                      .map(d=>d.price * d.quantity)
+                      .reduce((partialSum, a) => partialSum + a, 0);
 
-        const paidAmount = element.purchaseTransactions
-                                .filter(d=>d.transactionType !== EnumTransactionType.refund)
-                                .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-        const totalRefundAmount = element.purchaseTransactions
-                                    .filter(d=>d.transactionType === EnumTransactionType.refund)
-                                    .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-        const balance = totalPrice + totalRefundAmount - paidAmount;
+      const paidAmount = element.purchaseTransactions
+                              .filter(d=>d.transactionType !== EnumTransactionType.refund)
+                              .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+      const totalRefundAmount = element.purchaseTransactions
+                                  .filter(d=>d.transactionType === EnumTransactionType.refund)
+                                  .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+      const balance = totalPrice + totalRefundAmount - paidAmount;
 
-        const purchaseStatus = this.purchaseService.getPurchaseStatus(element);
+      const purchaseStatus = this.purchaseService.getPurchaseStatus(element);
 
-        const purchaseStatusCompleteFlag = element.completedDate ? true : false;
-        const purchaseStatusCancelledFlag = element.cancelledDate ? true : false;
+      const purchaseStatusCompleteFlag = element.completedDate ? true : false;
+      const purchaseStatusCancelledFlag = element.cancelledDate ? true : false;
 
-        const tmpPurchaseData = {
-          purchaseID: element.purchaseID,
-          serialNumber: index + 1,
-          supplier: element.supplier.clientName,
-          remarks: element.remarks,
-          purchaseDate: element.purchaseDate,
-          numberOfMaterials: element.purchaseEntries.length,
-          purchasedQuantity: element.purchaseEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
-          totalPrice,
-          paidAmount,
-          balance,
-          purchaseStatus,
-          purchaseStatusCompleteFlag,
-          purchaseStatusCancelledFlag
-        };
-        tmpPurchaseList.push(tmpPurchaseData);
-      });
-      this.dataSource.data = tmpPurchaseList;
-
+      const tmpPurchaseData = {
+        purchaseID: element.purchaseID,
+        serialNumber: index + 1,
+        supplier: element.supplier.clientName,
+        remarks: element.remarks,
+        purchaseDate: element.purchaseDate,
+        numberOfMaterials: element.purchaseEntries.length,
+        purchasedQuantity: element.purchaseEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+        totalPrice,
+        paidAmount,
+        balance,
+        purchaseStatus,
+        purchaseStatusCompleteFlag,
+        purchaseStatusCancelledFlag
+      };
+      tmpPurchaseList.push(tmpPurchaseData);
     });
+    this.dataSource.data = tmpPurchaseList;
   }
 
   calcTransactionData(transactionData: IPurchaseTransactions[]): any{
@@ -129,6 +116,22 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
 
   onRefresh(){
     this.getPurchaseList();
+  }
+
+  ngOnInit(): void {
+    this.getPurchaseList();
+    this.purchaseService.getPurchaseList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setTableData(data);
+
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

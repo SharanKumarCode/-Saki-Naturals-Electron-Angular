@@ -132,6 +132,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.selectedProductID = this.productService.getSelectedProductID();
     this.activatedRoute.data.subscribe(data=>{
+      console.log(data);
       this.selectedProductData = data.productData;
       this.setProductDetails();
       this.productService.getSelectedProductData().subscribe(d=>{

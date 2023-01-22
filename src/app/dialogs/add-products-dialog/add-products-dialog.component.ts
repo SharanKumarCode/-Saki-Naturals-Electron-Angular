@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, Validators, FormGroup, FormControl} from '@angular/forms';
@@ -6,7 +6,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { IProductData, IProductGroup } from '../../core/interfaces/interfaces';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductsService } from '../../core/services/products/products.service';
 import { ProductsdbService } from '../../core/services/products/productsdb.service';
 
@@ -15,7 +15,7 @@ import { ProductsdbService } from '../../core/services/products/productsdb.servi
   templateUrl: './add-products-dialog.component.html',
   styleUrls: ['./add-products-dialog.component.scss']
 })
-export class AddProductsDialogComponent implements OnInit {
+export class AddProductsDialogComponent implements OnInit, OnDestroy {
   productName: string;
   productGroup: IProductGroup[];
   description: string;
@@ -26,8 +26,7 @@ export class AddProductsDialogComponent implements OnInit {
   editCreate: string;
   form: FormGroup;
 
-  private productGroupListObservable: Subject<IProductGroup[]>;
-
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -125,11 +124,14 @@ export class AddProductsDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.productsDBservice.getAllProductGroups();
-    this.productGroupListObservable = this.productService.getProductGroupList();
-    this.productGroupListObservable.subscribe(productGroupData=>{
+    this.productService.getProductGroupList().pipe(takeUntil(this.destroy$)).subscribe(productGroupData=>{
       this.productGroup = productGroupData;
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }
