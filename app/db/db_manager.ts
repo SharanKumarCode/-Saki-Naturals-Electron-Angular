@@ -26,6 +26,7 @@ import * as clientDB from './clients_db_manager';
 import * as materialDB from './materials_db_manager';
 import * as purchaseDB from './purchase_db_manager';
 import * as productionDB from './production_db_manager';
+import * as stockSoldConsumedDB from './stock_sold_consumed_db_manager';
 
 
 const AppDataSource = new DataSource({
@@ -66,5 +67,6 @@ export {
     clientDB,
     materialDB,
     purchaseDB,
-    productionDB
+    productionDB,
+    stockSoldConsumedDB
 }

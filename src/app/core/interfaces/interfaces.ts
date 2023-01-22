@@ -2,15 +2,18 @@ export interface IProductData {
     productID?: string;
     productName: string;
     productGroup?: IProductGroup;
-    productGroupID: string;
-    productGroupName: string;
+    productGroupID?: string;
+    productGroupName?: string;
+    saleEntries?: ISaleEntry[];
+    production?: IProductionData[];
     description: string;
     stock?: number;
+    sold?: number;
+    inProduction?: number;
     priceDirectSale?: number;
     priceReseller?: number;
     priceDealer?: number;
     createdDate?: Date;
-    sold?: number;
     remarks?: string;
     editCreate?: string;
   }
