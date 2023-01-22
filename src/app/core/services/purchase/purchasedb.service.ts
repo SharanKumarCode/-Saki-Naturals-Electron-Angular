@@ -28,14 +28,8 @@ export class PurchasedbService {
 
       data.forEach(element=>{
 
-        // sorting purchase transactoin by date and type - ascending order
-        // element.saleTransactions = element.saleTransactions.length > 0 ?
-        //                            this.commonService.sortSalesTransactionByTypeAndDate(element.saleTransactions) :
-        //                            [];
-
         const purchaseData: IPurchaseData = {
           purchaseID: element.purchaseID,
-          purchaseDate: element.purchaseDate,
           gstPercentage: element.gstPercentage,
           overallDiscountPercentage: element.overallDiscountPercentage,
           transportCharges: element.transportationCharges,
@@ -43,7 +37,15 @@ export class PurchasedbService {
           paymentTerms: element.paymentTerms,
           supplier: element.supplier,
           purchaseEntries: element.purchaseEntries,
-          purchaseTransactions: element.purchaseTransactions
+          purchaseTransactions: element.purchaseTransactions,
+
+          purchaseDate: element.purchaseDate,
+          dispatchDate: element.dispatchDate,
+          deliveredDate: element.deliveredDate,
+          returnedDate: element.returnedDate,
+          refundedDate: element.refundedDate,
+          completedDate: element.completedDate,
+          cancelledDate: element.cancelledDate
         };
         purchaseList.push(purchaseData);
       });

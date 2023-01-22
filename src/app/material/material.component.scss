@@ -1,21 +1,43 @@
 .materials-button-section {
-    height: 15%;
-    width: 28%;
-    float: right;
-    margin-top: 1%;
-}
-
-.materials-button-row{
-    width: 45%;
-    height: 50%;
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.materials-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.materials-button-section-dummy-div {
+    flex-grow: 8;
+}
+
+.materials-button-row{
+    width: 10%;
+    height: 55%;
+    flex-grow: 0.8;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .materials-button-row > button:first-child {

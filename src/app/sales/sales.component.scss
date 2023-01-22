@@ -1,23 +1,43 @@
 .sales-button-section {
-    height: 15%;
-    width: 30%;
-    float: right;
-    margin-right: 3%;
-    margin-top: 1%;
-}
-
-.sales-button-row{
-    width: 50%;
-    height: 50%;
-    float: right;
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.sales-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.sales-button-section-dummy-div {
+    flex-grow: 8;
+}
+
+.sales-button-row{
+    width: 10%;
+    height: 55%;
+    flex-grow: 0.8;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .sales-button-row > button:first-child {
@@ -67,3 +87,26 @@ td{
     font-style: italic;
     text-align: center;
   }
+
+.sales-status-completed {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 600;
+    text-align: left;
+    color: green;
+}
+
+.sales-status-cancelled {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 600;
+    text-align: left;
+    color: red;
+}
+
+.sales-status-general {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 500;
+    text-align: left;
+}

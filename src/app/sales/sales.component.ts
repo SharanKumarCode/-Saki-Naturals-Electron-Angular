@@ -32,11 +32,11 @@ export class SalesComponent implements OnInit, AfterViewInit {
                                 'totalAmount',
                                 'paidAmount',
                                 'balanceAmount',
+                                'salesStatus',
                                 'salesDate'
                               ];
   dataSource = new MatTableDataSource([]);
 
-  private salesData: ISalesData;
   private salesDataListObservable: Subject<ISalesData[]>;
   private path = 'assets/icon/';
 
@@ -49,17 +49,6 @@ export class SalesComponent implements OnInit, AfterViewInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
   ) {
-    this.salesData = {
-      salesDate: new Date(),
-      currentStock: 0,
-      saleType: EnumSaleType.dealer,
-      gstPercentage: 0,
-      overallDiscountPercentage: 0,
-      transportCharges: 0,
-      miscCharges: 0,
-      paymentTerms: 0,
-      remarks: ''
-    };
 
     this.matIconRegistry
         .addSvgIcon('plus',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'))
@@ -75,6 +64,12 @@ export class SalesComponent implements OnInit, AfterViewInit {
       this.dataSource = new MatTableDataSource();
       const tmpSaleList = [];
       data.forEach((element, index)=>{
+
+        const salesStatus = this.salesService.getSaleStatus(element);
+
+        const salesStatusCompleteFlag = element.completedDate ? true : false;
+        const salesStatusCancelledFlag = element.cancelledDate ? true : false;
+
         const tmpSaleData = {
           salesID: element.salesID,
           serialNumber: index + 1,
@@ -86,7 +81,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
           sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
           totalAmount: element.saleEntries.map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0),
           paid: element.saleTransactions.map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0),
-          balance: 0
+          balance: 0,
+          salesStatus,
+          salesStatusCompleteFlag,
+          salesStatusCancelledFlag
         };
         tmpSaleData.balance = tmpSaleData.totalAmount - tmpSaleData.paid;
         tmpSaleList.push(tmpSaleData);

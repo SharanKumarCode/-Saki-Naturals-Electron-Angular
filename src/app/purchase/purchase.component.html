@@ -1,8 +1,13 @@
 <section class="purchase-button-section">
-    <div class="purchase-button-row">
-      <button mat-raised-button color="accent" (click)="onAddPurchase()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
-      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
-    </div>
+  <div class="purchase-title">
+    <span>PURCHASE</span>
+  </div>
+  <div class="purchase-button-section-dummy-div">
+  </div>
+  <div class="purchase-button-row">
+    <button mat-raised-button color="accent" (click)="onAddPurchase()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+    <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+  </div>
 </section>
 <section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="purchase-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
@@ -62,6 +67,16 @@
       Balance Amount
     </th>
     <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
+  </ng-container>
+
+  <!-- Purchase Status Column -->
+  <ng-container matColumnDef="purchaseStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchaseStatus">
+      Purchase Status
+    </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'purchase-status-completed': element.purchaseStatusCompleteFlag,
+                                                        'purchase-status-cancelled':element.purchaseStatusCancelledFlag,
+                                                        'purchase-status-general': !element.purchaseStatusCancelledFlag && !element.purchaseStatusCompleteFlag}"> {{element.purchaseStatus}} </td>
   </ng-container>
 
   <!-- Date Column -->

@@ -1,4 +1,9 @@
 <section class="sales-button-section">
+  <div class="sales-title">
+    <span>SALES</span>
+  </div>
+  <div class="sales-button-section-dummy-div">
+  </div>
     <div class="sales-button-row">
       <button mat-raised-button color="accent" (click)="onAddSales()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
@@ -78,6 +83,16 @@
       Remarks
     </th>
     <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+  </ng-container>
+
+  <!-- Sales Status Column -->
+  <ng-container matColumnDef="salesStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by salesStatus">
+      Sales Status
+    </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'sales-status-completed': element.salesStatusCompleteFlag,
+                                                        'sales-status-cancelled':element.salesStatusCancelledFlag,
+                                                        'sales-status-general': !element.salesStatusCancelledFlag && !element.salesStatusCompleteFlag}"> {{element.salesStatus}} </td>
   </ng-container>
 
   <!-- Date Column -->

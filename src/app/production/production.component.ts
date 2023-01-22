@@ -60,10 +60,14 @@ export class ProductionComponent implements OnInit, AfterViewInit {
 
   setTableData(){
     this.productionListObservable.subscribe(data=>{
-      console.log(data);
       this.dataSource = new MatTableDataSource();
       const tmpProductionList = [];
       data.forEach((element, index)=>{
+
+        const productionStatus = this.productionService.getProductionStatus(element);
+        const productionStatusCompleteFlag = element.completedDate ? true : false;
+        const productionStatusCancelledFlag = element.cancelledDate ? true : false;
+
         const tmpProductionData = {
           productionID: element.productionID,
           serialNumber: index + 1,
@@ -71,7 +75,9 @@ export class ProductionComponent implements OnInit, AfterViewInit {
           remarks: element.remarks,
           productionDate: element.productionDate,
           productionQuantity: element.productQuantity,
-          productionStatus: this.getProductionStatus()
+          productionStatus,
+          productionStatusCompleteFlag,
+          productionStatusCancelledFlag
         };
         tmpProductionList.push(tmpProductionData);
       });

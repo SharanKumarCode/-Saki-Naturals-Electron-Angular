@@ -1,23 +1,43 @@
 .production-button-section {
-    height: 15%;
-    width: 30%;
-    float: right;
-    margin-right: 3%;
-    margin-top: 1%;
-}
-
-.production-button-row{
-    width: 50%;
-    height: 50%;
-    float: right;
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.production-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.production-button-section-dummy-div {
+    flex-grow: 8;
+}
+
+.production-button-row{
+    width: 10%;
+    height: 55%;
+    flex-grow: 0.8;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .production-button-row > button:first-child {
@@ -68,3 +88,26 @@ td{
     font-style: italic;
     text-align: center;
   }
+
+.production-status-completed {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 600;
+    text-align: left;
+    color: green;
+}
+
+.production-status-cancelled {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 600;
+    text-align: left;
+    color: red;
+}
+
+.production-status-general {
+    font-size: 1.5em;
+    font-family: Fragment;
+    font-weight: 500;
+    text-align: left;
+}

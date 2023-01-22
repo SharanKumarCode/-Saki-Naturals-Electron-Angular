@@ -28,11 +28,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
                                 'totalPrice',
                                 'paidAmount',
                                 'balanceAmount',
+                                'purchaseStatus',
                                 'purchaseDate'
                               ];
   dataSource = new MatTableDataSource([]);
 
-  private purchaseData: IPurchaseData;
   private purchaseDataListObservable: Subject<IPurchaseData[]>;
   private path = 'assets/icon/';
 
@@ -45,16 +45,6 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
   ) {
-    this.purchaseData = {
-      purchaseDate: new Date(),
-      currentStock: 0,
-      gstPercentage: 0,
-      overallDiscountPercentage: 0,
-      transportCharges: 0,
-      miscCharges: 0,
-      paymentTerms: 0,
-      remarks: ''
-    };
 
     this.matIconRegistry
         .addSvgIcon('plus',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'))
@@ -97,6 +87,11 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
                                     .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
         const balance = totalPrice + totalRefundAmount - paidAmount;
 
+        const purchaseStatus = this.purchaseService.getPurchaseStatus(element);
+
+        const purchaseStatusCompleteFlag = element.completedDate ? true : false;
+        const purchaseStatusCancelledFlag = element.cancelledDate ? true : false;
+
         const tmpPurchaseData = {
           purchaseID: element.purchaseID,
           serialNumber: index + 1,
@@ -107,7 +102,10 @@ export class PurchaseComponent implements OnInit, AfterViewInit {
           purchasedQuantity: element.purchaseEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
           totalPrice,
           paidAmount,
-          balance
+          balance,
+          purchaseStatus,
+          purchaseStatusCompleteFlag,
+          purchaseStatusCancelledFlag
         };
         tmpPurchaseList.push(tmpPurchaseData);
       });
