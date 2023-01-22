@@ -5,9 +5,9 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
-import { ProductsService } from '../core/services/products.service';
+import { ProductsService } from '../core/services/products/products.service';
 import { Subject } from 'rxjs';
-import { ProductsdbService } from '../core/services/productsdb.service';
+import { ProductsdbService } from '../core/services/products/productsdb.service';
 import * as _moment from 'moment';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -30,12 +30,12 @@ export class ProductsComponent implements OnInit, AfterViewInit{
                                 'serial_number',
                                 'product_name',
                                 'group',
-                                'stock',
                                 'priceDirectSale',
                                 'priceReseller',
                                 'priceDealer',
-                                'sold',
-                                'createdDate'];
+                                'inProduction',
+                                'stock',
+                                'sold'];
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
@@ -123,8 +123,7 @@ export class ProductsComponent implements OnInit, AfterViewInit{
   }
 
   onRowClick(e: any){
-    this.productService.updateSelectedProductID(e.productID);
-    this.router.navigate(['product/detail']);
+    this.router.navigate(['product/detail', e.productID]);
   }
 
   ngOnInit(): void {
@@ -143,5 +142,4 @@ export class ProductsComponent implements OnInit, AfterViewInit{
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }
-
 }

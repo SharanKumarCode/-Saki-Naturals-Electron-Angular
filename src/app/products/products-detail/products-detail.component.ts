@@ -5,10 +5,10 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IProductData } from '../../core/interfaces/interfaces';
-import { ProductsService } from '../../core/services/products.service';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ProductsService } from '../../core/services/products/products.service';
+import { ProductsdbService } from '../../core/services/products/productsdb.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { AddProductsDialogComponent } from '../../dialogs/add-products-dialog/add-products-dialog.component';
 
@@ -36,6 +36,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
                                 ];
   selectedProductID: string;
   selectedProductData: IProductData;
+  productDetail: any;
   dataSource = new MatTableDataSource([]);
   private path = 'assets/icon/';
 
@@ -45,6 +46,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private productService: ProductsService,
     private productDBService: ProductsdbService,
     private notificationService: NotificationService
@@ -67,17 +69,21 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
     .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'));
   }
 
-  getProductData(){
-    this.productDBService.getProductByID(this.selectedProductID)
-    .then(data=>{
-      this.selectedProductData = data[0];
-      this.selectedProductData.createdDate = this.selectedProductData.createdDate;
-      this.selectedProductData.productGroupID = data[0].productGroup.productGroupID;
-      this.selectedProductData.productGroupName = data[0].productGroup.productGroupName;
-    })
-    .catch(err=>{
-      console.error(err);
-    });
+  setProductDetails(){
+    this.productDetail = {
+      productID: this.selectedProductData?.productID,
+      createdDate: this.selectedProductData?.createdDate,
+      productGroupName: this.selectedProductData?.productGroup.productGroupName,
+      productName: this.selectedProductData?.productName,
+      priceDealer: this.selectedProductData?.priceDealer,
+      priceDirectSale: this.selectedProductData?.priceDirectSale,
+      priceReseller: this.selectedProductData?.priceReseller,
+      inProduction: this.selectedProductData?.inProduction,
+      stock: this.selectedProductData?.stock,
+      sold: this.selectedProductData?.sold,
+      description: this.selectedProductData?.description,
+      remarks: this.selectedProductData?.remarks
+    };
   }
 
   onUpdateProduct(){
@@ -113,6 +119,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog box is closed');
       if (result){
+        console.log(result);
         this.productDBService.updateProduct(result);
       }
     });
@@ -124,7 +131,14 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.selectedProductID = this.productService.getSelectedProductID();
-    this.getProductData();
+    this.activatedRoute.data.subscribe(data=>{
+      this.selectedProductData = data.productData;
+      this.setProductDetails();
+      this.productService.getSelectedProductData().subscribe(d=>{
+        this.selectedProductData = d;
+        this.setProductDetails();
+      });
+    });
   }
 
   onRowClick(e: any){
@@ -132,7 +146,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
   }
 
   onRefresh(){
-    this.getProductData();
+    this.productDBService.getProductByID(this.selectedProductID);
   }
 
   onBack(){

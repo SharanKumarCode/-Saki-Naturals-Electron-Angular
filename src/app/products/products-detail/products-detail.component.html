@@ -17,42 +17,54 @@
             </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="product-details-data">
-                <div class="product-details-data-section-one product-details-data-sections">
-                    <span>Product ID</span>
-                    <span>{{selectedProductID}}</span>
-                </div>
-                <div class="product-details-data-section-two product-details-data-sections">
-                    <span>Create Date</span>
-                    <span>{{selectedProductData.createdDate ? selectedProductData.createdDate.toUTCString() : ''}}</span>
-                </div>
-                <div class="product-details-data-section-three product-details-data-sections">
-                    <span>Group</span>
-                    <span>{{selectedProductData.productGroupName ? selectedProductData.productGroupName : ''}}</span>
-                </div>
-                <div class="product-details-data-section-four product-details-data-sections">
-                    <span>Product Name</span>
-                    <span>{{selectedProductData.productName ? selectedProductData.productName : ''}}</span>
-                </div>
-                <div class="product-details-data-section-five product-details-data-sections">
-                    <span>Description</span>
-                    <span>{{selectedProductData.description ? selectedProductData.description : ''}}</span>
-                </div>
-                <div class="product-details-data-section-six product-details-data-sections">
-                    <span>Dealer Price</span>
-                    <span>&#8377; {{selectedProductData.priceDealer ? selectedProductData.priceDealer : ''}}</span>
-                </div>
-                <div class="product-details-data-section-seven product-details-data-sections">
-                    <span>Reseller Price</span>
-                    <span>&#8377; {{selectedProductData.priceReseller ? selectedProductData.priceReseller : ''}}</span>
-                </div>
-                <div class="product-details-data-section-eight product-details-data-sections">
-                    <span>Direct Sale Price</span>
-                    <span>&#8377; {{selectedProductData.priceDirectSale ? selectedProductData.priceDirectSale : ''}}</span>
-                </div>
-                <div class="product-details-data-section-nine product-details-data-sections">
-                    <span>Remarks</span>
-                    <span>{{selectedProductData.remarks ? selectedProductData.remarks : '(blank)'}}</span>
-                </div>
+                <mat-card class="product-data-section-1">
+                    <span class="product-data-key-sections">Product ID</span>
+                    <span style="float: right; font-size: 1.1em;">{{(productDetail.productID ? productDetail.productID : '')}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-2">
+                    <span class="product-data-key-sections">Create Date</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.createdDate ? productDetail.createdDate.toUTCString() : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-3">
+                    <span class="product-data-key-sections">Product Group</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.productGroupName ? productDetail.productGroupName : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-4">
+                    <span class="product-data-key-sections">Product Name</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.productName ? productDetail.productName : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-5">
+                    <span class="product-data-key-sections">Dealer Price</span>
+                    <span style="float: right; font-size: 1.1em;">&#8377; {{productDetail.priceDealer ? productDetail.priceDealer : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-6">
+                    <span class="product-data-key-sections">Reseller Price</span>
+                    <span style="float: right; font-size: 1.1em;">&#8377; {{productDetail.priceReseller ? productDetail.priceReseller : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-7">
+                    <span class="product-data-key-sections">Direct Sale Price</span>
+                    <span style="float: right; font-size: 1.1em;">&#8377; {{productDetail.priceDirectSale ? productDetail.priceDirectSale : ''}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-8">
+                    <span class="product-data-key-sections">In Production</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.inProduction ? productDetail.inProduction : 0}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-9">
+                    <span class="product-data-key-sections">Stock</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.stock ? productDetail.stock : 0}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-10">
+                    <span class="product-data-key-sections">Sold</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.sold ? productDetail.sold : 0}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-11">
+                    <span class="product-data-key-sections">Description</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.description ? productDetail.description : ''}}</span>
+                  </mat-card>
+                <div class="product-data-section-12">
+                    <span class="product-data-key-sections">Remarks</span>
+                    <span style="margin-left : 2%; font-size: 1em;">{{productDetail.remarks ? productDetail.remarks : '(blank)'}}</span>
+                  </div>
             </div>
             <mat-action-row>
                 <button mat-button color="primary" (click)="onUpdateProduct()">UPDATE</button>

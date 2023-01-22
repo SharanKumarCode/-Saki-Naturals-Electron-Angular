@@ -7,8 +7,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { IProductData, IProductGroup } from '../../core/interfaces/interfaces';
 import { Subject } from 'rxjs';
-import { ProductsService } from '../../core/services/products.service';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ProductsService } from '../../core/services/products/products.service';
+import { ProductsdbService } from '../../core/services/products/productsdb.service';
 
 @Component({
   selector: 'app-add-products-dialog',
@@ -61,8 +61,9 @@ export class AddProductsDialogComponent implements OnInit {
       }
     );
 
-    if (this.data.productGroupName){
-      this.form.controls.productGroup.setValue(this.data.productGroupID);
+    if (this.data.productGroup?.productGroupName){
+      this.form.controls.productGroup.setValue(this.data.productGroup.productGroupID);
+      this.form.controls.productGroup.disable();
     }
 
     this.matIconRegistry
@@ -76,17 +77,28 @@ export class AddProductsDialogComponent implements OnInit {
 
   onSave(): void{
     const {value, valid} = this.form;
+    console.log(this.productGroup.filter(d=> d.productGroupID === value.productGroup)[0]);
+
     if (valid) {
       if (value.priceDealer === 0 && value.priceDirectSale === 0 && value.priceReseller === 0){
         this.snackbar.open('Please provide alteast one Price.', 'close');
       } else {
-        const finalProductData = value;
-        finalProductData.productGroupID = value.productGroup;
-        finalProductData.productGroupName = this.productGroup.filter(d=> d.productGroupID === value.productGroup)[0].productGroupName;
-        delete finalProductData.productGroup;
+        const finalProductData: IProductData = {
+          productName: value.productName,
+          description: value.description,
+          productGroup: {
+            productGroupID: value.productGroup,
+            productGroupName: this.productGroup
+                      .filter(d=> d.productGroupID === value.productGroup)[0].productGroupName
+          },
+          priceDealer: value.priceDealer,
+          priceDirectSale: value.priceDirectSale,
+          priceReseller: value.priceReseller,
+          remarks: value.remarks
+        };
         this.dialogRef.close(finalProductData);
+        };
       }
-    }
   }
 
   onUpdate(): void {
@@ -97,10 +109,8 @@ export class AddProductsDialogComponent implements OnInit {
       } else {
         const finalProductData = value;
         finalProductData.productID = this.data.productID;
-        finalProductData.productGroupID = value.productGroup;
-        finalProductData.productGroupName = this.productGroup.filter(d=> d.productGroupID === value.productGroup)[0].productGroupName;
+        finalProductData.productGroup = this.data.productGroup;
         finalProductData.editCreate = 'Edit';
-        delete finalProductData.productGroup;
         this.dialogRef.close(finalProductData);
       }
     }
