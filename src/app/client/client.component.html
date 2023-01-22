@@ -1,0 +1,83 @@
+<section class="client-button-section">
+    <div class="client-button-row">
+      <button mat-raised-button (click)="openAddDialog()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+    </div>
+</section>
+<section class="client-filter-section">
+  <mat-form-field class="client-filter-type" appearance="outline">
+    <mat-select placeholder="Filter by Client type" [(ngModel)]="selectedValue" name="clientType" (selectionChange)="onFilterChange($event)">
+      <mat-option *ngFor="let clientType of clientTypes" [value]="clientType.value">
+        {{clientType.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</section>
+<section class="client-table-section">
+  <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+    class="mat-elevation-z8">
+
+  <!-- Serial Number Column -->
+  <ng-container matColumnDef="serial_number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+      
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+  </ng-container>
+
+  <!-- Client Type Column -->
+  <ng-container matColumnDef="clientType">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by type">
+      Type
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.clientType}} </td>
+  </ng-container>
+
+  <!-- Client Name Column -->
+  <ng-container matColumnDef="clientName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by name">
+      Name
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+  </ng-container>
+
+  <!-- Client Location Column -->
+  <ng-container matColumnDef="clientLocation">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by location">
+      Location
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+  </ng-container>
+
+  <!-- Contact Column -->
+  <ng-container matColumnDef="contact">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by contact">
+      Primary Contact #
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.contact1}} </td>
+  </ng-container>
+
+  <!-- Email Column -->
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by email">
+      Email
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+  </ng-container>
+
+  <!-- createdDate Column -->
+  <ng-container matColumnDef="createdDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+      Created Date
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.createdDate | date:'medium'}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr 
+      mat-row 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="onRowClick(row)">
+    </tr>
+</table>
+</section>

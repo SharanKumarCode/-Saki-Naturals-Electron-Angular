@@ -1,0 +1,94 @@
+.form-container  {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+    overflow: hidden;
+  }
+
+.product-add-group-container  {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5%;
+}
+
+.product-add-group-container > .add-product-input {
+    flex-grow: 9;
+    margin-right: 2%;   
+}
+
+.product-add-group-container > button {
+    flex-grow: 0.8;
+    width: 2%;
+    height: 90%;
+    border-radius: 10px;
+    margin-bottom: 0%;
+    background-color: greenyellow;
+}
+
+.card-group-list{
+    margin-top: 10%;
+    margin-bottom: 10%;
+    overflow: auto;
+    height: 60%;
+}
+
+.card-container{
+    flex-grow: 8;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+mat-card {
+    margin-bottom: 2%;
+    margin-right: 2%;
+    background-color: whitesmoke;
+}
+
+.card-container > span {
+    flex-grow: 8;
+    font-size: larger;
+}
+
+.card-container > button {
+    flex-grow: 1;
+}
+
+
+.form-button-container  {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: stretch;
+}
+
+.form-button-container > button {
+    flex-grow: 1;
+    height: 80%;
+    padding-bottom: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+
+.card-group-list::-webkit-scrollbar {
+    width: 8px;
+    margin-left: 1%;
+  }
+  
+.card-group-list::-webkit-scrollbar-track {
+    background-color: #673BB7;
+    border-radius: 100px;
+
+}
+
+.card-group-list::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba(238, 12, 12, 0.3);
+    border-radius: 100px;
+    background: #FFD741;
+    border: 6px solid rgba(0, 0, 0, 0.2);
+}

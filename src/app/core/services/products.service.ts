@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { IProductData } from '../../products/interfaces/productdata.interface';
+import { IProductData, IProductGroup } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +8,12 @@ import { IProductData } from '../../products/interfaces/productdata.interface';
 export class ProductsService {
 
   private productListSubject$: Subject<IProductData[]>;
+  private productGroupListSubject$: Subject<IProductGroup[]>;
   private selectedProductID: string;
 
   constructor() {
     this.productListSubject$ = new Subject<IProductData[]>();
+    this.productGroupListSubject$ = new Subject<IProductGroup[]>();
    }
 
   getProductList(): Subject<IProductData[]>{
@@ -26,7 +28,15 @@ export class ProductsService {
     return this.selectedProductID;
    }
 
-   updateSelectedProductID(salesID: string){
-    this.selectedProductID = salesID;
+   updateSelectedProductID(productID: string){
+    this.selectedProductID = productID;
    }
+
+   getProductGroupList(): Subject<IProductGroup[]>{
+    return this.productGroupListSubject$;
+   }
+
+   updateProductGroupList(a: IProductGroup[]){
+    this.productGroupListSubject$.next(a);
+  }
 }

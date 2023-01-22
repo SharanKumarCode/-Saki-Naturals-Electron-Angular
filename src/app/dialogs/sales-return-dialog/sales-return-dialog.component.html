@@ -1,0 +1,98 @@
+<h1 mat-dialog-title>SALES</h1>
+
+<!-- Product Details -->
+<mat-dialog-content class="form-container">
+  <section class="container-one">
+    <mat-form-field appearance="outline">
+      <mat-label>Return date</mat-label>
+      <input matInput [min]="minReturnDate" [matDatepicker]="dp" [formControl]="date">
+      <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+    <button mat-raised-button style="background-color: #1f8612; color: white; height: 100%;" (click)="onAddProduct()">ADD PRODUCT</button>   
+  </section>
+  <section @slideDownUp *ngIf="addSaleReturnEntryFlag" class="container-two">
+    <mat-card>
+      <mat-card-content [formGroup]="formSaleReturnEntry">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Product</mat-label>
+          <mat-select formControlName="productGroupAndProductName" >
+              <mat-option *ngFor="let prod of productGroupAndProductNameList" (onSelectionChange)="onProductSelectChange($event)" [value]="prod.value">
+                {{prod.viewValue}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input matInput min="1" max="{{returnQuantityMaxValue}}" type="number" formControlName="returnQuantity" value="{{returnQuantity}}"/>
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions>
+        <button style="transform: scale(1.1);" mat-icon-button (click)="onAddSaleReturnEntry()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+        <button style="float: right" mat-icon-button (click)="onSaleReturnEntryCancel()"><mat-icon class="icon-display" svgIcon="close"></mat-icon></button>
+      </mat-card-actions>
+    </mat-card>
+  </section>
+  <section class="container-three">
+    <section class="product-list-table mat-elevation-z8" tabindex="0">
+      <table mat-table [dataSource]="dataSourceProductList">
+    
+        <!-- Product Group Column -->
+        <ng-container matColumnDef="productGroup">
+          <th mat-header-cell *matHeaderCellDef> Product Group </th>
+          <td mat-cell *matCellDef="let element"> {{element.product.productGroup.productGroupName}} </td>
+        </ng-container>
+    
+        <!-- Product Name Column -->
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef> Product Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.product.productName}} </td>
+        </ng-container>
+    
+        <!-- selling price Column -->
+        <ng-container matColumnDef="sellingPrice">
+          <th mat-header-cell *matHeaderCellDef> Selling Price </th>
+          <td mat-cell *matCellDef="let element"> &#8377;&nbsp; {{element.price}} </td>
+        </ng-container>
+
+        <!-- Quantity Column -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Amount </th>
+          <td mat-cell *matCellDef="let element" #input> &#8377;&nbsp; {{(element.price * element.quantity) | number : '1.2-2'}} </td>
+        </ng-container>
+
+        <!-- Delete Column -->
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element" style="width: 6%;"> <button mat-icon-button (click)="onDeleteSaleEntry(element.product.productID)"><mat-icon class="icon-display" style="color: rgb(206, 36, 36);" svgIcon="close"></mat-icon></button></td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsProductList; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsProductList;"></tr>
+      </table>
+      
+    </section>
+    <div class="no-products-div" *ngIf="!dataSourceProductList.data.length">
+      No products added yet..
+  </div>
+  </section>  
+
+</mat-dialog-content>
+
+<div mat-dialog-actions *ngIf="editCreate === 'Create'" class="form-button-container">
+  <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button *ngIf="editCreate === 'Create'" cdkFocusInitial (click)="onSave()" [style.background-color]="'#33b249'" [style.color]="'white'">INITIATE RETURN</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial style="background-color: greenyellow; color: black;" (click)="onUpdate()" color="primary">UPDATE RETURN</button>
+  <button mat-button cdkFocusInitial style="background-color: red; color: white;" (click)="onCancel()" color="primary">CANCEL RETURN</button>
+
+</div>

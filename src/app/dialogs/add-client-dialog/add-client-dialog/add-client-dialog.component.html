@@ -1,0 +1,102 @@
+<h1 mat-dialog-title>ADD CLIENT</h1>
+<mat-dialog-content class="form-container" [formGroup]="form">
+    <mat-form-field appearance="outline">
+        <mat-label>Client Type</mat-label>
+        <mat-select formControlName="clientType" >
+            <mat-option *ngFor="let client of clientTypeSelect" [value]="client.value">
+                {{client.viewValue}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Client Name</mat-label>
+        <input matInput #input maxlength="50" formControlName="clientName" value="{{clientName}}"/>
+        <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput #inputdesc maxlength="100" formControlName="description" value="{{description}}"></textarea>
+        <mat-hint align="end">{{inputdesc.value?.length || 0}}/100</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Contact Person</mat-label>
+        <textarea matInput #inputContactPerson maxlength="50" formControlName="contactPerson" value="{{contactPerson}}"></textarea>
+        <mat-hint align="end">{{inputContactPerson.value?.length || 0}}/50</mat-hint>
+    </mat-form-field>
+  
+    <div class="contacts-container">
+    <mat-form-field appearance="outline">
+        <mat-label>Primary Contact #</mat-label>
+        <input matInput type="tel" formControlName="contact1" pattern="[0-9]{10}" value="{{contact1}}"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Secondary Contact #</mat-label>
+        <input matInput type="tel" formControlName="contact2" pattern="[0-9]{10}" value="{{contact2}}"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Landline</mat-label>
+        <input matInput type="tel" formControlName="landline" value="{{landline}}"/>
+    </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" value="{{email}}"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Address Line 1</mat-label>
+        <textarea matInput #inputAddressLine1 maxlength="100" formControlName="addressLine1" value="{{addressLine1}}"></textarea>
+        <mat-hint align="end">{{inputAddressLine1.value?.length || 0}}/100</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Address Line 2</mat-label>
+        <textarea matInput #inputAddressLine1 maxlength="100" formControlName="addressLine2" value="{{addressLine2}}"></textarea>
+        <mat-hint align="end">{{inputAddressLine1.value?.length || 0}}/100</mat-hint>
+    </mat-form-field>
+
+    <div class="location-container">    
+        <mat-form-field appearance="outline">
+            <mat-label>City / District</mat-label>
+            <textarea matInput #inputcity maxlength="50" formControlName="city" value="{{city}}"></textarea>
+            <mat-hint align="end">{{inputcity.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>State / Province</mat-label>
+            <textarea matInput #inputstate maxlength="50" formControlName="state" value="{{state}}"></textarea>
+            <mat-hint align="end">{{inputstate.value?.length || 0}}/50</mat-hint>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+            <mat-label>PIN Code</mat-label>
+            <textarea matInput #inputpincode maxlength="6" formControlName="pincode" value="{{pincode}}"></textarea>
+            <mat-hint align="end">{{inputpincode.value?.length || 0}}/6</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+        <mat-label>Country</mat-label>
+        <input type="text"
+                aria-label="Country"
+                matInput
+                required
+                [formControl]="countryControl"
+                [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let country of filteredCountryList | async" [value]="country">
+            {{country}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Remarks</mat-label>
+        <textarea matInput #inputremarks maxlength="100" formControlName="remarks" value="{{remarks}}"></textarea>
+        <mat-hint align="end">{{inputremarks.value?.length || 0}}/100</mat-hint>
+    </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions class="form-button-container">
+  <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button *ngIf="editCreate !== 'Edit'" cdkFocusInitial (click)="onSave()" color="warn">ADD CLIENT</button>
+  <button mat-button *ngIf="editCreate === 'Edit'" cdkFocusInitial (click)="onUpdate()" color="primary">UPDATE CLIENT</button>
+</div>

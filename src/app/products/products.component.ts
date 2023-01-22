@@ -5,12 +5,15 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
-import { IProductData } from './interfaces/productdata.interface';
 import { ProductsService } from '../core/services/products.service';
 import { Subject } from 'rxjs';
 import { ProductsdbService } from '../core/services/productsdb.service';
 import * as _moment from 'moment';
 import { Router } from '@angular/router';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { IProductData } from '../core/interfaces/interfaces';
+import { ProductGroupDialogComponent } from '../dialogs/product-group-dialog/product-group-dialog.component';
 
 const moment = _moment;
 
@@ -36,18 +39,22 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
-  private productListObservalble: Subject<IProductData[]>;
+  private productListObservable: Subject<IProductData[]>;
+  private path = 'assets/icon/';
 
   constructor(
     private productdbservice: ProductsdbService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
     private productService: ProductsService,
-    private router: Router
+    private router: Router,
+    private domSanitizer: DomSanitizer,
+    private matIconRegistry: MatIconRegistry
     ) {
       this.productdata = {
         productName: '',
-        group: '',
+        productGroupID: '',
+        productGroupName: '',
         description: '',
         stock: 0,
         priceDirectSale: 0,
@@ -56,10 +63,14 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
         sold: 0,
       };
 
+      this.matIconRegistry
+        .addSvgIcon('refresh',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'refresh_icon.svg'))
+        .addSvgIcon('plus',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'plus_icon.svg'));
+
     }
 
   ngOnInit(): void {
-    this.productListObservalble = this.productService.getProductList();
+    this.productListObservable = this.productService.getProductList();
     this.getProducts();
   }
 
@@ -71,15 +82,26 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     // this.productListObservalble.unsubscribe();
   }
 
+  openProductGroupDialog(): void {
+    console.log('INFO : Opening dialog box add product group..');
+    const dialogRef = this.dialog.open(ProductGroupDialogComponent, {
+      width: '50%', height: '80%'
+    });
+
+    dialogRef.afterClosed().subscribe(_ => {
+      console.log('INFO : The dialog box is closed');
+    });
+  }
+
   openAddDialog(): void {
-    console.log('opening dialog box add products..');
+    console.log('INFO : Opening dialog box add products..');
     const dialogRef = this.dialog.open(AddProductsDialogComponent, {
       width: '50%',
       data: this.productdata,
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed');
+      console.log('INFO : The dialog box is closed');
       console.log(result);
       if (result){
         this.productdbservice.insertProduct(result);
@@ -87,31 +109,11 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     });
   }
 
-  openEditDialog(editProductData: IProductData): void {
-    console.log('opening dialog box edit/delete product..');
-    const dialogRef = this.dialog.open(AddProductsDialogComponent, {
-      width: '50%',
-      data: editProductData,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog box is closed');
-      if (result){
-        if (result.editCreate === 'Delete'){
-          this.productdbservice.deleteProduct(result.productID);
-        } else if (result.editCreate === 'Edit'){
-          this.productdbservice.updateProduct(result);
-        }
-      }
-    });
-  }
-
   getProducts(){
     this.productdbservice.getProducts();
-    this.productListObservalble.subscribe(d=>{
+    this.productListObservable.subscribe(d=>{
       d.map((value, index)=>{
-        console.log(value.createdDate);
-        value.createdDate = value.createdDate.toString();
+        value.createdDate = value.createdDate;
         return {
           ...value,
           serialNumber: index
@@ -134,11 +136,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   onRowClick(e: any){
-    // const editProductData: IProductData = {
-    //   ...e,
-    //   editCreate: 'Edit'
-    // };
-    // this.openEditDialog(editProductData);
     this.productService.updateSelectedProductID(e.productID);
     this.router.navigate(['product/detail']);
   }

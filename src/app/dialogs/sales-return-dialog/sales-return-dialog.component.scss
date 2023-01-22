@@ -1,0 +1,68 @@
+mat-card-content, .container-one {
+  display: flex;
+  flex-direction: row;
+}
+
+mat-card-content > mat-form-field, .container-one > mat-form-field, .container-one > button {
+  flex-grow: 1;
+}
+
+mat-card-content > mat-form-field:nth-child(1) {
+  margin-right: 2%;
+}
+
+.container-one > mat-form-field {
+  margin-right: 5%;
+}
+
+.container-one > button {
+  margin-left: 5%;
+  margin-top: 1%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.container-two {
+  margin-top: 2%;
+  border: 2px solid green;
+  border-style: dashed;
+}
+
+// .product-list-table {
+//   box-shadow: none;
+// }
+
+.product-list-table > table {
+  width: 100%;
+  margin-top: 3%;
+}
+
+.no-products-div {
+  width: 100%;
+  margin-top: 4%;
+  font-style: italic;
+  text-align: center;
+}
+
+.form-button-container, .form-button-edit-container {
+  width: 100%;
+  margin-top: 10%;
+  display: flex;
+  flex-direction: row;
+}
+
+.form-button-container > button {
+  flex-grow: 1;
+}
+
+.form-button-edit-container > button:nth-child(1) {
+  flex-grow: 1;
+}
+
+.form-button-edit-container > button:nth-child(2) {
+  flex-grow: 8;
+}
+
+.form-button-edit-container > button:nth-child(3) {
+  flex-grow: 1;
+}

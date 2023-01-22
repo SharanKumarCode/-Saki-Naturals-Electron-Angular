@@ -23,11 +23,11 @@
                 </div>
                 <div class="product-details-data-section-two product-details-data-sections">
                     <span>Create Date</span>
-                    <span>{{(selectedProductData.createdDate ? selectedProductData.createdDate : '') | date:'medium'}}</span>
+                    <span>{{selectedProductData.createdDate ? selectedProductData.createdDate.toUTCString() : ''}}</span>
                 </div>
                 <div class="product-details-data-section-three product-details-data-sections">
                     <span>Group</span>
-                    <span>{{selectedProductData.group ? selectedProductData.group : ''}}</span>
+                    <span>{{selectedProductData.productGroupName ? selectedProductData.productGroupName : ''}}</span>
                 </div>
                 <div class="product-details-data-section-four product-details-data-sections">
                     <span>Product Name</span>

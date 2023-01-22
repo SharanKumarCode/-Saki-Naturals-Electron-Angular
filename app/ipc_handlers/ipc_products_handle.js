@@ -9,6 +9,10 @@ module.exports = {
             global.share.ipcMain.handle('get-product-by-id', async (_, data) => {
                 return productsDB.getProductByID(data);
             }),
+
+            global.share.ipcMain.handle('get-product-by-group-id', async (_, data) => {
+                return productsDB.getProductByProductGroupID(data);
+            }),
         
             global.share.ipcMain.handle('insert-product', async (_, data) => {
                 return productsDB.insertProduct(data);
@@ -25,5 +29,21 @@ module.exports = {
             global.share.ipcMain.handle('update-product', async (_, data) => {
                 return productsDB.updateProduct(data);
             }),
+    
+            global.share.ipcMain.handle('get-product-groups', async () => {
+                return productsDB.getAllProductGroups();
+            }),
+
+            global.share.ipcMain.handle('insert-product-group', async (_, data) => {
+                return productsDB.insertProductGroup(data);
+            }),
+
+            global.share.ipcMain.handle('soft-delete-product-group', async (_, data) => {
+                return productsDB.softDeleteProductGroup(data);
+            }),
+
+            global.share.ipcMain.handle('hard-delete-product-group', async (_, data) => {
+                return productsDB.hardDeleteProductGroup(data);
+            })
     ]
     }

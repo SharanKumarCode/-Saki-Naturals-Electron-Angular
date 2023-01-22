@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>PRODUCT GROUPS</h1>
+<mat-dialog-content class="form-container" [formGroup]="form">
+    <div class="product-add-group-container">
+        <mat-form-field class="add-product-input" appearance="outline">
+            <mat-label>Add Product Group</mat-label>
+            <input matInput #input maxlength="50" formControlName="productGroup" value="{{productGroup}}"/>
+            <mat-hint align="end">{{input.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button (click)="onAddProductGroup()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-group-list">
+        <mat-card *ngFor="let group of productGroupList">
+            <mat-card-content>
+                <div class="card-container">
+                    <span>{{group.productGroupName}}</span>
+                    <button mat-button (click)="onDeleteProductGroup(group.productGroupID)"><mat-icon class="icon-display" color="warn" svgIcon="delete"></mat-icon></button>
+                </div>            
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+
+    <div mat-dialog-actions class="form-button-container">
+        <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+    </div>
+    
+</mat-dialog-content>

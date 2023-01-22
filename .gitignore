@@ -8,6 +8,8 @@
 /release
 main.js
 src/**/*.js
+app/*.js
+app/db/**/*.js
 !src/karma.conf.js
 *.js.map
 
@@ -51,3 +53,5 @@ testem.log
 .DS_Store
 Thumbs.db
 app/db/data/saki_naturals_db.db
+
+package-lock.json
