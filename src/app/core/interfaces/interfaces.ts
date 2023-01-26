@@ -10,6 +10,7 @@ export interface IProductData {
     stock?: number;
     sold?: number;
     inProduction?: number;
+    toBeSold?: number;
     priceDirectSale?: number;
     priceReseller?: number;
     priceDealer?: number;
@@ -73,6 +74,7 @@ export interface IProductData {
 export interface ISaleEntry {
   saleEntryID?: string;
   salesID?: string;
+  sale?: ISalesData;
   product: IProductData;
   returnFlag?: boolean;
   price?: number;

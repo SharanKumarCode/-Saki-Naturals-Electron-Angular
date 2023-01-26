@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ISalesData, ISaleTransactions, EnumRouteActions } from '../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType } from '../core/interfaces/interfaces';
 
 @Component({
   selector: 'app-sales',
@@ -30,6 +30,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
                                 'soldQuantity',
                                 'totalAmount',
                                 'paidAmount',
+                                'refundAmount',
                                 'balanceAmount',
                                 'salesStatus',
                                 'salesDate'
@@ -62,7 +63,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource();
     const tmpSaleList = [];
     data.forEach((element, index)=>{
-
+      const totalAmount = this.salesService.getNetSalePrice(element);
+      const paid = element.saleTransactions
+                    .filter(d=>d.transactionType !== EnumTransactionType.refund)
+                    .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+      const refund = element.saleTransactions
+                    .filter(d=>d.transactionType === EnumTransactionType.refund)
+                    .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
+      const balance = totalAmount - paid + refund;
       const salesStatus = this.salesService.getSaleStatus(element);
 
       const salesStatusCompleteFlag = element.completedDate ? true : false;
@@ -77,14 +85,14 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         salesDate: element.salesDate,
         numberOfProducts: element.saleEntries.length,
         sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
-        totalAmount: element.saleEntries.map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0),
-        paid: element.saleTransactions.map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0),
-        balance: 0,
+        totalAmount,
+        paid,
+        refund,
+        balance,
         salesStatus,
         salesStatusCompleteFlag,
         salesStatusCancelledFlag
       };
-      tmpSaleData.balance = tmpSaleData.totalAmount - tmpSaleData.paid;
       tmpSaleList.push(tmpSaleData);
     });
     this.dataSource.data = tmpSaleList;

@@ -55,26 +55,34 @@
 
   <!-- Total Amount Column -->
   <ng-container matColumnDef="totalAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by totalAmount">
       Total Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Paid Amount Column -->
   <ng-container matColumnDef="paidAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paidAmount">
       Paid Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.paid}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.paid | number : '1.2-2'}} </td>
+  </ng-container>
+
+  <!-- Refund Amount Column -->
+  <ng-container matColumnDef="refundAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by refundAmount">
+      Refund Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.refund | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Balance Amount Column -->
   <ng-container matColumnDef="balanceAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balanceAmount">
       Balance Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.balance | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Remarks Column -->

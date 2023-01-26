@@ -49,6 +49,7 @@ export class SalesReturnDialogComponent implements OnInit {
     'productName',
     'sellingPrice',
     'quantity',
+    'discount',
     'amount',
     'action'
   ];
@@ -109,9 +110,9 @@ export class SalesReturnDialogComponent implements OnInit {
   onAddSaleReturnEntry(): void {
     const {value, valid} = this.formSaleReturnEntry;
     if (valid) {
+      console.log(this.data.data);
       const tmpData = {...this.data.data.filter(d=>d.product.productID === value.productGroupAndProductName)[0]};
       tmpData.quantity = value.returnQuantity;
-      tmpData.discountPercentage = 0;
       const returnFlagData = {
         returnFlag: true
       };

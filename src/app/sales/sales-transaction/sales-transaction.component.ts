@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -45,6 +46,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
     private matIconRegistry: MatIconRegistry,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private notificationService: NotificationService
   ) {
 
@@ -71,11 +73,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
   }
 
   setSaleDetails(): void {
-    let totPrice = this.selectedSaleData
-                        ?.saleEntries
-                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
-    totPrice -= this.selectedSaleData
-                ?.saleEntries.filter(d=>d.returnFlag === true).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+    const totPrice = this.salesService.getNetSalePrice(this.selectedSaleData);
 
     let totSoldQuantity = this.selectedSaleData
                             ?.saleEntries
@@ -108,7 +106,8 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
         productName: d.product.productName,
         price: d.price,
         quantity: d.quantity,
-        amount: d.price * d.quantity
+        discountPercentage: d.discountPercentage,
+        amount: d.price * d.quantity - (d.price * d.quantity * d.discountPercentage / 100)
       }))
     };
     this.setTotalAmounts();
@@ -121,7 +120,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
     this.totalRefundAmount = this.selectedSaleData.saleTransactions
                                 .filter(d=>d.transactionType === EnumTransactionType.refund)
                                 .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-    this.balanceAmount = this.salesDetail.totalPrice - this.totalPaidAmount - this.totalRefundAmount;
+    this.balanceAmount = parseFloat((this.salesDetail.totalPrice - this.totalPaidAmount + this.totalRefundAmount).toFixed(2));
   }
 
   openAddTransactionDialog(): void {
@@ -342,7 +341,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
   }
 
   onBack(){
-    this.router.navigate(['sales']);
+    this.location.back();
   }
 
   ngOnInit(): void {
