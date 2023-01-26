@@ -1,18 +1,18 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Moment } from 'moment';
-import { IProductData } from '../../core/interfaces/interfaces';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ProductionService } from '../../core/services/production/production.service';
-import { ExportService } from '../../core/services/export.service';
-import { Router } from '@angular/router';
+import { IMaterialData } from '../../core/interfaces/interfaces';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { MatSort, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { Moment } from 'moment';
+import { ExportService } from '../../core/services/export.service';
+import { ProductionService } from '../../core/services/production/production.service';
 
 @Component({
-  selector: 'app-products-production-history-table',
-  templateUrl: './products-production-history-table.component.html',
-  styleUrls: ['./products-production-history-table.component.scss'],
+  selector: 'app-material-consumption-history-table',
+  templateUrl: './material-consumption-history-table.component.html',
+  styleUrls: ['./material-consumption-history-table.component.scss'],
   animations: [
     trigger('fadeOut', [
       transition(':enter', [style({ height: 0 }), animate(100)]),
@@ -20,10 +20,10 @@ import { trigger, transition, style, animate } from '@angular/animations';
     ]),
   ]
 })
-export class ProductsProductionHistoryTableComponent implements OnInit, AfterViewInit {
+export class MaterialConsumptionHistoryTableComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
-  @Input() selectedProductData: IProductData;
+  @Input() selectedMaterialData: IMaterialData;
 
   selectedProductionStatusValue: string;
   selectedStartDate: Moment;
@@ -31,14 +31,13 @@ export class ProductsProductionHistoryTableComponent implements OnInit, AfterVie
 
   productionStatusList: string[];
 
-  tmpProductionHistoryWithDefectList = [];
+  tmpConsumptionHistoryWithReturnList = [];
   dataSource = new MatTableDataSource([]);
 
   displayedColumns: string[] = [
     'serial_number',
     'productionDate',
-    'producedQuantity',
-    'defectQuantity',
+    'consumedQuantity',
     'productionStatus',
     'remarks'
   ];
@@ -52,28 +51,27 @@ export class ProductsProductionHistoryTableComponent implements OnInit, AfterVie
 
   setTableData() {
     this.dataSource = new MatTableDataSource();
-    this.selectedProductData.production.forEach((element, index)=>{
-      const productionStatus = this.productionService.getProductionStatus(element);
-      const productionStatusCompleteFlag = element.completedDate ? true : false;
-      const productionStatusCancelledFlag = element.cancelledDate ? true : false;
+    this.selectedMaterialData.productionEntries.forEach((element, index)=>{
+      const productionStatus = this.productionService.getProductionStatus(element.production);
+      const productionStatusCompleteFlag = element.production.completedDate ? true : false;
+      const productionStatusCancelledFlag = element.production.cancelledDate ? true : false;
 
-      const productionHistoryData = {
-        productionID: element.productionID,
+      const consumptionHistoryData = {
+        productionID: element.production.productionID,
         serialNumber: index + 1,
-        producedQuantity: element.productQuantity,
-        productionDate: element.productionDate,
-        defectQuantity: 0,
+        consumedQuantity: element.materialQuantity,
+        productionDate: element.production.productionDate,
         productionStatus,
-        remarks: element.remarks,
+        remarks: element.production.remarks,
         productionStatusCompleteFlag,
         productionStatusCancelledFlag
       };
-      this.tmpProductionHistoryWithDefectList.push(productionHistoryData);
+      this.tmpConsumptionHistoryWithReturnList.push(consumptionHistoryData);
     });
 
-    this.productionStatusList = ['Show all', ...new Set(this.tmpProductionHistoryWithDefectList.map(d=>d.productionStatus))];
+    this.productionStatusList = ['Show all', ...new Set(this.tmpConsumptionHistoryWithReturnList.map(d=>d.productionStatus))];
 
-    this.dataSource.data = this.tmpProductionHistoryWithDefectList;
+    this.dataSource.data = this.tmpConsumptionHistoryWithReturnList;
   }
 
   onFilterChange(): void {
@@ -84,11 +82,11 @@ export class ProductsProductionHistoryTableComponent implements OnInit, AfterVie
     this.selectedProductionStatusValue = '';
     this.selectedStartDate = null;
     this.selectedEndDate = null;
-    this.dataSource = new MatTableDataSource(this.tmpProductionHistoryWithDefectList);
+    this.dataSource = new MatTableDataSource(this.tmpConsumptionHistoryWithReturnList);
   }
 
   getFilteredList(): any[] {
-    return this.tmpProductionHistoryWithDefectList
+    return this.tmpConsumptionHistoryWithReturnList
                 .filter(data=> this.selectedProductionStatusValue &&
                   this.selectedProductionStatusValue !== 'Show all'  ? data.productionStatus === this.selectedProductionStatusValue : true)
                 .filter(data=> {
@@ -115,8 +113,7 @@ export class ProductsProductionHistoryTableComponent implements OnInit, AfterVie
   onExportAsExcel(): void {
     const columnNames = [
                           'ProductionID',
-                          'Produced Quantity',
-                          'Defect Quantity',
+                          'Consumed Quantity',
                           'Production Status',
                           'Production Date',
                           'Remarks'
@@ -125,15 +122,14 @@ export class ProductsProductionHistoryTableComponent implements OnInit, AfterVie
     this.getFilteredList().forEach(elem=>{
       const tmp = {};
       tmp[columnNames[0]] = elem.productionID;
-      tmp[columnNames[1]] = elem.producedQuantity;
-      tmp[columnNames[2]] = elem.defectQuantity;
-      tmp[columnNames[3]] = elem.productionStatus;
-      tmp[columnNames[4]] = elem.productionDate;
-      tmp[columnNames[5]] = elem.remarks;
+      tmp[columnNames[1]] = elem.consumedQuantity;
+      tmp[columnNames[2]] = elem.productionStatus;
+      tmp[columnNames[3]] = elem.productionDate;
+      tmp[columnNames[4]] = elem.remarks;
 
       exportFileContent.push(tmp);
     });
-    this.exportService.exportAsExcel(exportFileContent, 'production_history');
+    this.exportService.exportAsExcel(exportFileContent, 'consumption_history');
   }
 
   onRowClick(e: any){

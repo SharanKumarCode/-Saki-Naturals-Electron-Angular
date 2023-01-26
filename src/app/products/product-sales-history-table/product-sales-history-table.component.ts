@@ -185,7 +185,7 @@ export class ProductSalesHistoryTableComponent implements OnInit, AfterViewInit 
 
       exportFileContent.push(tmp);
     });
-    this.exportService.exportAsExcel(exportFileContent, 'sample');
+    this.exportService.exportAsExcel(exportFileContent, 'sales_history');
   }
 
   onRowClick(e: any){
