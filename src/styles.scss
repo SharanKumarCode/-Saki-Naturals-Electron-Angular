@@ -23,3 +23,12 @@
     font-family: "Fragment";
     src: local("Fragment"), url(./assets/fonts/fragment_core/Fragmentcore.otf) format("truetype");
 }
+
+body, html{
+    height: 100%;
+    margin: 0;
+  }
+
+.mat-tab-body-wrapper{
+    flex-grow: 1;
+}
