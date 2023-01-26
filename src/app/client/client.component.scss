@@ -23,13 +23,13 @@
 }
 
 .client-button-section-dummy-div {
-    flex-grow: 8;
+    flex-grow: 8.5;
 }
 
 .client-button-row{
-    width: 10%;
+    width: 5%;
     height: 55%;
-    flex-grow: 0.8;
+    flex-grow: 0.5;
 
     display: flex;
     flex-direction: row;
@@ -80,11 +80,6 @@ table{
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {
