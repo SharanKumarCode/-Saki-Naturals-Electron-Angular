@@ -164,7 +164,6 @@ export class PurchaseTransactionComponent implements OnInit, OnDestroy {
           remarks: result.remarks,
           purchase: this.selectedPurchaseData
         };
-        console.log(purchaseTransactionData);
 
         this.purchaseDBService.insertPurchaseTransaction(purchaseTransactionData)
         .then(_=>{
