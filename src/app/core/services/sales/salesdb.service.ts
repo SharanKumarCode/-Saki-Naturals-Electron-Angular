@@ -27,7 +27,6 @@ export class SalesdbService {
     .then(data=>{
 
       data.forEach(element=>{
-
         // sorting sales transactoin by date and type - ascending order
         element.saleTransactions = element.saleTransactions.length > 0 ?
                                    this.commonService.sortSalesTransactionByTypeAndDate(element.saleTransactions) :
@@ -38,7 +37,7 @@ export class SalesdbService {
           saleType: element.saleType,
           gstPercentage: element.gstPercentage,
           overallDiscountPercentage: element.overallDiscountPercentage,
-          transportCharges: element.transportationCharges,
+          transportCharges: element.transportCharges,
           miscCharges: element.miscCharges,
           paymentTerms: element.paymentTerms,
           customer: element.customer,
