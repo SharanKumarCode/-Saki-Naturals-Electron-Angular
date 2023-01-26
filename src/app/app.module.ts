@@ -71,6 +71,7 @@ import { PurchaseProgressTrackerComponent } from './purchase/purchase-progress-t
 import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
 import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 import { ProductionProgressTrackerComponent } from './production/production-progress-tracker/production-progress-tracker.component';
+import { ProductSalesHistoryTableComponent } from './products/product-sales-history-table/product-sales-history-table.component';
 
 
 // AoT requires an exported function for factories
@@ -124,7 +125,8 @@ const lang = 'en-US';
     PurchaseProgressTrackerComponent,
     AddUpdateProductionComponent,
     ProductionDetailComponent,
-    ProductionProgressTrackerComponent
+    ProductionProgressTrackerComponent,
+    ProductSalesHistoryTableComponent
 
     ],
   imports: [

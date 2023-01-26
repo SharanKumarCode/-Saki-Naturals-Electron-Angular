@@ -1,9 +1,7 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IProductData } from '../../core/interfaces/interfaces';
@@ -17,32 +15,17 @@ import { AddProductsDialogComponent } from '../../dialogs/add-products-dialog/ad
   templateUrl: './products-detail.component.html',
   styleUrls: ['./products-detail.component.scss']
 })
-export class ProductsDetailComponent implements OnInit, AfterViewInit {
+export class ProductsDetailComponent implements OnInit {
 
-  @ViewChild(MatSort) sort: MatSort;
   panelOpenState = false;
 
-  displayedColumns: string[] = [
-                                  'serial_number',
-                                  'purchaser',
-                                  'supplier',
-                                  'saleType',
-                                  'sellingPrice',
-                                  'soldQuantity',
-                                  'totalAmount',
-                                  'paidAmount',
-                                  'balanceAmount',
-                                  'salesDate'
-                                ];
   selectedProductID: string;
   selectedProductData: IProductData;
   productDetail: any;
-  dataSource = new MatTableDataSource([]);
   private path = 'assets/icon/';
 
   constructor(
     public dialog: MatDialog,
-    private liveAnnouncer: LiveAnnouncer,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
@@ -79,6 +62,7 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
       priceDirectSale: this.selectedProductData?.priceDirectSale,
       priceReseller: this.selectedProductData?.priceReseller,
       inProduction: this.selectedProductData?.inProduction,
+      toBeSold: this.selectedProductData?.toBeSold,
       stock: this.selectedProductData?.stock,
       sold: this.selectedProductData?.sold,
       description: this.selectedProductData?.description,
@@ -125,14 +109,9 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-  }
-
   ngOnInit(): void {
     this.selectedProductID = this.productService.getSelectedProductID();
     this.activatedRoute.data.subscribe(data=>{
-      console.log(data);
       this.selectedProductData = data.productData;
       this.setProductDetails();
       this.productService.getSelectedProductData().subscribe(d=>{
@@ -142,24 +121,12 @@ export class ProductsDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onRowClick(e: any){
-    console.log(e);
-  }
-
   onRefresh(){
     this.productDBService.getProductByID(this.selectedProductID);
   }
 
   onBack(){
     this.router.navigate(['products']);
-  }
-
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this.liveAnnouncer.announce(`Sorted ${sortState.direction} ending`);
-    } else {
-      this.liveAnnouncer.announce('Sorting cleared');
-    }
   }
 
 }

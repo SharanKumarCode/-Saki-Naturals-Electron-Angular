@@ -54,14 +54,22 @@
                     <span style="float: right; font-size: 1.1em;">{{productDetail.stock ? productDetail.stock : 0}}</span>
                   </mat-card>
                 <mat-card class="product-data-section-10">
+                    <span class="product-data-key-sections">In Sales Transit</span>
+                    <span style="float: right; font-size: 1.1em;">{{productDetail.toBeSold ? productDetail.toBeSold : 0}}</span>
+                  </mat-card>
+                <mat-card class="product-data-section-11">
                     <span class="product-data-key-sections">Sold</span>
                     <span style="float: right; font-size: 1.1em;">{{productDetail.sold ? productDetail.sold : 0}}</span>
                   </mat-card>
-                <mat-card class="product-data-section-11">
+                <mat-card class="product-data-section-12">
+                    <span class="product-data-key-sections">Defective Quantity</span>
+                    <span style="float: right; font-size: 1.1em;">0</span>
+                  </mat-card>
+                <mat-card class="product-data-section-13">
                     <span class="product-data-key-sections">Description</span>
                     <span style="float: right; font-size: 1.1em;">{{productDetail.description ? productDetail.description : ''}}</span>
                   </mat-card>
-                <div class="product-data-section-12">
+                <div class="product-data-section-14">
                     <span class="product-data-key-sections">Remarks</span>
                     <span style="margin-left : 2%; font-size: 1em;">{{productDetail.remarks ? productDetail.remarks : '(blank)'}}</span>
                   </div>
@@ -74,103 +82,10 @@
     </mat-accordion>
 </section>
 <section class="product-details-tab-section">
-    <mat-tab-group dynamicHeight>
+    <mat-tab-group dynamicHeight="true" class="product-details-tab-group">
         <mat-tab class="product-details-tab-section-one" label="Sales History">
-
-            <section class="product-details-sales-history-table-section">
-                <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
-                        class="mat-elevation-z8">
-
-                    <!-- Serial Number Column -->
-                    <ng-container matColumnDef="serial_number">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
-                        
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
-                    </ng-container>
-
-                    <!-- Purchaser Column -->
-                    <ng-container matColumnDef="purchaser">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
-                        Purchaser
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.purchaser}} </td>
-                    </ng-container>
-
-                    <!-- Supplier Column -->
-                    <ng-container matColumnDef="supplier">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by stock">
-                        Supplier
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.supplier}} </td>
-                    </ng-container>
-
-                    <!-- Sale Type Column -->
-                    <ng-container matColumnDef="saleType">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
-                        Sale Type
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.saleType}} </td>
-                    </ng-container>
-
-                    <!-- Selling Price Column -->
-                    <ng-container matColumnDef="sellingPrice">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by stock">
-                        Selling Price
-                        </th>
-                        <td mat-cell *matCellDef="let element"> &#8377; {{element.sellingPrice}} </td>
-                    </ng-container>
-
-                    <!-- Sold Quantity Column -->
-                    <ng-container matColumnDef="soldQuantity">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sold quantity">
-                        Sold Quantity
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.sellingQuantity}} </td>
-                    </ng-container>
-
-                    <!-- Total Amount Column -->
-                    <ng-container matColumnDef="totalAmount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total amount">
-                        Total Amount
-                        </th>
-                        <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount}} </td>
-                    </ng-container>
-
-                    <!-- Paid Amount Column -->
-                    <ng-container matColumnDef="paidAmount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
-                        Paid Amount
-                        </th>
-                        <td mat-cell *matCellDef="let element"> &#8377; {{element.paid}} </td>
-                    </ng-container>
-
-                    <!-- Balance Amount Column -->
-                    <ng-container matColumnDef="balanceAmount">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
-                        Balance Amount
-                        </th>
-                        <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
-                    </ng-container>
-
-                    <!-- Date Column -->
-                    <ng-container matColumnDef="salesDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
-                        Sale Date
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.saleDate | date}} </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr 
-                        mat-row 
-                        *matRowDef="let row; columns: displayedColumns;"
-                        (click)="onRowClick(row)">
-                        </tr>
-                    </table>
-              </section>
-
+            <app-product-sales-history-table class="product-details-tab-section-one" [selectedProductData]="selectedProductData"></app-product-sales-history-table>
         </mat-tab>
-        <mat-tab label="Production History"> Content 2 </mat-tab>
+        <mat-tab class="product-details-tab-section-one" label="Production History"> Content 2 </mat-tab>
       </mat-tab-group>
 </section>
