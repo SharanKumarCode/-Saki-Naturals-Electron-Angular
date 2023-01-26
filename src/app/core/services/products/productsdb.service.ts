@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ElectronService } from './electron/electron.service';
+import { ElectronService } from '../electron/electron.service';
 import { ipcRenderer } from 'electron';
 import { ProductsService } from './products.service';
-import { IProductData, IProductGroup } from '../interfaces/interfaces';
-import { NotificationService } from './notification/notification.service';
+import { IProductData, IProductGroup } from '../../interfaces/interfaces';
+import { NotificationService } from '../notification/notification.service';
+import { CommonService } from '../common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class ProductsdbService {
   constructor(
     private electronService: ElectronService,
     private productService: ProductsService,
+    private commonService: CommonService,
     private notificationService: NotificationService
     ) {
       this.ipcRenderer = this.electronService.getIpcRenderer();
@@ -26,19 +28,27 @@ export class ProductsdbService {
       console.log('INFO : Received all products');
       data.forEach(element => {
         if (element.deleteFlag === false){
+
           const productData: IProductData = {
             productID: element.productID,
             productName: element.productName,
+            production: element.production,
+            saleEntries: element.saleEntries,
             productGroupID: element.productGroup.productGroupID,
             productGroupName: element.productGroup.productGroupName,
             description: element.description,
-            stock: element.stock,
             priceDirectSale: element.priceDirectSale,
             priceReseller: element.priceReseller,
             priceDealer: element.priceDealer,
-            sold: element.sold,
-            createdDate: element.createdDate
+            createdDate: element.createdDate,
+            remarks: element.remarks,
+            productGroup: element.productGroup
           };
+          productData.stock = this.commonService.getProductStock(productData);
+          productData.sold = this.commonService.getProductSold(productData);
+          productData.inProduction = this.commonService.getProductInProduction(productData);
+          productData.toBeSold = this.commonService.getProductToBeSold(productData);
+
           productsList.push(productData);
         }
       });
@@ -52,7 +62,26 @@ export class ProductsdbService {
   }
 
   getProductByID(productID: string): Promise<any>{
-    return this.ipcRenderer.invoke('get-product-by-id', productID);
+    return this.ipcRenderer.invoke('get-product-by-id', productID)
+    .then(data=>{
+      const productData = data[0];
+      productData.stock = this.commonService.getProductStock(productData);
+      productData.sold = this.commonService.getProductSold(productData);
+      productData.inProduction = this.commonService.getProductInProduction(productData);
+      productData.toBeSold = this.commonService.getProductToBeSold(productData);
+      this.productService.updateSelectedProductData(productData);
+
+      return new Promise((res, rej)=>{
+        res(true);
+      });
+    })
+    .catch(err=>{
+      console.error(err);
+
+      return new Promise((res, rej)=>{
+        rej(true);
+      });
+    });
   }
 
   insertProduct(product: IProductData): void{
@@ -70,6 +99,7 @@ export class ProductsdbService {
   }
 
   updateProduct(product: IProductData): void{
+    console.log(product);
     this.ipcRenderer.invoke('update-product', product)
     .then(_=>{
       console.log('INFO : updated product');

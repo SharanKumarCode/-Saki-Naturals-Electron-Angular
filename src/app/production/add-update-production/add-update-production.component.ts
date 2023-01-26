@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EnumRouteActions, IMaterialData, IProductData, IProductionData, IProductionEntry } from '../../core/interfaces/interfaces';
 import * as _moment from 'moment';
@@ -7,10 +7,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { NotificationService } from '../../core/services/notification/notification.service';
-import { ProductsService } from '../../core/services/products.service';
-import { ProductsdbService } from '../../core/services/productsdb.service';
+import { ProductsService } from '../../core/services/products/products.service';
+import { ProductsdbService } from '../../core/services/products/productsdb.service';
 import { ProductiondbService } from '../../core/services/production/productiondb.service';
 import { MaterialdbService } from '../../core/services/material/materialdb.service';
 import { MaterialService } from '../../core/services/material/material.service';
@@ -33,7 +33,7 @@ interface IProductGroupSelect {
     ]),
   ]
 })
-export class AddUpdateProductionComponent implements OnInit {
+export class AddUpdateProductionComponent implements OnInit, OnDestroy {
 
   componentBehaviourFlag: boolean;
   form: FormGroup;
@@ -64,8 +64,7 @@ export class AddUpdateProductionComponent implements OnInit {
   dataSourceMaterialList = new MatTableDataSource([]);
   date = new FormControl(moment());
 
-  private productListObservable: Subject<IProductData[]>;
-  private materialListObservable: Subject<IMaterialData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -286,8 +285,7 @@ export class AddUpdateProductionComponent implements OnInit {
       this.componentBehaviourFlag = params.createOrUpdate === EnumRouteActions.create ? true : false;
 
       this.productsDBservice.getProducts();
-      this.productListObservable = this.productService.getProductList();
-      this.productListObservable.subscribe(data => {
+      this.productService.getProductList().pipe(takeUntil(this.destroy$)).subscribe(data => {
 
         // Assign list of products for drop down
         this.products = data;
@@ -308,8 +306,7 @@ export class AddUpdateProductionComponent implements OnInit {
         });
 
       this.materialDBservice.getMaterials();
-      this.materialListObservable = this.materialService.getMaterialList();
-      this.materialListObservable.subscribe(d=>{
+      this.materialService.getMaterialList().pipe(takeUntil(this.destroy$)).subscribe(d=>{
         this.materials = d;
       });
 
@@ -321,6 +318,10 @@ export class AddUpdateProductionComponent implements OnInit {
       }
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

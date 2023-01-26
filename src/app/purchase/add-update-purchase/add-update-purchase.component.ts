@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _moment from 'moment';
 import { EnumClientType,
@@ -9,7 +9,7 @@ import { EnumClientType,
           IPurchaseEntry
         } from '../../core/interfaces/interfaces';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MaterialService } from '../../core/services/material/material.service';
 import { MaterialdbService } from '../../core/services/material/materialdb.service';
 import { ClientdbService } from '../../core/services/client/clientdb.service';
@@ -34,7 +34,7 @@ const moment = _moment;
     ]),
   ]
 })
-export class AddUpdatePurchaseComponent implements OnInit {
+export class AddUpdatePurchaseComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   formPurchaseEntry: FormGroup;
@@ -88,8 +88,7 @@ export class AddUpdatePurchaseComponent implements OnInit {
 
   componentBehaviourFlag: boolean;
 
-  private materialListObservable: Subject<IMaterialData[]>;
-  private clientListObservable: Subject<IClientData[]>;
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -467,14 +466,12 @@ export class AddUpdatePurchaseComponent implements OnInit {
 
       this.materialDBservice.getMaterials();
       this.clientDBservice.getClients();
-      this.materialListObservable = this.materialService.getMaterialList();
-      this.clientListObservable = this.clientService.getClientList();
-      this.materialListObservable.subscribe(data => {
-        console.log(data);
+      this.materialService.getMaterialList().pipe(takeUntil(this.destroy$)).subscribe(data => {
+
       // Assign list of materials for drop down
       this.materials = data;
 
-      this.clientListObservable.subscribe(e => {
+      this.clientService.getClientList().pipe(takeUntil(this.destroy$)).subscribe(e => {
         this.suppliers = e.filter(d => d.clientType === EnumClientType.supplier);
       });
 
@@ -486,6 +483,10 @@ export class AddUpdatePurchaseComponent implements OnInit {
       }
     });
   });
+}
+
+ngOnDestroy(): void {
+  this.destroy$.next(true);
 }
 
 }

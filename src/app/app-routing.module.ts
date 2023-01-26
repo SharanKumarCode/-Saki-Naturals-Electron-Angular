@@ -24,6 +24,7 @@ import { PurchaseTransactionComponent } from './purchase/purchase-transaction/pu
 import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
 import { ProductionDataResolverService } from './core/services/production/production-data-resolver.service';
 import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
+import { ProductsDataResolverService } from './core/services/products/products-data-resolver.service';
 
 const routes: Routes = [
   {
@@ -32,7 +33,11 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: 'products', component: ProductsComponent },
-  { path: 'product/detail', component: ProductsDetailComponent },
+  { path: 'product/detail/:selectedProductID',
+    component: ProductsDetailComponent,
+    resolve: {
+      productData: ProductsDataResolverService
+    }},
   { path: 'materials', component: MaterialComponent },
   { path: 'materials/detail/:materialID',
     component: MaterialDetailComponent,

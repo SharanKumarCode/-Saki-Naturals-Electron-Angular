@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -9,7 +10,7 @@ import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
 
@@ -18,7 +19,7 @@ import { NotificationService } from '../../core/services/notification/notificati
   templateUrl: './sales-transaction.component.html',
   styleUrls: ['./sales-transaction.component.scss']
 })
-export class SalesTransactionComponent implements OnInit {
+export class SalesTransactionComponent implements OnInit, OnDestroy {
 
 
   panelOpenState = false;
@@ -27,12 +28,13 @@ export class SalesTransactionComponent implements OnInit {
 
   selectedSalesID: string;
   selectedSaleData: ISalesData;
-  selectedSaleDataSubject: Subject<ISalesData>;
   salesDetail: any;
   totalPaidAmount = 0;
   balanceAmount = 0;
   totalRefundAmount = 0;
   saleStatus: EnumSaleStatus;
+
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -44,6 +46,7 @@ export class SalesTransactionComponent implements OnInit {
     private matIconRegistry: MatIconRegistry,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private notificationService: NotificationService
   ) {
 
@@ -70,11 +73,7 @@ export class SalesTransactionComponent implements OnInit {
   }
 
   setSaleDetails(): void {
-    let totPrice = this.selectedSaleData
-                        ?.saleEntries
-                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
-    totPrice -= this.selectedSaleData
-                ?.saleEntries.filter(d=>d.returnFlag === true).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+    const totPrice = this.salesService.getNetSalePrice(this.selectedSaleData);
 
     let totSoldQuantity = this.selectedSaleData
                             ?.saleEntries
@@ -107,7 +106,8 @@ export class SalesTransactionComponent implements OnInit {
         productName: d.product.productName,
         price: d.price,
         quantity: d.quantity,
-        amount: d.price * d.quantity
+        discountPercentage: d.discountPercentage,
+        amount: d.price * d.quantity - (d.price * d.quantity * d.discountPercentage / 100)
       }))
     };
     this.setTotalAmounts();
@@ -120,7 +120,7 @@ export class SalesTransactionComponent implements OnInit {
     this.totalRefundAmount = this.selectedSaleData.saleTransactions
                                 .filter(d=>d.transactionType === EnumTransactionType.refund)
                                 .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-    this.balanceAmount = this.salesDetail.totalPrice - this.totalPaidAmount - this.totalRefundAmount;
+    this.balanceAmount = parseFloat((this.salesDetail.totalPrice - this.totalPaidAmount + this.totalRefundAmount).toFixed(2));
   }
 
   openAddTransactionDialog(): void {
@@ -341,7 +341,7 @@ export class SalesTransactionComponent implements OnInit {
   }
 
   onBack(){
-    this.router.navigate(['sales']);
+    this.location.back();
   }
 
   ngOnInit(): void {
@@ -351,12 +351,16 @@ export class SalesTransactionComponent implements OnInit {
       this.selectedSaleData = data.saleData;
       this.setSaleDetails();
       this.setSaleStatus();
-      this.salesService.getSelectedSaleData().subscribe(d=>{
+      this.salesService.getSelectedSaleData().pipe(takeUntil(this.destroy$)).subscribe(d=>{
         this.selectedSaleData = d;
         this.setSaleDetails();
         this.setSaleStatus();
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

@@ -71,6 +71,16 @@ import { PurchaseProgressTrackerComponent } from './purchase/purchase-progress-t
 import { AddUpdateProductionComponent } from './production/add-update-production/add-update-production.component';
 import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 import { ProductionProgressTrackerComponent } from './production/production-progress-tracker/production-progress-tracker.component';
+import { ProductSalesHistoryTableComponent } from './products/product-sales-history-table/product-sales-history-table.component';
+import {
+  ProductsProductionHistoryTableComponent
+ } from './products/products-production-history-table/products-production-history-table.component';
+import {
+  MaterialPurchaseHistoryTableComponent
+} from './material/material-purchase-history-table/material-purchase-history-table.component';
+import {
+  MaterialConsumptionHistoryTableComponent
+} from './material/material-consumption-history-table/material-consumption-history-table.component';
 
 
 // AoT requires an exported function for factories
@@ -124,7 +134,11 @@ const lang = 'en-US';
     PurchaseProgressTrackerComponent,
     AddUpdateProductionComponent,
     ProductionDetailComponent,
-    ProductionProgressTrackerComponent
+    ProductionProgressTrackerComponent,
+    ProductSalesHistoryTableComponent,
+    ProductsProductionHistoryTableComponent,
+    MaterialPurchaseHistoryTableComponent,
+    MaterialConsumptionHistoryTableComponent
 
     ],
   imports: [

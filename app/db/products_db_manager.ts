@@ -7,7 +7,11 @@ async function getAllProducts(){
     const res = await AppDataSource.manager
                     .getRepository(Product).find({
                         relations: {
-                            productGroup: true
+                            productGroup: true,
+                            saleEntries: {
+                                sale: true
+                            },
+                            production: true
                         }
                     }                        
                     )
@@ -22,7 +26,13 @@ async function getProductByID(productID: string){
                 productID: productID
             },
             relations: {
-                productGroup: true
+                productGroup: true,
+                saleEntries: {
+                    sale: {
+                        customer: true
+                    }
+                },
+                production: true
             }
         }
     )
@@ -50,8 +60,8 @@ async function insertProduct(product: IProductData){
     console.log("INFO: Inserting product data")
 
     const productGroupEntity = new ProductGroup()
-    productGroupEntity.productGroupID = product.productGroupID
-    productGroupEntity.productGroupName = product.productGroupName
+    productGroupEntity.productGroupID = product.productGroup.productGroupID
+    productGroupEntity.productGroupName = product.productGroup.productGroupName
 
     await AppDataSource.getRepository(ProductGroup).save(productGroupEntity)
 
@@ -72,8 +82,8 @@ async function insertProduct(product: IProductData){
 async function updateProduct(product: IProductData){
     console.log("INFO: Updating product data")
     const productGroupEntity = new ProductGroup()
-    productGroupEntity.productGroupID = product.productGroupID
-    productGroupEntity.productGroupName = product.productGroupName
+    productGroupEntity.productGroupID = product.productGroup.productGroupID
+    productGroupEntity.productGroupName = product.productGroup.productGroupName
 
     const res = await AppDataSource.manager.update(Product, {
         productID: product.productID

@@ -1,0 +1,103 @@
+<section class="product-details-production-history-filter-section" style="font-size: 12px">
+    <div class="filter-label">
+        <span style="font-size: 1.5em">Filter</span>
+    </div>
+    <mat-form-field class="production-status-filter-type table-filters" appearance="outline">
+        <mat-select placeholder="by Production Status" [(ngModel)]="selectedProductionStatusValue" name="productionStatus" (selectionChange)="onFilterChange()">
+            <mat-option *ngFor="let productionStatus of productionStatusList" [value]="productionStatus">
+            {{productionStatus}}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+    <mat-form-field appearance="outline" class="production-date-filter-type table-filters">
+        <mat-label>by Production Date range</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate [(ngModel)]="selectedStartDate" placeholder="Start date">
+            <input matEndDate [(ngModel)]="selectedEndDate" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChange()">Apply</button>
+            </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+        </mat-form-field>
+    <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+        Clear all filters
+    </button>
+    
+</section>
+
+<section class="product-details-production-history-table-section">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+            class="mat-elevation-z8 production-history-table">
+
+        <!-- Serial Number Column -->
+        <ng-container matColumnDef="serial_number">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+            
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+        </ng-container>
+
+        <!-- Produced Quantity Column -->
+        <ng-container matColumnDef="producedQuantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by producedQuantity">
+                Produced Quantity
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.producedQuantity}} </td>
+        </ng-container>
+
+        <!-- Defect Quantity Column -->
+        <ng-container matColumnDef="defectQuantity">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by defectQuantity">
+            Defect Quantity
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.defectQuantity}} </td>
+        </ng-container>
+
+        <!-- Productions Status Column -->
+        <ng-container matColumnDef="productionStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productionStatus">
+            Production Status
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.productionStatus}} </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="productionDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by productionDate">
+            Production Date
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.productionDate | date}} </td>
+        </ng-container>
+
+        <!-- Remarks Column -->
+        <ng-container matColumnDef="remarks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by remarks">
+                Remarks
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr 
+            mat-row 
+            @fadeOut
+            *matRowDef="let row; columns: displayedColumns;"
+            style="min-height: 100px !important;"
+            (click)="onRowClick(row)">
+            </tr>
+        </table>        
+  </section>
+  <section class="export-btn-container">
+    <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+        Export as Excel
+    </button>
+    <button mat-flat-button color="primary" class="export-pdf-btn">
+        Export as PDF
+    </button>
+</section>
+

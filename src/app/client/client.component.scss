@@ -1,23 +1,43 @@
 .client-button-section {
-    height: 14%;
-    width: 30%;
-    float: right;
-    margin-top: 1%;
-    margin-right: 3%;
-}
-
-.client-button-row{
-    width: 40%;
-    height: 50%;
-    float: right;
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.client-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.client-button-section-dummy-div {
+    flex-grow: 8.5;
+}
+
+.client-button-row{
+    width: 5%;
+    height: 55%;
+    flex-grow: 0.5;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .client-button-row > button:first-child {
@@ -38,7 +58,6 @@
     height: 7%;
     width: 30%;
     float: left;
-    margin-top: 6%;
     margin-left: 3%;
 }
 
@@ -61,11 +80,6 @@ table{
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {

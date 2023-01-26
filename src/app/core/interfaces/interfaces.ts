@@ -2,15 +2,19 @@ export interface IProductData {
     productID?: string;
     productName: string;
     productGroup?: IProductGroup;
-    productGroupID: string;
-    productGroupName: string;
+    productGroupID?: string;
+    productGroupName?: string;
+    saleEntries?: ISaleEntry[];
+    production?: IProductionData[];
     description: string;
     stock?: number;
+    sold?: number;
+    inProduction?: number;
+    toBeSold?: number;
     priceDirectSale?: number;
     priceReseller?: number;
     priceDealer?: number;
     createdDate?: Date;
-    sold?: number;
     remarks?: string;
     editCreate?: string;
   }
@@ -19,9 +23,13 @@ export interface IProductData {
     materialID?: string;
     materialName: string;
     description: string;
+    productionEntries?: IProductionEntry[];
+    purchaseEntries?: IPurchaseEntry[];
     stock?: number;
+    toBeInStock?: number;
     createdDate?: Date;
     consumed?: number;
+    toBeConsumed?: number;
     remarks?: string;
     editCreate?: string;
   }
@@ -66,6 +74,7 @@ export interface IProductData {
 export interface ISaleEntry {
   saleEntryID?: string;
   salesID?: string;
+  sale?: ISalesData;
   product: IProductData;
   returnFlag?: boolean;
   price?: number;
@@ -119,6 +128,7 @@ export interface IPurchaseData {
 export interface IPurchaseEntry {
   purchaseEntryID?: string;
   purchaseID?: string;
+  purchase?: IPurchaseData;
   material: IMaterialData;
   returnFlag?: boolean;
   price?: number;
@@ -156,6 +166,7 @@ export interface IProductionData {
 export interface IProductionEntry {
   productionEntryID?: string;
   productionID?: string;
+  production?: IProductionData;
   material: IMaterialData;
   materialQuantity?: number;
 }
@@ -211,7 +222,7 @@ export enum EnumRouteActions {
 }
 
 export enum EnumSaleStatus {
-  initiated = 'Sale Initiated',
+  initiated = 'Initiated',
   dispatched = 'Dispatched',
   delivered = 'Delivered',
   returned = 'Returned',
@@ -221,7 +232,7 @@ export enum EnumSaleStatus {
 }
 
 export enum EnumPurchaseStatus {
-  initiated = 'Purchase Initiated',
+  initiated = 'Initiated',
   dispatched = 'Dispatched',
   delivered = 'Delivered',
   returned = 'Returned',
@@ -231,7 +242,7 @@ export enum EnumPurchaseStatus {
 }
 
 export enum EnumProductionStatus {
-  initiated = 'Production Initiated',
+  initiated = 'Initiated',
   completed = 'Completed',
   cancelled = 'Cancelled'
 }

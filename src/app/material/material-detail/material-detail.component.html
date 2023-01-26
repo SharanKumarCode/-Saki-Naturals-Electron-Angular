@@ -49,3 +49,13 @@
         </mat-expansion-panel>
     </mat-accordion>
 </section>
+<section class="material-details-tab-section">
+  <mat-tab-group dynamicHeight="true" class="material-details-tab-group">
+      <mat-tab class="material-details-tab-section-one" label="Purchase History">
+        <app-material-purchase-history-table class="product-details-tab-section-one" [selectedMaterialData]="materialData"></app-material-purchase-history-table>
+      </mat-tab>
+      <mat-tab class="material-details-tab-section-one" label="Consumption History"> 
+        <app-material-consumption-history-table class="material-details-tab-section-one" [selectedMaterialData]="materialData"></app-material-consumption-history-table>
+        </mat-tab>
+    </mat-tab-group>
+</section>

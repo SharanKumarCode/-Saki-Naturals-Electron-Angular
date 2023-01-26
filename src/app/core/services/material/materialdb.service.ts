@@ -4,6 +4,7 @@ import { IMaterialData } from '../../interfaces/interfaces';
 import { ipcRenderer } from 'electron';
 import { NotificationService } from '../notification/notification.service';
 import { ElectronService } from '../electron/electron.service';
+import { CommonService } from '../common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class MaterialdbService {
   constructor(
     private electronService: ElectronService,
     private materialService: MaterialService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private commonService: CommonService
     ) {
       this.ipcRenderer = this.electronService.getIpcRenderer();
   }
@@ -30,11 +32,18 @@ export class MaterialdbService {
             materialID: element.materialID,
             materialName: element.materialName,
             description: element.description,
+            productionEntries: element.productionEntries,
+            purchaseEntries: element.purchaseEntries,
             stock: element.stock,
             consumed: element.consumed,
             createdDate: element.createdDate,
             remarks: element.remarks
           };
+          materialData.consumed = this.commonService.getMaterialConsumed(materialData);
+          materialData.toBeConsumed = this.commonService.getMaterialToBeConsumed(materialData);
+          materialData.stock = this.commonService.getMaterialStock(materialData);
+          materialData.toBeInStock = this.commonService.getMaterialToBeInStock(materialData);
+
           materialList.push(materialData);
         }
       });
@@ -50,6 +59,12 @@ export class MaterialdbService {
   getMaterialByID(materialID: string): Promise<any>{
     return this.ipcRenderer.invoke('get-material-by-id', materialID)
     .then(data=>{
+      const materialData = data[0];
+      materialData.consumed = this.commonService.getMaterialConsumed(materialData);
+      materialData.toBeConsumed = this.commonService.getMaterialToBeConsumed(materialData);
+      materialData.stock = this.commonService.getMaterialStock(materialData);
+      materialData.toBeInStock = this.commonService.getMaterialToBeInStock(materialData);
+
       this.materialService.updateSelectedMaterialData(data[0]);
 
       return new Promise((res, rej)=>{

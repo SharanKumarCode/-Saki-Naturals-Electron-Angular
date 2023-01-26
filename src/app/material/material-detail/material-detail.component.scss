@@ -77,3 +77,33 @@
     padding-top: 1%;
     padding-bottom: 1%;
  }
+
+ .material-details-tab-section{
+    width: 95%;
+    height: 75%;
+    margin: 1% auto 8px auto;
+  }
+ 
+  .material-details-tab-group {
+     height: 100%;
+  }
+ 
+  .material-details-tab-group mat-tab-body {
+     flex-grow: 1;
+  }
+ 
+  .material-details-tab-section-one {
+    height: 100%;
+  }
+ 
+ .material-details-total-section{
+     float: right;
+     width: 30%;
+     margin-top: 1%;
+ }
+ 
+ .material-details-total-section > mat-card{
+     font-size: 0.8em;
+     background-color: #f0f0f0;
+     margin-top: 1%;
+ }

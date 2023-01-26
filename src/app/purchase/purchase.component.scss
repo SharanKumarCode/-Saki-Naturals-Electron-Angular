@@ -1,54 +1,111 @@
 .purchase-button-section {
-    height: 15%;
-    width: 30%;
-    float: right;
-    margin-right: 3%;
-    margin-top: 1%;
-}
-
-.purchase-button-row{
-    width: 50%;
-    height: 50%;
-    float: right;
+    height: 10%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.purchase-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.purchase-button-section-dummy-div {
+    flex-grow: 8.5;
+}
+
+.purchase-button-row{
+    width: 5%;
+    height: 55%;
+    flex-grow: 0.5;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .purchase-button-row > button:first-child {
     flex-grow: 1;
     margin-right: 10%;
     background-color: greenyellow;
+
 }
 
 .purchase-button-row > button:nth-child(2) {
     flex-grow: 1;
 }
 
+// Filter section
+
+.purchase-filter-section {
+    display: flex;
+    flex-direction: row;
+    width: 65%;
+    height: 6%;
+    margin: 0% auto;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.filter-label {
+    flex-grow: 0.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.purchase-filter-section > mat-form-field {
+    flex-grow: 1;
+}
+
+.table-filters{
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+.clear-filter-btn {
+    margin-bottom: 1%;
+    margin-top: 0.5%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+// Filter section
+
 .purchase-table-section{
     width: 95%;
-    margin: 1% auto 8px auto;
+    height: 60%;
+    margin: 2% auto 8px auto;
     overflow: auto;
 }
 
 table{
     width: 100%;
-    color: black;
-
 }
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {
@@ -66,3 +123,18 @@ td{
     font-style: italic;
     text-align: center;
   }
+
+  .export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 20%;
+    margin-right: 1%;
+}
+
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
+}

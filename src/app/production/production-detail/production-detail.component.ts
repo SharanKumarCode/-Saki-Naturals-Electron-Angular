@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { EnumProductionStatus, EnumRouteActions, IProductionData } from '../../core/interfaces/interfaces';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ProductionService } from '../../core/services/production/production.service';
 import { ProductiondbService } from '../../core/services/production/productiondb.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
@@ -15,7 +16,7 @@ import { PromptDialogComponent } from '../../dialogs/prompt-dialog/prompt-dialog
   templateUrl: './production-detail.component.html',
   styleUrls: ['./production-detail.component.scss']
 })
-export class ProductionDetailComponent implements OnInit {
+export class ProductionDetailComponent implements OnInit, OnDestroy {
 
   panelOpenState = false;
   materialPanelOpenState = false;
@@ -23,9 +24,10 @@ export class ProductionDetailComponent implements OnInit {
 
   selectedProductionID: string;
   selectedProductionData: IProductionData;
-  selectedProductionDataSubject: Subject<IProductionData>;
   productionDetail: any;
   productionStatus: EnumProductionStatus;
+
+  private destroy$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -36,6 +38,7 @@ export class ProductionDetailComponent implements OnInit {
     private matIconRegistry: MatIconRegistry,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private notificationService: NotificationService
   ) {
 
@@ -64,8 +67,6 @@ export class ProductionDetailComponent implements OnInit {
   }
 
   setProductionDetails(): void {
-
-    console.log(this.selectedProductionData);
 
     this.productionDetail = {
       productionID: this.selectedProductionData?.productionID,
@@ -163,7 +164,7 @@ export class ProductionDetailComponent implements OnInit {
   }
 
   onBack(){
-    this.router.navigate(['production']);
+    this.location.back();
   }
 
   ngOnInit(): void {
@@ -173,12 +174,16 @@ export class ProductionDetailComponent implements OnInit {
       this.selectedProductionData = data.productionData;
       this.setProductionDetails();
       this.setProductionStatus();
-      this.productionService.getSelectedProductionData().subscribe(d=>{
+      this.productionService.getSelectedProductionData().pipe(takeUntil(this.destroy$)).subscribe(d=>{
         this.selectedProductionData = d;
         this.setProductionDetails();
         this.setProductionStatus();
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

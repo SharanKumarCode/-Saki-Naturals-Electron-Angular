@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -11,7 +11,7 @@ import { EnumClientType, IClientData } from '../core/interfaces/interfaces';
 import { AddClientDialogComponent } from '../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
 import { ClientdbService } from '../core/services/client/clientdb.service';
 import { ClientService } from '../core/services/client/client.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 
 interface IClientTypeFilter {
@@ -26,7 +26,7 @@ const tmpClientList = [];
   templateUrl: './client.component.html',
   styleUrls: ['./client.component.scss']
 })
-export class ClientComponent implements OnInit, AfterViewInit {
+export class ClientComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -49,7 +49,7 @@ export class ClientComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource([]);
 
-  private clientListObservable: Subject<IClientData[]>;
+  private destroy$ = new Subject();
   private clientData: IClientData;
   private path = 'assets/icon/';
 
@@ -103,33 +103,20 @@ export class ClientComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getClients(): void {
-    this.clientDBservice.getClients();
-    this.clientListObservable.subscribe(data=>{
-      data.map((value, index)=>({
-          ...value,
-          serialNumber: index
-        })
-      );
-      tmpClientList.length = 0;
-      data.forEach((element, index)=>{
-        tmpClientList.push({
-          ...element,
-          serialNumber: index + 1
-        });
-      });
-      this.dataSource = new MatTableDataSource(tmpClientList);
+  setClientData(data: IClientData[]): void {
+    data.map((value, index)=>({
+      ...value,
+      serialNumber: index
+    })
+  );
+  tmpClientList.length = 0;
+  data.forEach((element, index)=>{
+    tmpClientList.push({
+      ...element,
+      serialNumber: index + 1
     });
-  }
-
-
-  ngOnInit(): void {
-    this.clientListObservable = this.clientService.getClientList();
-    this.getClients();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+  });
+  this.dataSource = new MatTableDataSource(tmpClientList);
   }
 
   onRefresh(): void {
@@ -148,6 +135,21 @@ export class ClientComponent implements OnInit, AfterViewInit {
   onRowClick(e: any){
     this.clientService.updateSelectedClientID(e.clientID);
     this.router.navigate(['clients/details']);
+  }
+
+  ngOnInit(): void {
+    this.clientDBservice.getClients();
+    this.clientService.getClientList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setClientData(data);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

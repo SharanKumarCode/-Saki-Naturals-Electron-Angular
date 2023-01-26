@@ -1,9 +1,54 @@
 <section class="purchase-button-section">
-    <div class="purchase-button-row">
-      <button mat-raised-button color="accent" (click)="onAddPurchase()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
-      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
-    </div>
+  <div class="purchase-title">
+    <span>PURCHASE</span>
+  </div>
+  <div class="purchase-button-section-dummy-div">
+  </div>
+  <div class="purchase-button-row">
+    <button mat-raised-button color="accent" (click)="onAddPurchase()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+    <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+  </div>
 </section>
+
+<section class="purchase-filter-section" style="font-size: 12px">
+  <div class="filter-label">
+      <span style="font-size: 1.5em">Filter</span>
+  </div>
+  <mat-form-field class="supplier-filter-type table-filters" appearance="outline">
+      <mat-select placeholder="by Supplier" [(ngModel)]="selectedSupplierValue" name="supplier" (selectionChange)="onFilterChange()">
+        <mat-option *ngFor="let supplier of supplierList" [value]="supplier">
+          {{supplier}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  <mat-form-field class="purchase-status-filter-type table-filters" appearance="outline">
+      <mat-select placeholder="by Purchase Status" [(ngModel)]="selectedPurchaseStatusValue" name="purchaseStatus" (selectionChange)="onFilterChange()">
+          <mat-option *ngFor="let purchaseStatus of purchaseStatusList" [value]="purchaseStatus">
+          {{purchaseStatus}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+  <mat-form-field appearance="outline" class="purchase-date-filter-type table-filters">
+      <mat-label>by Purchase Date range</mat-label>
+      <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate [(ngModel)]="selectedStartDate" placeholder="Start date">
+          <input matEndDate [(ngModel)]="selectedEndDate" placeholder="End date">
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+          <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChange()">Apply</button>
+          </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+      </mat-form-field>
+  <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+      Clear all filters
+  </button>
+  
+</section>
+
 <section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="purchase-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
@@ -27,22 +72,30 @@
   <!-- Number of Materials Column -->
   <ng-container matColumnDef="numberOfMaterials">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by numberOfMaterials">
-      Number of Materials
+      # of Materials
     </th>
     <td mat-cell *matCellDef="let element"> {{element.numberOfMaterials}} </td>
   </ng-container>
 
   <!-- Purchased Quantity Column -->
   <ng-container matColumnDef="purchasedQuantity">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchased quantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchasedQuantity">
         Purchased Quantity
     </th>
     <td mat-cell *matCellDef="let element"> {{element.purchasedQuantity}} </td>
   </ng-container>
 
+  <!-- Returned Quantity Column -->
+  <ng-container matColumnDef="returnedQuantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by returnedQuantity">
+      Returned Quantity
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.returnedQuantity}} </td>
+  </ng-container>
+
   <!-- Total Price Column -->
   <ng-container matColumnDef="totalPrice">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total price">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by totalPrice">
       Total Price
     </th>
     <td mat-cell *matCellDef="let element"> &#8377; {{element.totalPrice}} </td>
@@ -50,7 +103,7 @@
 
   <!-- Paid Amount Column -->
   <ng-container matColumnDef="paidAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paidAmount">
       Paid Amount
     </th>
     <td mat-cell *matCellDef="let element"> &#8377; {{element.paidAmount}} </td>
@@ -58,15 +111,25 @@
 
   <!-- Balance Amount Column -->
   <ng-container matColumnDef="balanceAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balanceAmount">
       Balance Amount
     </th>
     <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
   </ng-container>
 
+  <!-- Purchase Status Column -->
+  <ng-container matColumnDef="purchaseStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchaseStatus">
+      Purchase Status
+    </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'status-completed': element.purchaseStatusCompleteFlag,
+                                                        'status-cancelled':element.purchaseStatusCancelledFlag,
+                                                        'status-general': !element.purchaseStatusCancelledFlag && !element.purchaseStatusCompleteFlag}"> {{element.purchaseStatus}} </td>
+  </ng-container>
+
   <!-- Date Column -->
   <ng-container matColumnDef="purchaseDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by purchaseDate">
       Purchase Date
     </th>
     <td mat-cell *matCellDef="let element"> {{element.purchaseDate | date:'medium'}} </td>
@@ -80,6 +143,16 @@
     </tr>
 </table>
 </section>
+
 <div class="no-purchase-div" *ngIf="!dataSource.data.length">
   No purchase added yet..
 </div>
+
+<section class="export-btn-container">
+  <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+      Export as Excel
+  </button>
+  <button mat-flat-button color="primary" class="export-pdf-btn">
+      Export as PDF
+  </button>
+</section>
