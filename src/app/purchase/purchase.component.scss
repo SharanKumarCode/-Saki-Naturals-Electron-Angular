@@ -1,5 +1,5 @@
 .purchase-button-section {
-    height: 12%;
+    height: 10%;
     width: 95%;
     margin-right: auto;
     margin-left: auto;
@@ -23,13 +23,13 @@
 }
 
 .purchase-button-section-dummy-div {
-    flex-grow: 8;
+    flex-grow: 8.5;
 }
 
 .purchase-button-row{
-    width: 10%;
+    width: 5%;
     height: 55%;
-    flex-grow: 0.8;
+    flex-grow: 0.5;
 
     display: flex;
     flex-direction: row;
@@ -51,25 +51,61 @@
     flex-grow: 1;
 }
 
+// Filter section
+
+.purchase-filter-section {
+    display: flex;
+    flex-direction: row;
+    width: 65%;
+    height: 6%;
+    margin: 0% auto;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.filter-label {
+    flex-grow: 0.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.purchase-filter-section > mat-form-field {
+    flex-grow: 1;
+}
+
+.table-filters{
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+.clear-filter-btn {
+    margin-bottom: 1%;
+    margin-top: 0.5%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+// Filter section
+
 .purchase-table-section{
     width: 95%;
-    margin: 1% auto 8px auto;
+    height: 60%;
+    margin: 2% auto 8px auto;
     overflow: auto;
 }
 
 table{
     width: 100%;
-    color: black;
-
 }
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {
@@ -88,26 +124,17 @@ td{
     text-align: center;
   }
 
-
-.purchase-status-completed {
-    font-size: 1.5em;
-    font-family: Fragment;
-    font-weight: 600;
-    text-align: left;
-    color: green;
+  .export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 20%;
+    margin-right: 1%;
 }
 
-.purchase-status-cancelled {
-    font-size: 1.5em;
-    font-family: Fragment;
-    font-weight: 600;
-    text-align: left;
-    color: red;
-}
-
-.purchase-status-general {
-    font-size: 1.5em;
-    font-family: Fragment;
-    font-weight: 500;
-    text-align: left;
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
 }

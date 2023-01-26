@@ -72,11 +72,6 @@ table{
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {
@@ -95,3 +90,19 @@ td{
     font-style: italic;
     text-align: center;
   }
+
+.export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 16%;
+    margin-top: 2%;
+    margin-right: 2%;
+}
+
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
+}

@@ -13,6 +13,7 @@ import { MaterialdbService } from '../core/services/material/materialdb.service'
 import { Router } from '@angular/router';
 import { __values } from 'tslib';
 import { CommonService } from '../core/services/common.service';
+import { ExportService } from '../core/services/export.service';
 
 @Component({
   selector: 'app-material',
@@ -31,7 +32,7 @@ export class MaterialComponent implements OnInit, AfterViewInit, OnDestroy {
                                 'toBeConsumed',
                                 'consumed',
                                 'lastSuppliedBy'];
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource([]);
 
   private destroy$ = new Subject();
   private path = 'assets/icon/';
@@ -43,6 +44,7 @@ export class MaterialComponent implements OnInit, AfterViewInit, OnDestroy {
     private matIconRegistry: MatIconRegistry,
     private materialService: MaterialService,
     private materialDBservice: MaterialdbService,
+    private exportService: ExportService,
     private commonService: CommonService,
     private router: Router
   ) {
@@ -95,6 +97,36 @@ export class MaterialComponent implements OnInit, AfterViewInit, OnDestroy {
   onRowClick(e): void {
     this.materialService.updateSelectedMaterialID(e.materialID);
     this.router.navigate(['materials/detail', e.materialID]);
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+      'MaterialID',
+      'Material Name',
+      'In Purchase Transit',
+      'Stock',
+      'To be Consumed',
+      'Consumed',
+      'Last Supplied by',
+      'Created Date',
+      'Remarks'
+    ];
+    const exportFileContent = [];
+    this.dataSource.data.forEach(elem=>{
+    const tmp = {};
+    tmp[columnNames[0]] = elem.materialID;
+    tmp[columnNames[1]] = elem.materialName;
+    tmp[columnNames[2]] = elem.toBeInStock;
+    tmp[columnNames[3]] = elem.stock;
+    tmp[columnNames[4]] = elem.toBeConsumed;
+    tmp[columnNames[5]] = elem.consumed;
+    tmp[columnNames[6]] = elem.lastSuppliedBy;
+    tmp[columnNames[7]] = elem.createdDate;
+    tmp[columnNames[8]] = elem.remarks;
+
+    exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'materials_list');
   }
 
   ngOnInit(): void {

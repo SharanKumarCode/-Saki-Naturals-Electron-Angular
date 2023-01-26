@@ -10,6 +10,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { PurchaseService } from '../core/services/purchase/purchase.service';
 import { PurchasedbService } from '../core/services/purchase/purchasedb.service';
+import { Moment } from 'moment';
+import { ExportService } from '../core/services/export.service';
 
 @Component({
   selector: 'app-purchase',
@@ -20,11 +22,22 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
+  selectedSupplierValue: string;
+  selectedPurchaseStatusValue: string;
+  selectedStartDate: Moment;
+  selectedEndDate: Moment;
+
+  supplierList: string[];
+  purchaseStatusList: string[];
+
+  purchaseList = [];
+
   displayedColumns: string[] = [
                                 'serial_number',
                                 'supplier',
                                 'numberOfMaterials',
                                 'purchasedQuantity',
+                                'returnedQuantity',
                                 'totalPrice',
                                 'paidAmount',
                                 'balanceAmount',
@@ -41,6 +54,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
     private liveAnnouncer: LiveAnnouncer,
     private purchaseService: PurchaseService,
     private purchaseDBservice: PurchasedbService,
+    private exportService: ExportService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -76,8 +90,15 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
                                   .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
       const balance = totalPrice + totalRefundAmount - paidAmount;
 
-      const purchaseStatus = this.purchaseService.getPurchaseStatus(element);
+      const numberOfMaterials = [...new Set(element.purchaseEntries.map(d=>d.material.materialID))].length;
+      const purchasedQuantity = element.purchaseEntries
+                          .filter(d=>d.returnFlag === false)
+                          .map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+      const returnedQuantity = element.purchaseEntries
+                          .filter(d=>d.returnFlag === true)
+                          .map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
 
+      const purchaseStatus = this.purchaseService.getPurchaseStatus(element);
       const purchaseStatusCompleteFlag = element.completedDate ? true : false;
       const purchaseStatusCancelledFlag = element.cancelledDate ? true : false;
 
@@ -87,8 +108,9 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
         supplier: element.supplier.clientName,
         remarks: element.remarks,
         purchaseDate: element.purchaseDate,
-        numberOfMaterials: element.purchaseEntries.length,
-        purchasedQuantity: element.purchaseEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+        numberOfMaterials,
+        purchasedQuantity: purchasedQuantity - returnedQuantity,
+        returnedQuantity,
         totalPrice,
         paidAmount,
         balance,
@@ -96,9 +118,84 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
         purchaseStatusCompleteFlag,
         purchaseStatusCancelledFlag
       };
-      tmpPurchaseList.push(tmpPurchaseData);
+      this.purchaseList.push(tmpPurchaseData);
     });
-    this.dataSource.data = tmpPurchaseList;
+
+    this.supplierList = ['Show all', ...new Set(this.purchaseList.map(d=>d.supplier))];
+    this.purchaseStatusList = ['Show all', ...new Set(this.purchaseList.map(d=>d.purchaseStatus))];
+
+    this.dataSource.data = this.purchaseList;
+  }
+
+  onFilterChange(): void {
+    this.dataSource = new MatTableDataSource(this.getFilteredList());
+  }
+
+  onClearFilters(): void {
+    this.selectedSupplierValue = '';
+    this.selectedPurchaseStatusValue = '';
+    this.selectedStartDate = null;
+    this.selectedEndDate = null;
+    this.dataSource = new MatTableDataSource(this.purchaseList);
+  }
+
+  getFilteredList(): any[] {
+    return this.purchaseList
+                .filter(data=> this.selectedSupplierValue &&
+                  this.selectedSupplierValue !== 'Show all'  ? data.supplier === this.selectedSupplierValue : true)
+                .filter(data=> this.selectedPurchaseStatusValue &&
+                  this.selectedPurchaseStatusValue !== 'Show all'  ? data.purchaseStatus === this.selectedPurchaseStatusValue : true)
+                .filter(data=> {
+
+                  if (!this.selectedStartDate) {
+                    return true;
+                  }
+
+                  const date = new Date(data.purchaseDate);
+                  const trimmedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                  const startTimeSeconds = this.selectedStartDate?.toDate().getTime();
+                  const endTimeSeconds = this.selectedEndDate?.toDate().getTime();
+
+                  if (!endTimeSeconds) {
+                    return trimmedDate.getTime() <= startTimeSeconds ? true : false;
+                  } else {
+                    return trimmedDate.getTime() >= startTimeSeconds && trimmedDate.getTime() <= endTimeSeconds? true : false;
+                  }
+
+                });
+
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+                          'PurchaseID',
+                          'Supplier',
+                          'Purchased Quantity',
+                          'Returned Quantity',
+                          'Total Price',
+                          'Paid Amount',
+                          'Balance Amount',
+                          'Purchase Status',
+                          'Purchase Date',
+                          'Remarks'
+                        ];
+    const exportFileContent = [];
+    this.getFilteredList().forEach(elem=>{
+      const tmp = {};
+      tmp[columnNames[0]] = elem.purchaseID;
+      tmp[columnNames[1]] = elem.supplier;
+      tmp[columnNames[2]] = elem.purchasedQuantity;
+      tmp[columnNames[3]] = elem.returnedQuantity;
+      tmp[columnNames[4]] = elem.totalPrice;
+      tmp[columnNames[5]] = elem.paidAmount;
+      tmp[columnNames[6]] = elem.balance;
+      tmp[columnNames[7]] = elem.purchaseStatus;
+      tmp[columnNames[8]] = elem.purchaseDate;
+      tmp[columnNames[9]] = elem.remarks;
+
+      exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'purchase_history');
   }
 
   calcTransactionData(transactionData: IPurchaseTransactions[]): any{

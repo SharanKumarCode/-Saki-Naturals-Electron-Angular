@@ -38,6 +38,7 @@ export class PurchasedbService {
           supplier: element.supplier,
           purchaseEntries: element.purchaseEntries,
           purchaseTransactions: element.purchaseTransactions,
+          remarks: element.remarks,
 
           purchaseDate: element.purchaseDate,
           dispatchDate: element.dispatchDate,

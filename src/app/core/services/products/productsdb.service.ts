@@ -40,7 +40,9 @@ export class ProductsdbService {
             priceDirectSale: element.priceDirectSale,
             priceReseller: element.priceReseller,
             priceDealer: element.priceDealer,
-            createdDate: element.createdDate
+            createdDate: element.createdDate,
+            remarks: element.remarks,
+            productGroup: element.productGroup
           };
           productData.stock = this.commonService.getProductStock(productData);
           productData.sold = this.commonService.getProductSold(productData);

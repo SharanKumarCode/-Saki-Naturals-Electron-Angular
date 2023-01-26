@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType } from '../core/interfaces/interfaces';
+import { Moment } from 'moment';
+import { ExportService } from '../core/services/export.service';
 
 @Component({
   selector: 'app-sales',
@@ -22,12 +24,25 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
+  selectedCustomerValue: string;
+  selectedSaleTypeValue: string;
+  selectedSaleStatusValue: string;
+  selectedStartDate: Moment;
+  selectedEndDate: Moment;
+
+  customerList: string[];
+  saleTypeList: string[];
+  saleStatusList: string[];
+
+  salesList = [];
+
   displayedColumns: string[] = [
                                 'serial_number',
                                 'customer',
                                 'numberOfProducts',
                                 'saleType',
                                 'soldQuantity',
+                                'returnedQuantity',
                                 'totalAmount',
                                 'paidAmount',
                                 'refundAmount',
@@ -45,6 +60,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
     private liveAnnouncer: LiveAnnouncer,
     private salesService: SalesService,
     private salesdbService: SalesdbService,
+    private exportService: ExportService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -61,7 +77,6 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setTableData(data: ISalesData[]){
     this.dataSource = new MatTableDataSource();
-    const tmpSaleList = [];
     data.forEach((element, index)=>{
       const totalAmount = this.salesService.getNetSalePrice(element);
       const paid = element.saleTransactions
@@ -71,8 +86,16 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
                     .filter(d=>d.transactionType === EnumTransactionType.refund)
                     .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
       const balance = totalAmount - paid + refund;
-      const salesStatus = this.salesService.getSaleStatus(element);
 
+      const numberOfProducts = [...new Set(element.saleEntries.map(d=>d.product.productID))].length;
+      const soldQuantity = element.saleEntries
+                          .filter(d=>d.returnFlag === false)
+                          .map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+      const returnedQuantity = element.saleEntries
+                          .filter(d=>d.returnFlag === true)
+                          .map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+
+      const salesStatus = this.salesService.getSaleStatus(element);
       const salesStatusCompleteFlag = element.completedDate ? true : false;
       const salesStatusCancelledFlag = element.cancelledDate ? true : false;
 
@@ -83,8 +106,9 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         saleType: element.saleType,
         remarks: element.remarks,
         salesDate: element.salesDate,
-        numberOfProducts: element.saleEntries.length,
-        sellingQuantity: element.saleEntries.map(d=>d.quantity).reduce((partialSum, a) => partialSum + a, 0),
+        numberOfProducts,
+        sellingQuantity: soldQuantity - returnedQuantity,
+        returnedQuantity,
         totalAmount,
         paid,
         refund,
@@ -93,9 +117,92 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
         salesStatusCompleteFlag,
         salesStatusCancelledFlag
       };
-      tmpSaleList.push(tmpSaleData);
+      this.salesList.push(tmpSaleData);
     });
-    this.dataSource.data = tmpSaleList;
+
+    this.customerList = ['Show all', ...new Set(this.salesList.map(d=>d.customer))];
+    this.saleTypeList = ['Show all', ...new Set(this.salesList.map(d=>d.saleType))];
+    this.saleStatusList = ['Show all', ...new Set(this.salesList.map(d=>d.salesStatus))];
+
+    this.dataSource.data = this.salesList;
+  }
+
+  onFilterChange(): void {
+    this.dataSource = new MatTableDataSource(this.getFilteredList());
+  }
+
+  onClearFilters(): void {
+    this.selectedCustomerValue = '';
+    this.selectedSaleStatusValue = '';
+    this.selectedSaleTypeValue = '';
+    this.selectedStartDate = null;
+    this.selectedEndDate = null;
+    this.dataSource = new MatTableDataSource(this.salesList);
+  }
+
+  getFilteredList(): any[] {
+    return this.salesList
+                .filter(data=> this.selectedCustomerValue &&
+                  this.selectedCustomerValue !== 'Show all'  ? data.customer === this.selectedCustomerValue : true)
+                .filter(data=> this.selectedSaleTypeValue &&
+                        this.selectedSaleTypeValue !== 'Show all' ? data.saleType === this.selectedSaleTypeValue : true)
+                .filter(data=> this.selectedSaleStatusValue &&
+                  this.selectedSaleStatusValue !== 'Show all'  ? data.salesStatus === this.selectedSaleStatusValue : true)
+                .filter(data=> {
+
+                  if (!this.selectedStartDate) {
+                    return true;
+                  }
+
+                  const date = new Date(data.salesDate);
+                  const trimmedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                  const startTimeSeconds = this.selectedStartDate?.toDate().getTime();
+                  const endTimeSeconds = this.selectedEndDate?.toDate().getTime();
+
+                  if (!endTimeSeconds) {
+                    return trimmedDate.getTime() <= startTimeSeconds ? true : false;
+                  } else {
+                    return trimmedDate.getTime() >= startTimeSeconds && trimmedDate.getTime() <= endTimeSeconds? true : false;
+                  }
+
+                });
+
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+                          'SalesID',
+                          'Customer',
+                          'Sale Type',
+                          'Sold Quantity',
+                          'Returned Quantity',
+                          'Total Amount',
+                          'Paid Amount',
+                          'Refund Amount',
+                          'Balance Amount',
+                          'Sale Status',
+                          'Sale Date',
+                          'Remarks'
+                        ];
+    const exportFileContent = [];
+    this.getFilteredList().forEach(elem=>{
+      const tmp = {};
+      tmp[columnNames[0]] = elem.salesID;
+      tmp[columnNames[1]] = elem.customer;
+      tmp[columnNames[2]] = elem.saleType;
+      tmp[columnNames[3]] = elem.sellingQuantity;
+      tmp[columnNames[4]] = elem.returnedQuantity;
+      tmp[columnNames[5]] = elem.totalAmount;
+      tmp[columnNames[6]] = elem.paid;
+      tmp[columnNames[7]] = elem.refund;
+      tmp[columnNames[8]] = elem.balance;
+      tmp[columnNames[9]] = elem.salesStatus;
+      tmp[columnNames[10]] = elem.salesDate;
+      tmp[columnNames[11]] = elem.remarks;
+
+      exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'sales_list');
   }
 
   calcTransactionData(transactionData: ISaleTransactions[]): any{

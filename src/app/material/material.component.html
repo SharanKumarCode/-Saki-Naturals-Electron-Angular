@@ -77,6 +77,16 @@
       </tr>
   </table>
   </section>
+  
   <div class="no-materials-div" *ngIf="!dataSource.data.length">
     No materials added yet..
   </div>
+
+  <section class="export-btn-container" *ngIf="dataSource.data.length">
+  <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+      Export as Excel
+  </button>
+  <button mat-flat-button color="primary" class="export-pdf-btn">
+      Export as PDF
+  </button>
+</section>

@@ -43,6 +43,7 @@ export class SalesdbService {
           customer: element.customer,
           saleEntries: element.saleEntries,
           saleTransactions: element.saleTransactions,
+          remarks: element.remarks,
 
           salesDate: element.salesDate,
           deliveredDate: element.deliveredDate,

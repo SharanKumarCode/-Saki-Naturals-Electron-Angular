@@ -153,9 +153,8 @@ export class MaterialPurchaseHistoryTableComponent implements OnInit, AfterViewI
     const columnNames = [
                           'PurchaseID',
                           'Supplier',
-                          'Purchase Type',
                           'Selling Price',
-                          'Sold Quantity',
+                          'Purchased Quantity',
                           'Returned Quantity',
                           'Discount',
                           'Gross Price',
@@ -167,14 +166,13 @@ export class MaterialPurchaseHistoryTableComponent implements OnInit, AfterViewI
       const tmp = {};
       tmp[columnNames[0]] = elem.purchaseID;
       tmp[columnNames[1]] = elem.supplier;
-      tmp[columnNames[2]] = elem.purchaseType;
-      tmp[columnNames[3]] = elem.sellingPrice;
-      tmp[columnNames[4]] = elem.sellingQuantity;
-      tmp[columnNames[5]] = elem.returnedQuantity;
-      tmp[columnNames[6]] = elem.discount;
-      tmp[columnNames[7]] = elem.grossPrice;
-      tmp[columnNames[8]] = elem.purchaseStatus;
-      tmp[columnNames[9]] = elem.purchaseDate;
+      tmp[columnNames[2]] = elem.sellingPrice;
+      tmp[columnNames[3]] = elem.purchasedQuantity;
+      tmp[columnNames[4]] = elem.returnedQuantity;
+      tmp[columnNames[5]] = elem.discount;
+      tmp[columnNames[6]] = elem.grossPrice;
+      tmp[columnNames[7]] = elem.purchaseStatus;
+      tmp[columnNames[8]] = elem.purchaseDate;
 
       exportFileContent.push(tmp);
     });

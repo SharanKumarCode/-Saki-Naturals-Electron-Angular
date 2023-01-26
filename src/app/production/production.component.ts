@@ -10,6 +10,8 @@ import { ProductiondbService } from '../core/services/production/productiondb.se
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { Moment } from 'moment';
+import { ExportService } from '../core/services/export.service';
 
 @Component({
   selector: 'app-production',
@@ -19,6 +21,18 @@ import { MatIconRegistry } from '@angular/material/icon';
 export class ProductionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
+
+  selectedProductGroupValue: string;
+  selectedProductNameValue: string;
+  selectedProductionStatusValue: string;
+  selectedStartDate: Moment;
+  selectedEndDate: Moment;
+
+  productGroupList: string[];
+  productNameList: string[];
+  productionStatusList: string[];
+
+  productionList = [];
 
   displayedColumns: string[] = [
                                 'serial_number',
@@ -39,6 +53,7 @@ export class ProductionComponent implements OnInit, AfterViewInit, OnDestroy {
     private productionService: ProductionService,
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
+    private exportService: ExportService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -60,7 +75,6 @@ export class ProductionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setTableData(data: IProductionData[]){
     this.dataSource = new MatTableDataSource();
-      const tmpProductionList = [];
       data.forEach((element, index)=>{
 
         const productionStatus = this.productionService.getProductionStatus(element);
@@ -78,9 +92,83 @@ export class ProductionComponent implements OnInit, AfterViewInit, OnDestroy {
           productionStatusCompleteFlag,
           productionStatusCancelledFlag
         };
-        tmpProductionList.push(tmpProductionData);
+        this.productionList.push(tmpProductionData);
       });
-      this.dataSource.data = tmpProductionList;
+
+    this.productGroupList = ['Show all', ...new Set(this.productionList.map(d=>d.product.productGroup.productGroupName))];
+    this.productNameList = ['Show all', ...new Set(this.productionList.map(d=>d.product.productName))];
+    this.productionStatusList = ['Show all', ...new Set(this.productionList.map(d=>d.productionStatus))];
+
+    this.dataSource.data = this.productionList;
+  }
+
+  onFilterChange(): void {
+    this.dataSource = new MatTableDataSource(this.getFilteredList());
+  }
+
+  onClearFilters(): void {
+    this.selectedProductGroupValue = '';
+    this.selectedProductNameValue = '';
+    this.selectedProductionStatusValue = '';
+    this.selectedStartDate = null;
+    this.selectedEndDate = null;
+    this.dataSource = new MatTableDataSource(this.productionList);
+  }
+
+  getFilteredList(): any[] {
+    return this.productionList
+                .filter(data=> this.selectedProductGroupValue &&
+                  this.selectedProductGroupValue !== 'Show all'  ?
+                  data.product.productGroup.productGroupName === this.selectedProductGroupValue : true)
+                .filter(data=> this.selectedProductNameValue &&
+                  this.selectedProductNameValue !== 'Show all'  ? data.product.productName === this.selectedProductNameValue : true)
+                .filter(data=> this.selectedProductionStatusValue &&
+                  this.selectedProductionStatusValue !== 'Show all'  ? data.productionStatus === this.selectedProductionStatusValue : true)
+                .filter(data=> {
+
+                  if (!this.selectedStartDate) {
+                    return true;
+                  }
+
+                  const date = new Date(data.productionDate);
+                  const trimmedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                  const startTimeSeconds = this.selectedStartDate?.toDate().getTime();
+                  const endTimeSeconds = this.selectedEndDate?.toDate().getTime();
+
+                  if (!endTimeSeconds) {
+                    return trimmedDate.getTime() <= startTimeSeconds ? true : false;
+                  } else {
+                    return trimmedDate.getTime() >= startTimeSeconds && trimmedDate.getTime() <= endTimeSeconds? true : false;
+                  }
+
+                });
+
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+                          'ProductionID',
+                          'Product Name',
+                          'Product Group',
+                          'Production Quantity',
+                          'Production Status',
+                          'Production Date',
+                          'Remarks'
+                        ];
+    const exportFileContent = [];
+    this.getFilteredList().forEach(elem=>{
+      const tmp = {};
+      tmp[columnNames[0]] = elem.productionID;
+      tmp[columnNames[1]] = elem.product.productName;
+      tmp[columnNames[2]] = elem.product.productGroup.productGroupName;
+      tmp[columnNames[3]] = elem.productionQuantity;
+      tmp[columnNames[4]] = elem.productionStatus;
+      tmp[columnNames[5]] = elem.productionDate;
+      tmp[columnNames[6]] = elem.remarks;
+
+      exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'production_list');
   }
 
   onAddProduction(): void {

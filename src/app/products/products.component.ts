@@ -14,6 +14,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IProductData } from '../core/interfaces/interfaces';
 import { ProductGroupDialogComponent } from '../dialogs/product-group-dialog/product-group-dialog.component';
+import { ExportService } from '../core/services/export.service';
 
 const moment = _moment;
 
@@ -49,6 +50,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
     private productService: ProductsService,
+    private exportService: ExportService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -123,6 +125,44 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
   onRowClick(e: any){
     this.router.navigate(['product/detail', e.productID]);
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+      'ProductID',
+      'Product Name',
+      'Product Group',
+      'Price - Direct Sale',
+      'Price - Reseller',
+      'Price - Dealer',
+      'In Production',
+      'Stock',
+      'In Sale Transit',
+      'Sold',
+      'Defective',
+      'Created Date',
+      'Remarks'
+    ];
+    const exportFileContent = [];
+    this.dataSource.data.forEach(elem=>{
+    const tmp = {};
+    tmp[columnNames[0]] = elem.productID;
+    tmp[columnNames[1]] = elem.productName;
+    tmp[columnNames[2]] = elem.productGroupName;
+    tmp[columnNames[3]] = elem.priceDirectSale;
+    tmp[columnNames[4]] = elem.priceReseller;
+    tmp[columnNames[5]] = elem.priceDealer;
+    tmp[columnNames[6]] = elem.inProduction;
+    tmp[columnNames[7]] = elem.stock;
+    tmp[columnNames[8]] = elem.toBeSold;
+    tmp[columnNames[9]] = elem.sold;
+    tmp[columnNames[10]] = 0;
+    tmp[columnNames[11]] = elem.createdDate;
+    tmp[columnNames[12]] = elem.remarks;
+
+    exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'products_list');
   }
 
   ngOnInit(): void {
