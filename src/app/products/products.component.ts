@@ -35,7 +35,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
                                 'priceDealer',
                                 'inProduction',
                                 'stock',
-                                'sold'];
+                                'toBeSold',
+                                'sold',
+                                'defectQuantity'];
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
@@ -108,6 +110,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     data.forEach((element, index)=>{
       tmp.push({
         ...element,
+        defectQuantity: 0,
         serialNumber: index + 1
       });
     });
