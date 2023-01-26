@@ -42,10 +42,10 @@ export class ProductsdbService {
             priceDealer: element.priceDealer,
             createdDate: element.createdDate
           };
-
           productData.stock = this.commonService.getProductStock(productData);
           productData.sold = this.commonService.getProductSold(productData);
           productData.inProduction = this.commonService.getProductInProduction(productData);
+          productData.toBeSold = this.commonService.getProductToBeSold(productData);
 
           productsList.push(productData);
         }
@@ -66,6 +66,7 @@ export class ProductsdbService {
       productData.stock = this.commonService.getProductStock(productData);
       productData.sold = this.commonService.getProductSold(productData);
       productData.inProduction = this.commonService.getProductInProduction(productData);
+      productData.toBeSold = this.commonService.getProductToBeSold(productData);
       this.productService.updateSelectedProductData(productData);
 
       return new Promise((res, rej)=>{

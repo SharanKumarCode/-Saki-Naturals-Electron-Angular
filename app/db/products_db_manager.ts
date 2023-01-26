@@ -8,7 +8,9 @@ async function getAllProducts(){
                     .getRepository(Product).find({
                         relations: {
                             productGroup: true,
-                            saleEntries: true,
+                            saleEntries: {
+                                sale: true
+                            },
                             production: true
                         }
                     }                        
@@ -25,7 +27,11 @@ async function getProductByID(productID: string){
             },
             relations: {
                 productGroup: true,
-                saleEntries: true,
+                saleEntries: {
+                    sale: {
+                        customer: true
+                    }
+                },
                 production: true
             }
         }

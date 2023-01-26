@@ -6,6 +6,16 @@ async function getAllMaterials(){
     console.log('INFO : Getting all materials')
     const res = await AppDataSource.manager
                     .getRepository(Material).find({
+                        relations: {
+                            productionEntries: {
+                                production: true
+                            },
+                            purchaseEntries: {
+                                purchase: {
+                                    supplier: true
+                                }
+                            }
+                        }
                     }                        
                     )
     return res
@@ -15,6 +25,16 @@ async function getMaterialByID(materialID: string){
     console.log('INFO : Getting material by ID')
     const res = await AppDataSource.getRepository(Material).find(
         {
+            relations: {
+                productionEntries: {
+                    production: true
+                },
+                purchaseEntries: {
+                    purchase: {
+                        supplier: true
+                    }
+                }
+            },
             where: {
                 materialID: materialID
             }
