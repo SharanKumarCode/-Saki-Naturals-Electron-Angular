@@ -84,8 +84,10 @@
 <section class="product-details-tab-section">
     <mat-tab-group dynamicHeight="true" class="product-details-tab-group">
         <mat-tab class="product-details-tab-section-one" label="Sales History">
-            <app-product-sales-history-table class="product-details-tab-section-one" [selectedProductData]="selectedProductData"></app-product-sales-history-table>
+          <app-product-sales-history-table class="product-details-tab-section-one" [selectedProductData]="selectedProductData"></app-product-sales-history-table>
         </mat-tab>
-        <mat-tab class="product-details-tab-section-one" label="Production History"> Content 2 </mat-tab>
+        <mat-tab class="product-details-tab-section-one" label="Production History"> 
+          <app-products-production-history-table class="product-details-tab-section-one" [selectedProductData]="selectedProductData"></app-products-production-history-table>
+          </mat-tab>
       </mat-tab-group>
 </section>

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { EnumProductionStatus, EnumRouteActions, IProductionData } from '../../core/interfaces/interfaces';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductionService } from '../../core/services/production/production.service';
@@ -37,6 +38,7 @@ export class ProductionDetailComponent implements OnInit, OnDestroy {
     private matIconRegistry: MatIconRegistry,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private notificationService: NotificationService
   ) {
 
@@ -162,7 +164,7 @@ export class ProductionDetailComponent implements OnInit, OnDestroy {
   }
 
   onBack(){
-    this.router.navigate(['production']);
+    this.location.back();
   }
 
   ngOnInit(): void {
