@@ -5,6 +5,7 @@ import { EnumPurchaseStatus,
           IPurchaseData,
           IPurchaseTransactions
         } from '../../core/interfaces/interfaces';
+import { Location } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { PurchasedbService } from '../../core/services/purchase/purchasedb.service';
 import { PurchaseService } from '../../core/services/purchase/purchase.service';
@@ -49,6 +50,7 @@ export class PurchaseTransactionComponent implements OnInit, OnDestroy {
     private matIconRegistry: MatIconRegistry,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private notificationService: NotificationService
   ) {
 
@@ -364,7 +366,7 @@ export class PurchaseTransactionComponent implements OnInit, OnDestroy {
   }
 
   onBack(){
-    this.router.navigate(['purchase']);
+    this.location.back();
   }
 
   ngOnInit(): void {
