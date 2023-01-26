@@ -222,7 +222,7 @@ export enum EnumRouteActions {
 }
 
 export enum EnumSaleStatus {
-  initiated = 'Sale Initiated',
+  initiated = 'Initiated',
   dispatched = 'Dispatched',
   delivered = 'Delivered',
   returned = 'Returned',
@@ -232,7 +232,7 @@ export enum EnumSaleStatus {
 }
 
 export enum EnumPurchaseStatus {
-  initiated = 'Purchase Initiated',
+  initiated = 'Initiated',
   dispatched = 'Dispatched',
   delivered = 'Delivered',
   returned = 'Returned',
@@ -242,7 +242,7 @@ export enum EnumPurchaseStatus {
 }
 
 export enum EnumProductionStatus {
-  initiated = 'Production Initiated',
+  initiated = 'Initiated',
   completed = 'Completed',
   cancelled = 'Cancelled'
 }
