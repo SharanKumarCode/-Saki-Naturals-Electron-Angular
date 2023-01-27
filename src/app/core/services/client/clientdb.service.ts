@@ -58,7 +58,22 @@ export class ClientdbService {
   }
 
   getClientByID(clientID: string): Promise<any>{
-    return this.ipcRenderer.invoke('get-client-by-id', clientID);
+    return this.ipcRenderer.invoke('get-client-by-id', clientID)
+    .then(data=>{
+      const clientData = data[0];
+      this.clientService.updateSelectedClientData(clientData);
+
+      return new Promise((res, rej)=>{
+        res(true);
+      });
+    })
+    .catch(err=>{
+      console.error(err);
+
+      return new Promise((res, rej)=>{
+        rej(true);
+      });
+    });
   }
 
   insertClient(client: IClientData): void{
