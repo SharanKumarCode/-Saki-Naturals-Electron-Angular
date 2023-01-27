@@ -1,9 +1,56 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow, screen, dialog} from 'electron';
 import { ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
+import { autoUpdater } from 'electron-updater';
+
 
 let win: BrowserWindow = null;
+
+autoUpdater.autoDownload = false;
+
+autoUpdater.on('error', (error) => {
+  console.log('update-error')
+
+  dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
+})
+
+autoUpdater.on('update-available', () => {
+  console.log('update-available')
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Found Updates',
+    message: 'Found updates, do you want update now?',
+    buttons: ['Sure', 'No']
+  }).then((buttonIndex) => {
+    console.log(buttonIndex);
+    if (buttonIndex) {
+      autoUpdater.downloadUpdate()
+    }
+    else {
+      console.log('Cancelling update download')
+    }
+  })
+})
+
+autoUpdater.on('update-not-available', () => {
+  console.log('update-not-available')
+
+  // dialog.showMessageBox({
+  //   title: 'No Updates',
+  //   message: 'Current version is up-to-date.'
+  // })
+})
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    title: 'Install Updates',
+    message: 'Updates downloaded, application will be quit for update...'
+  }).then(() => {
+    setImmediate(() => autoUpdater.quitAndInstall())
+  })
+})
+
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
@@ -20,11 +67,11 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     frame: false,
-    icon: 'src/assets/icon/saki_naturals.png',
+    icon: 'src/assets/icon/saki_products.png',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
-      contextIsolation: false,  // false if you want to run e2e test with Spectron
+      contextIsolation: false  // false if you want to run e2e test with Spectron
     },
   });
 
@@ -54,7 +101,6 @@ function createWindow(): BrowserWindow {
     // when you should delete the corresponding element.
     win = null;
   });
-
   return win;
 }
 
@@ -65,6 +111,8 @@ try {
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
     setTimeout(createWindow, 400)
+    console.log('Checking for Updates..')
+    autoUpdater.checkForUpdates();
   });
 
   ipcMain.handle('close-main-window', async () => {

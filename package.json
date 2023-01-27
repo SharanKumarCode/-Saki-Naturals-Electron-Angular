@@ -1,12 +1,13 @@
 {
   "name": "saki-naturals",
-  "version": "11.1.0",
+  "version": "1.0.1",
   "description": "Angular 14 with Electron 19 (Typescript + SASS + Hot Reload)",
   "homepage": "https://github.com/maximegris/saki-naturals",
   "author": {
     "name": "Sharan Kumar",
     "email": "sharankumaraero@gmail.com"
   },
+  "repository": "https://github.com/SharanKumarCode/-Saki-Naturals-Electron-Angular",
   "keywords": [
     "angular",
     "angular 14",
@@ -37,6 +38,7 @@
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:build": "npm run build:prod && electron-builder build --publish=never",
+    "dist": "npm run build:prod && electron-builder",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "e2e": "npm run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
