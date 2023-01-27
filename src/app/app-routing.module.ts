@@ -25,6 +25,7 @@ import { AddUpdateProductionComponent } from './production/add-update-production
 import { ProductionDataResolverService } from './core/services/production/production-data-resolver.service';
 import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 import { ProductsDataResolverService } from './core/services/products/products-data-resolver.service';
+import { ClientDataResolverService } from './core/services/client/client-data-resolver.service';
 
 const routes: Routes = [
   {
@@ -57,7 +58,11 @@ const routes: Routes = [
       productionData: ProductionDataResolverService
     }},
   { path: 'clients', component: ClientComponent },
-  { path: 'clients/details', component: ClientDetailComponent },
+  { path: 'clients/detail/:selectedClientID',
+    component: ClientDetailComponent,
+    resolve: {
+      clientData: ClientDataResolverService
+    }},
   { path: 'expense', component: ExpenseComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'purchase', component: PurchaseComponent },
