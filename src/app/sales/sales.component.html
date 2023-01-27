@@ -1,4 +1,4 @@
-<section class="sales-button-section">
+<section *ngIf="!selectedClientData" class="sales-button-section">
   <div class="sales-title">
     <span>SALES</span>
   </div>
@@ -14,7 +14,7 @@
   <div class="filter-label">
       <span style="font-size: 1.5em">Filter</span>
   </div>
-  <mat-form-field class="customer-filter-type table-filters" appearance="outline">
+  <mat-form-field *ngIf="!selectedClientData" class="customer-filter-type table-filters" appearance="outline">
     <mat-select placeholder="by Customer" [(ngModel)]="selectedCustomerValue" name="customer" (selectionChange)="onFilterChange()">
       <mat-option *ngFor="let customer of customerList" [value]="customer">
         {{customer}}

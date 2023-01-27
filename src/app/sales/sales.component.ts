@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {MatSort, Sort} from '@angular/material/sort';
@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType } from '../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, IClientData } from '../core/interfaces/interfaces';
 import { Moment } from 'moment';
 import { ExportService } from '../core/services/export.service';
 
@@ -23,6 +23,7 @@ import { ExportService } from '../core/services/export.service';
 export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
+  @Input() selectedClientData?: IClientData;
 
   selectedCustomerValue: string;
   selectedSaleTypeValue: string;
@@ -77,7 +78,7 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setTableData(data: ISalesData[]){
     this.dataSource = new MatTableDataSource();
-    data.forEach((element, index)=>{
+    data.filter(d=>this.selectedClientData ? d.customer.clientID === this.selectedClientData?.clientID : true).forEach((element, index)=>{
       const totalAmount = this.salesService.getNetSalePrice(element);
       const paid = element.saleTransactions
                     .filter(d=>d.transactionType !== EnumTransactionType.refund)
@@ -223,6 +224,21 @@ export class SalesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.selectedClientData) {
+      this.displayedColumns = [
+                                'serial_number',
+                                'salesDate',
+                                'numberOfProducts',
+                                'saleType',
+                                'soldQuantity',
+                                'returnedQuantity',
+                                'totalAmount',
+                                'paidAmount',
+                                'refundAmount',
+                                'balanceAmount',
+                                'salesStatus',
+                              ];
+    }
     this.getSalesList();
     this.salesService.getSalesList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
       this.setTableData(data);
