@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppUpdateService } from '../core/services/app-update.service';
 
 @Component({
   selector: 'app-settings',
@@ -7,9 +8,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SettingsComponent implements OnInit {
 
-  constructor() { }
+  statusMessage: string;
+  appVersion: string;
+
+  constructor(
+    private appUpdateService: AppUpdateService
+  ) { }
 
   ngOnInit(): void {
+    this.appUpdateService.getAppVersion()
+    .then(data=>{
+      console.log(data);
+      this.appVersion = data;
+    });
+    // this.appUpdateService.checkForAppUpdates()
+    // .then(data=>{
+    //   this.statusMessage = data;
+    // })
+    // .catch(err=>{
+    //   console.log(err);
+    //   this.statusMessage = err;
+    // });
   }
 
 }
