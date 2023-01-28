@@ -10,8 +10,8 @@ let win: BrowserWindow = null;
 autoUpdater.autoDownload = false;
 
 autoUpdater.on('error', (error) => {
-  console.log('update-error')
-
+  console.log('update-error');
+  console.log(error);
   dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
 })
 
@@ -36,10 +36,10 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-not-available', () => {
   console.log('update-not-available')
 
-  // dialog.showMessageBox({
-  //   title: 'No Updates',
-  //   message: 'Current version is up-to-date.'
-  // })
+  dialog.showMessageBox({
+    title: 'No Updates',
+    message: 'Current version is up-to-date.'
+  })
 })
 
 autoUpdater.on('update-downloaded', () => {
@@ -111,8 +111,6 @@ try {
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
   app.on('ready', () => {
     setTimeout(createWindow, 400)
-    console.log('Checking for Updates..')
-    autoUpdater.checkForUpdates();
   });
 
   ipcMain.handle('close-main-window', async () => {
