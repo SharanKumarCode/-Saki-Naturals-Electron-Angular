@@ -3,6 +3,12 @@ import { IProductData, IProductGroup } from '../../src/app/core/interfaces/inter
 import { Product, ProductGroup } from './data/models/items.schema';
 import { autoUpdater } from 'electron-updater'
 
+
+async function checkForAppUpdates() {
+    console.log('Checking for Updates..')
+    return autoUpdater.checkForUpdatesAndNotify()
+}
+
 async function getAppVersion() {
     return autoUpdater.currentVersion.version
 }
@@ -157,6 +163,7 @@ async function hardDeleteProductGroup(productGroupID: string){
 }
 
 export { 
+        checkForAppUpdates,
         getAppVersion,
         getAllProducts, 
         getProductByID,

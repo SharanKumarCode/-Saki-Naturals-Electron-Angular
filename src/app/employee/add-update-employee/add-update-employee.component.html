@@ -1,0 +1,95 @@
+<section class="add-update-employee-button-section">
+    <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+</section>
+<section class="add-update-employee-container-one" [formGroup]="form">
+    <mat-form-field appearance="outline">
+        <mat-label>Joining date</mat-label>
+        <input matInput [matDatepicker]="dp" formControlName="joiningDate">
+        <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Exit date</mat-label>
+        <input matInput [matDatepicker]="exitdp" formControlName="exitDate">
+        <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="exitdp"></mat-datepicker-toggle>
+        <mat-datepicker #exitdp></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Employee Name</mat-label>
+        <input matInput #inputName maxlength="100" formControlName="employeeName" value="{{employeeName}}"/>
+        <mat-hint align="end">{{inputName.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <input matInput #inputRole maxlength="100" formControlName="role" value="{{role}}"/>
+        <mat-hint align="end">{{inputRole.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+      <div class="middle-field-container">
+        <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender" >
+                <mat-option *ngFor="let gender of genders" [value]="gender">
+                    {{gender}}
+                </mat-option>
+                </mat-select>
+        </mat-form-field>   
+        <mat-form-field appearance="outline">
+            <mat-label>DOB</mat-label>
+            <input matInput [matDatepicker]="dobdp" formControlName="dob" [max]="maxDate" (dateChange)="onDOBChange()">
+            <mat-hint align="start">Age: {{age}} years</mat-hint>
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dobdp"></mat-datepicker-toggle>
+            <mat-datepicker #dobdp></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Aadhar Number</mat-label>
+            <input matInput #inputAadhar minlength="12" maxlength="12" formControlName="aadhar" value="{{aadhar}}" />
+            <mat-hint align="end">{{inputAadhar.value?.length || 0}}/12</mat-hint>
+        </mat-form-field>
+      </div>
+    
+    <mat-form-field appearance="outline">
+        <mat-label>Primary Contact #</mat-label>
+        <input matInput type="tel" formControlName="contact1" pattern="[0-9]{10}" value="{{contact1}}"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Secondary Contact #</mat-label>
+        <input matInput type="tel" formControlName="contact2" pattern="[0-9]{10}" value="{{contact2}}"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" value="{{email}}"/>
+        </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <textarea matInput #inputAddressLine1 maxlength="100" formControlName="address" value="{{address}}"></textarea>
+        <mat-hint align="end">{{inputAddressLine1.value?.length || 0}}/100</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+        <mat-label>Salary</mat-label>
+        <input matInput type="number" class="price-right-align" formControlName="salary" value="{{salary}}"/>
+        <span matPrefix>&#8377;&nbsp;</span>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Salary Frequency</mat-label>
+        <mat-select formControlName="salaryFrequency" >
+            <mat-option *ngFor="let salaryFrequency of salaryFrequencyList" [value]="salaryFrequency">
+                {{salaryFrequency}}
+            </mat-option>
+            </mat-select>
+    </mat-form-field>
+    <div class="last-field-container">
+        <mat-slide-toggle formControlName="employeeExitFlag" (change)="onExitFlagChange()">Employee Exited?</mat-slide-toggle>
+        <mat-form-field class="employee-remarks-field" appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput #inputremarks maxlength="100" formControlName="remarks" value="{{remarks}}"></textarea>
+            <mat-hint align="end">{{inputremarks.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+        <div class="employee-submit-btn">
+            <button *ngIf="componentBehaviourFlag" mat-raised-button style="background-color: #2be813; color: black;" (click)="onCreateEmployee()">CREATE EMPLOYEE</button>
+            <button *ngIf="!componentBehaviourFlag" mat-raised-button style="background-color: #2be813; color: black;" (click)="onUpdateEmployee()">UPDATE EMPLOYEE</button>
+        </div>
+    </div>    
+</section>

@@ -1,11 +1,11 @@
 {
   "name": "saki-naturals",
-  "description": "Angular Electron sample",
+  "description": "Saki Products Inventory Management application with Electron and Angular",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Sharan Kumar",
+    "email": "sharankumaraero@gmail.com"
   },
-  "version": "1.0.1",
+  "version": "1.0.0",
   "main": "main.js",
   "private": true,
   "dependencies": {

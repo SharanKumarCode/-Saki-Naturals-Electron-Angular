@@ -1,0 +1,114 @@
+// button section
+
+.employee-button-section {
+    height: 10%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+
+    display: flex;
+    flex-direction: row;
+
+}
+
+.employee-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.employee-button-section-dummy-div {
+    flex-grow: 8.5;
+}
+
+.employee-button-row{
+    width: 5%;
+    height: 55%;
+    flex-grow: 0.5;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
+    align-content: stretch;
+
+    margin: 2% auto 8px auto;
+  }
+
+.employee-button-row > button:first-child {
+    flex-grow: 1;
+    margin-right: 10%;
+    background-color: greenyellow;
+}
+
+.employee-button-row > button:nth-child(2) {
+    flex-grow: 1;
+}
+
+// button section
+
+// table section
+
+.employee-table-section{
+    height: 60%;
+    width: 95%;
+    margin: 2% auto 8px auto;
+    overflow: auto;
+}
+
+table{
+    width: 100%;
+    color: black;
+}
+
+th{
+    background-color: #e0e0e0;
+}
+
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+.mat-row:hover .mat-cell {
+    border-color: currentColor;
+}
+
+// table section
+
+// No div section
+
+.no-employee-div {
+    width: 100%;
+    font-style: italic;
+    text-align: center;
+  }
+
+// No div section
+
+// Export Section
+
+.export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 20%;
+    margin-right: 1%;
+}
+
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
+}
+
+// Export Section

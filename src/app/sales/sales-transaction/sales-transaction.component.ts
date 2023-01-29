@@ -171,12 +171,6 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditSaleDialog(): void {
-    this.router.navigate(['sale/add_update_sale',
-                        EnumRouteActions.update,
-                        this.selectedSaleData.salesID]);
-  }
-
   onUpdateSale(){
     if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
       const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
@@ -184,7 +178,9 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.openEditSaleDialog();
+    this.router.navigate(['sale/add_update_sale',
+                        EnumRouteActions.update,
+                        this.selectedSaleData.salesID]);
   }
 
   onDeleteSale(){
