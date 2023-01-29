@@ -22,6 +22,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
@@ -81,6 +83,13 @@ import {
 import {
   MaterialConsumptionHistoryTableComponent
 } from './material/material-consumption-history-table/material-consumption-history-table.component';
+import { AddUpdateEmployeeComponent } from './employee/add-update-employee/add-update-employee.component';
+import { EmployeeDetailComponent } from './employee/employee-detail/employee-detail.component';
+import { CalendarComponent } from './employee/calendar/calendar.component';
+import {
+  EmployeeAttendanceHistoryTableComponent
+} from './employee/employee-attendance-history-table/employee-attendance-history-table.component';
+import { EmployeeSalaryHistoryTableComponent } from './employee/employee-salary-history-table/employee-salary-history-table.component';
 
 
 // AoT requires an exported function for factories
@@ -138,7 +147,12 @@ const lang = 'en-US';
     ProductSalesHistoryTableComponent,
     ProductsProductionHistoryTableComponent,
     MaterialPurchaseHistoryTableComponent,
-    MaterialConsumptionHistoryTableComponent
+    MaterialConsumptionHistoryTableComponent,
+    AddUpdateEmployeeComponent,
+    EmployeeDetailComponent,
+    CalendarComponent,
+    EmployeeAttendanceHistoryTableComponent,
+    EmployeeSalaryHistoryTableComponent
 
     ],
   imports: [
@@ -169,6 +183,8 @@ const lang = 'en-US';
     MatTabsModule,
     MaterialModule,
     MatStepperModule,
+    MatRadioModule,
+    MatSlideToggleModule,
 
     TranslateModule.forRoot({
       loader: {

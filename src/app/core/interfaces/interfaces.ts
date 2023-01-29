@@ -193,6 +193,47 @@ export interface IClientData {
   createdDate: Date;
 }
 
+export interface IEmployeeData {
+  employeeAttendanceEntries?: IAttendanceEntry[];
+  employeeSalaryEntries?: ISalaryTransaction[];
+  employeeID?: string;
+  employeeName: string;
+  role: string;
+  dob: Date;
+  aadhar: string;
+  gender: EnumGender;
+  salary: number;
+  salaryFrequency: EnumSalaryFrequency;
+  contact1: string;
+  contact2?: string;
+  address?: string;
+  email?: string;
+  joiningDate: Date;
+  exitDate?: Date;
+  remarks?: string;
+
+  editCreate?: string;
+  deleteFlag?: boolean;
+  createdDate?: Date;
+}
+
+export interface IAttendanceEntry {
+  attendanceEntryID?: string;
+  employee: IEmployeeData;
+  date: Date;
+  status: EnumAttendanceValues;
+  remarks?: string;
+}
+
+export interface ISalaryTransaction {
+  salaryTransactionID?: string;
+  employee: IEmployeeData;
+  transactionType: string;
+  amount: number;
+  transactionDate: Date;
+  remarks: string;
+}
+
 export enum EnumClientType {
   customer = 'CUSTOMER',
   supplier = 'SUPPLIER'
@@ -245,4 +286,18 @@ export enum EnumProductionStatus {
   initiated = 'Initiated',
   completed = 'Completed',
   cancelled = 'Cancelled'
+}
+
+export enum EnumGender {
+  male = 'Male',
+  female = 'Female',
+  others = 'Others'
+}
+
+export enum EnumAttendanceValues {
+  none = 'None',
+  present = 'Present',
+  half = 'Half Day',
+  leave = 'Leave',
+  cHoliday = 'Company Holiday',
 }
