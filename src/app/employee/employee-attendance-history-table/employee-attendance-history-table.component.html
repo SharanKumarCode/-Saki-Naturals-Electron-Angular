@@ -1,0 +1,68 @@
+<section class="attendance-selection-btns-section" [formGroup]="form">
+    <div class="month-btn-container">
+        <button mat-raised-button (click)="onPrevMonth()"><mat-icon class="icon-display" svgIcon="prev"></mat-icon></button>
+        <button mat-flat-button disabled>{{selectedMonthName}}</button>
+        <button mat-raised-button (click)="onNextMonth()"><mat-icon class="icon-display" svgIcon="next"></mat-icon></button>
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-select formControlName="year" >
+            <mat-option *ngFor="let year of yearList" (onSelectionChange)="onYearChange($event)" [value]="year">
+                {{year}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</section>
+
+<section class="attendance-history-table-section">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 attendance-history-table">
+
+        <!-- Serial Number Column -->
+        <ng-container matColumnDef="serial_number">
+            <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by number">
+            
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by date">
+            Date
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by status">
+            Status
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+
+        <!-- Remarks Price Column -->
+        <ng-container matColumnDef="remarks">
+            <th mat-header-cell *matHeaderCellDef sortActionDescription="Sort by remarks">
+            Remarks
+            </th>
+            <td mat-cell *matCellDef="let element">{{element.remarks}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns;"
+            style="min-height: 100px !important;">
+            </tr>
+        </table>        
+  </section>
+  <section class="export-btn-container">
+    <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+        Export as Excel
+    </button>
+    <button mat-flat-button color="primary" class="export-pdf-btn">
+        Export as PDF
+    </button>
+</section>
