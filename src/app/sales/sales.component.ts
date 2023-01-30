@@ -11,9 +11,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, IClientData } from '../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions, IClientData } from '../core/interfaces/interfaces';
 import { Moment } from 'moment';
 import { ExportService } from '../core/services/export.service';
+import { EnumTransactionType, EnumRouteActions } from '../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales',

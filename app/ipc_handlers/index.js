@@ -4,6 +4,7 @@ const { clientsHandler } = require('./ipc_client_handle');
 const { materialsHandler } = require('./ipc_materials_handle');
 const { purchaseHandler } = require('./ipc_purchase_handle');
 const { productionHandler } = require('./ipc_production_handle');
+const { employeeHandler } = require('./ipc_employee_handle');
 const { stockSoldConsumedHandler } = require('./ipc_stock_sold_consumed_handle');
 
 module.exports = {
@@ -14,5 +15,6 @@ module.exports = {
         materialsHandler, 
         purchaseHandler, 
         productionHandler,
+        employeeHandler,
         stockSoldConsumedHandler]
 }

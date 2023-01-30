@@ -1,0 +1,175 @@
+<section class="attendance-selection-btns-section" [formGroup]="form">
+    <div class="month-btn-container">
+        <button mat-raised-button (click)="onPrevMonth()"><mat-icon class="icon-display" svgIcon="prev"></mat-icon></button>
+        <button mat-flat-button disabled>{{selectedMonthName}}</button>
+        <button mat-raised-button (click)="onNextMonth()"><mat-icon class="icon-display" svgIcon="next"></mat-icon></button>
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-select formControlName="year" name="productionStatus" (onSelectionChange)="onYearChange($event)">
+            <mat-option *ngFor="let year of yearList" [value]="year">
+            {{year}}
+            </mat-option>
+        </mat-select>
+        </mat-form-field>
+
+    <div class="dummy-div"></div>
+
+    <button mat-raised-button color="accent" (click)="setCurrentDate()">Today's Date</button>
+</section>
+
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="attendance-table-section">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Sun Column -->
+        <ng-container matColumnDef="sun">
+            <th mat-header-cell *matHeaderCellDef>
+            Sun
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.sun.dayValue === 'Present',
+            'td-cell-block-half':element.sun.dayValue === 'Half Day',
+            'td-cell-block-leave':element.sun.dayValue === 'Leave',
+            'td-cell-block-choliday': element.sun.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.sun.value)" mat-cell *matCellDef="let element"><div class="date-block">
+                <div>{{element.sun.value}}</div>
+                <div *ngIf="element.sun.currentDateFlag" class="dot"></div>
+            </div></td>
+        </ng-container>
+
+        <!-- Mon Column -->
+        <ng-container matColumnDef="mon">
+            <th mat-header-cell *matHeaderCellDef>
+            Mon
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.mon.dayValue === 'Present',
+            'td-cell-block-half':element.mon.dayValue === 'Half Day',
+            'td-cell-block-leave':element.mon.dayValue === 'Leave',
+            'td-cell-block-choliday': element.mon.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.mon.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.mon.value}}</div>
+                    <div *ngIf="element.mon.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Tue Column -->
+        <ng-container matColumnDef="tue">
+            <th mat-header-cell *matHeaderCellDef>
+            Tue
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.tue.dayValue === 'Present',
+            'td-cell-block-half':element.tue.dayValue === 'Half Day',
+            'td-cell-block-leave':element.tue.dayValue === 'Leave',
+            'td-cell-block-choliday': element.tue.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.tue.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.tue.value}}</div>
+                    <div *ngIf="element.tue.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Wed Column -->
+        <ng-container matColumnDef="wed">
+            <th mat-header-cell *matHeaderCellDef>
+                Wed
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.wed.dayValue === 'Present',
+            'td-cell-block-half':element.wed.dayValue === 'Half Day',
+            'td-cell-block-leave':element.wed.dayValue === 'Leave',
+            'td-cell-block-choliday': element.wed.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.wed.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.wed.value}}</div>
+                    <div *ngIf="element.wed.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Thurs Column -->
+        <ng-container matColumnDef="thurs">
+            <th mat-header-cell *matHeaderCellDef>
+                Thurs
+            </th>
+            <td 
+            [ngClass]="{'td-cell-block-present': element.thurs.dayValue === 'Present',
+            'td-cell-block-half':element.thurs.dayValue === 'Half Day',
+            'td-cell-block-leave':element.thurs.dayValue === 'Leave',
+            'td-cell-block-choliday': element.thurs.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.thurs.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.thurs.value}}</div>
+                    <div *ngIf="element.thurs.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Fri Column -->
+        <ng-container matColumnDef="fri">
+            <th mat-header-cell *matHeaderCellDef>
+                Fri
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.fri.dayValue === 'Present',
+            'td-cell-block-half':element.fri.dayValue === 'Half Day',
+            'td-cell-block-leave':element.fri.dayValue === 'Leave',
+            'td-cell-block-choliday': element.fri.dayValue === 'Company Holiday'}"
+            (click)="onDateClick(element.fri.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.fri.value}}</div>
+                    <div *ngIf="element.fri.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- Sat Column -->
+        <ng-container matColumnDef="sat">
+            <th mat-header-cell *matHeaderCellDef>
+                Sat
+            </th>
+            <td
+            [ngClass]="{'td-cell-block-present': element.sat.dayValue === 'present',
+            'td-cell-block-half':element.sat.dayValue === 'half',
+            'td-cell-block-leave':element.sat.dayValue === 'leave',
+            'td-cell-block-choliday': element.sat.dayValue === 'cHoliday'}"
+            (click)="onDateClick(element.sat.value)" mat-cell *matCellDef="let element">
+                <div class="date-block">
+                    <div>{{element.sat.value}}</div>
+                    <div *ngIf="element.sat.currentDateFlag" class="dot"></div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr 
+            mat-row 
+            *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+    </table>
+    </section>
+
+    <section *ngIf="selectedFullDate" @slideDownUp class="day-selection-section">
+        <label>{{selectedFullDate}}</label>
+        <mat-radio-group [(ngModel)]="labelPosition" (change)="onRadioOrRemarksChange()">
+            <mat-radio-button value="None">None</mat-radio-button>
+            <mat-radio-button class="radio-present" value="Present">Present</mat-radio-button>
+            <mat-radio-button class="radio-half" value="Half Day">Half day</mat-radio-button>
+            <mat-radio-button class="radio-leave" value="Leave">Leave</mat-radio-button>
+            <mat-radio-button class="radio-choliday" value="Company Holiday">Company Holiday</mat-radio-button>
+          </mat-radio-group>
+    </section>
+
+    <section *ngIf="remarksFlag" @slideDownUp class="leave-remarks-section" [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <input matInput #input maxlength="100" formControlName="leaveRemarks"/>
+            <mat-hint align="end">{{input.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button (click)="onRemarksUpdate()">
+            <mat-icon class="icon-display" svgIcon="tick"></mat-icon>
+        </button>
+    </section>

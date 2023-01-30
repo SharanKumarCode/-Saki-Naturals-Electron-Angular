@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild, AfterViewInit, Input, OnChanges } from '@
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { ISalesData, EnumTransactionType, ISaleTransactions } from '../../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions } from '../../core/interfaces/interfaces';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { EnumTransactionType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales-transaction-table',

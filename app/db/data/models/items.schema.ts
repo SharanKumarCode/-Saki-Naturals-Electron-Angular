@@ -1,4 +1,4 @@
-import { CreateDateColumn, OneToMany, PrimaryColumn } from "typeorm";
+import { CreateDateColumn, OneToMany } from "typeorm";
 
 const { Entity, PrimaryGeneratedColumn, Column, ManyToOne } = require('typeorm');
 
@@ -36,93 +36,6 @@ export class Company
 		default: false
 	})
 	deleteFlag: boolean;
-}
-
-@Entity()
-export class Employee
-{
-	@PrimaryGeneratedColumn('uuid')
-	employeeID: string;
-
-    @Column()
-	employeeName: string;
-
-	@Column()
-	role: string;
-
-	@Column({
-		type: 'date'
-	})
-	dob: string
-
-	@Column({
-		type: 'date'
-	})
-	joiningDate: string
-
-	@Column({
-		type: 'date'
-	})
-	exitDate: string
-
-	@Column()
-	salary: number;
-
-	@Column()
-	salaryFrequency: string;
-
-	@Column()
-	contact1: string;
-
-	@Column()
-	contact2: string;
-
-	@Column()
-	address: string;
-
-	@CreateDateColumn()
-	createdDate: Date;
-
-	@Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-}
-
-@Entity()
-export class EmployeeTransaction
-{
-	@PrimaryGeneratedColumn('uuid')
-	transactionID: string;
-
-	// @PrimaryColumn()
-	// @ManyToOne(() => Employee, (employee)=>employee.employeeID, {
-	// 	onDelete: "RESTRICT"
-	// })
-	// employeeID: Employee;
-
-	@Column()
-	transactionType: string;
-
-    @Column()
-	amount: number;
-
-    @Column({
-		type: 'datetime'
-	})
-	transactionDate: Date;
-
-    @Column()
-	remarks: string;
-
-	@Column({
-		default: false
-	})
-	deleteFlag: boolean;
-
 }
 
 @Entity()

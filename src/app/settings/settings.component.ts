@@ -15,6 +15,16 @@ export class SettingsComponent implements OnInit {
     private appUpdateService: AppUpdateService
   ) { }
 
+  checkForUpdate(): void {
+    this.appUpdateService.checkForAppUpdates()
+    .then(data=>{
+      console.log(data);
+    })
+    .catch(err=>{
+      console.log(err);
+    });
+  }
+
   ngOnInit(): void {
     this.appUpdateService.getAppVersion()
     .then(data=>{

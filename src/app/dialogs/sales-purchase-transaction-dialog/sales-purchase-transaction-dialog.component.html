@@ -1,5 +1,6 @@
-<h1 mat-dialog-title *ngIf="saleFlag">SALES</h1>
-<h1 mat-dialog-title *ngIf="!saleFlag">PURCHASE</h1>
+<h1 mat-dialog-title *ngIf="dialogType === 'Sales'">SALES</h1>
+<h1 mat-dialog-title *ngIf="dialogType === 'Purchase'">PURCHASE</h1>
+<h1 mat-dialog-title *ngIf="dialogType === 'Salary'">SALARY</h1>
 
 <!-- Product Details -->
 <mat-dialog-content class="form-container" [formGroup]="form">
@@ -15,7 +16,8 @@
       <input class="timepicker" type="time" [value]="transactionTime" formControlName="transactionTime">
     </div>
     <mat-form-field appearance="outline" floatLabel="always">
-        <mat-label>Total Price</mat-label>
+        <mat-label *ngIf="dialogType === 'Salary'">Salary</mat-label>
+        <mat-label *ngIf="dialogType !== 'Salary'">Total Price</mat-label>
         <input matInput type="number" class="price-right-align" formControlName="totalPrice" value="{{totalPrice}}"/>
         <span matPrefix>&#8377;&nbsp;</span>
       </mat-form-field>

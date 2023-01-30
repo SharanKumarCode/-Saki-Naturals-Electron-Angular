@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { EnumSaleStatus, ISalesData } from '../../interfaces/interfaces';
+import { ISalesData } from '../../interfaces/interfaces';
+import { EnumSaleStatus } from '../../interfaces/enums';
 
 @Injectable({
   providedIn: 'root'

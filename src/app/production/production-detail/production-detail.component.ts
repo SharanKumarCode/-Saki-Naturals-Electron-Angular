@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { EnumProductionStatus, EnumRouteActions, IProductionData } from '../../core/interfaces/interfaces';
+import { IProductionData } from '../../core/interfaces/interfaces';
 import { Subject, takeUntil } from 'rxjs';
 import { ProductionService } from '../../core/services/production/production.service';
 import { ProductiondbService } from '../../core/services/production/productiondb.service';
@@ -10,6 +10,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PromptDialogComponent } from '../../dialogs/prompt-dialog/prompt-dialog.component';
+import { EnumProductionStatus, EnumRouteActions } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-production-detail',

@@ -1,0 +1,7 @@
+owner: SharanKumarCode
+repo: '-Saki-Naturals-Electron-Angular'
+provider: github
+releaseType: release
+private: false
+protocol: https
+updaterCacheDirName: saki-naturals-updater
