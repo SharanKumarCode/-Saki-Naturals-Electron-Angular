@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EnumProductionStatus, EnumRouteActions, IProductionData } from '../core/interfaces/interfaces';
+import { IProductionData } from '../core/interfaces/interfaces';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject, takeUntil } from 'rxjs';
@@ -12,6 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { Moment } from 'moment';
 import { ExportService } from '../core/services/export.service';
+import { EnumProductionStatus, EnumRouteActions } from '../core/interfaces/enums';
 
 @Component({
   selector: 'app-production',

@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { EnumTransactionType, IPurchaseData, IPurchaseTransactions } from '../../core/interfaces/interfaces';
+import { IPurchaseData, IPurchaseTransactions } from '../../core/interfaces/interfaces';
 import { PurchasedbService } from '../../core/services/purchase/purchasedb.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +9,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
+import { EnumTransactionType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase-transaction-table',

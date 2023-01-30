@@ -4,8 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
-import { EnumTransactionType, ISaleTransactions } from '../../core/interfaces/interfaces';
+import { ISaleTransactions } from '../../core/interfaces/interfaces';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { EnumTransactionType } from '../../core/interfaces/enums';
 
 const moment = _moment;
 

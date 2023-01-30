@@ -5,7 +5,8 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification.service';
-import { EnumRouteActions, IEmployeeData } from '../../core/interfaces/interfaces';
+import { IEmployeeData } from '../../core/interfaces/interfaces';
+import { EnumRouteActions } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-employee-detail',
@@ -65,6 +66,10 @@ export class EmployeeDetailComponent implements OnInit {
 
   onDeleteEmployee(): void {
 
+  }
+
+  onAddSalaryTransaction(): void {
+    
   }
 
   onRefresh(): void {

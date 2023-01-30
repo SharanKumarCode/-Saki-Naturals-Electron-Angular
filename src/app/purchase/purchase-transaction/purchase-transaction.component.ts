@@ -1,8 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { EnumPurchaseStatus,
-          EnumRouteActions,
-          EnumTransactionType,
-          IPurchaseData,
+import { IPurchaseData,
           IPurchaseTransactions
         } from '../../core/interfaces/interfaces';
 import { Location } from '@angular/common';
@@ -19,6 +16,7 @@ import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { PromptDialogComponent } from '../../dialogs/prompt-dialog/prompt-dialog.component';
+import { EnumPurchaseStatus, EnumTransactionType, EnumRouteActions } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase-transaction',

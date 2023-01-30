@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, EnumSaleStatus } from '../../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions } from '../../core/interfaces/interfaces';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import {
@@ -13,6 +13,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { EnumSaleStatus, EnumTransactionType, EnumRouteActions } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales-transaction',

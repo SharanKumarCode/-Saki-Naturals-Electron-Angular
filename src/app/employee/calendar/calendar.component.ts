@@ -4,12 +4,13 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as moment from 'moment';
-import { EnumAttendanceValues, IAttendanceEntry, IEmployeeData } from '../../core/interfaces/interfaces';
+import { IAttendanceEntry, IEmployeeData } from '../../core/interfaces/interfaces';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { EmployeedbService } from '../../core/services/employee/employeedb.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { EmployeeService } from '../../core/services/employee/employee.service';
 import { Subject, takeUntil } from 'rxjs';
+import { EnumAttendanceValues } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-calendar',

@@ -1,3 +1,5 @@
+import { EnumSaleType, EnumTransactionType, EnumClientType, EnumGender, EnumSalaryFrequency, EnumAttendanceValues } from './enums';
+
 export interface IProductData {
     productID?: string;
     productName: string;
@@ -233,71 +235,5 @@ export interface ISalaryTransaction {
   transactionDate: Date;
   remarks: string;
 }
+export { EnumClientType };
 
-export enum EnumClientType {
-  customer = 'CUSTOMER',
-  supplier = 'SUPPLIER'
-}
-
-export enum EnumSaleType {
-  directSale = 'Direct Sale',
-  reseller = 'Reseller',
-  dealer = 'Dealer'
-}
-
-export enum EnumTransactionType {
-advance = 'Advance',
-paid = 'Paid',
-refund = 'Refund'
-}
-
-export enum EnumSalaryFrequency {
-monthly = 'Monthly',
-weekly = 'Weekly',
-others = 'Others'
-}
-
-export enum EnumRouteActions {
-  update = 'Update',
-  create = 'Create'
-}
-
-export enum EnumSaleStatus {
-  initiated = 'Initiated',
-  dispatched = 'Dispatched',
-  delivered = 'Delivered',
-  returned = 'Returned',
-  refunded = 'Refunded',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}
-
-export enum EnumPurchaseStatus {
-  initiated = 'Initiated',
-  dispatched = 'Dispatched',
-  delivered = 'Delivered',
-  returned = 'Returned',
-  refunded = 'Refunded',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}
-
-export enum EnumProductionStatus {
-  initiated = 'Initiated',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}
-
-export enum EnumGender {
-  male = 'Male',
-  female = 'Female',
-  others = 'Others'
-}
-
-export enum EnumAttendanceValues {
-  none = 'None',
-  present = 'Present',
-  half = 'Half Day',
-  leave = 'Leave',
-  cHoliday = 'Company Holiday',
-}

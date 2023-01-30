@@ -8,10 +8,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ExportService } from '../core/services/export.service';
-import { EnumRouteActions, IEmployeeData } from '../core/interfaces/interfaces';
+import { IEmployeeData } from '../core/interfaces/interfaces';
 import { EmployeeService } from '../core/services/employee/employee.service';
 import { EmployeedbService } from '../core/services/employee/employeedb.service';
 import * as moment from 'moment';
+import { EnumRouteActions } from '../core/interfaces/enums';
 
 @Component({
   selector: 'app-employee',

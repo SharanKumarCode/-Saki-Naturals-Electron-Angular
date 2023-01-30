@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { EnumGender, EnumRouteActions, EnumSalaryFrequency, IEmployeeData } from '../../core/interfaces/interfaces';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { IEmployeeData } from '../../core/interfaces/interfaces';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import * as moment from 'moment';
 import { EmployeedbService } from '../../core/services/employee/employeedb.service';
+import { EnumGender, EnumSalaryFrequency, EnumRouteActions } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-add-update-employee',

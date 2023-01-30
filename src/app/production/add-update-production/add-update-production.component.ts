@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EnumRouteActions, IMaterialData, IProductData, IProductionData, IProductionEntry } from '../../core/interfaces/interfaces';
+import { IMaterialData, IProductData, IProductionData, IProductionEntry } from '../../core/interfaces/interfaces';
 import * as _moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { ProductsdbService } from '../../core/services/products/productsdb.servi
 import { ProductiondbService } from '../../core/services/production/productiondb.service';
 import { MaterialdbService } from '../../core/services/material/materialdb.service';
 import { MaterialService } from '../../core/services/material/material.service';
+import { EnumRouteActions } from '../../core/interfaces/enums';
 
 const moment = _moment;
 

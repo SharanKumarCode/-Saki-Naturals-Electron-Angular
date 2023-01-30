@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EnumRouteActions, EnumTransactionType, IClientData, IPurchaseData, IPurchaseTransactions } from '../core/interfaces/interfaces';
+import { IClientData, IPurchaseData, IPurchaseTransactions } from '../core/interfaces/interfaces';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -12,6 +12,7 @@ import { PurchaseService } from '../core/services/purchase/purchase.service';
 import { PurchasedbService } from '../core/services/purchase/purchasedb.service';
 import { Moment } from 'moment';
 import { ExportService } from '../core/services/export.service';
+import { EnumTransactionType, EnumRouteActions } from '../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase',
