@@ -1,3 +1,12 @@
 <p>Current App Version : {{appVersion}}</p>
 
 <button mat-raised-button color="primary" (click)="checkForUpdate()">Check for Update</button>
+
+<button mat-raised-button color="warn" (click)="signOut()">Sign Out</button>
+
+<mat-card>
+    <span>Logged in as</span>
+    <span>{{name}}</span>
+    <span>{{email}}</span>
+    <img [src]="photoUrl" width="60px" height="60px" />
+</mat-card>

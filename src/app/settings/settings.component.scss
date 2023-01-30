@@ -1,0 +1,16 @@
+mat-card {
+    width: 95%;
+    height: 5%;
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: auto auto auto auto ;
+    grid-template-rows: auto;
+    grid-row-gap: 1.5%;
+    grid-column-gap: 1%;
+}
+
+mat-card > span {
+    text-align: center;
+    vertical-align: middle;
+}

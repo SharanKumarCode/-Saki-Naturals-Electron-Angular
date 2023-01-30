@@ -90,6 +90,9 @@ import {
   EmployeeAttendanceHistoryTableComponent
 } from './employee/employee-attendance-history-table/employee-attendance-history-table.component';
 import { EmployeeSalaryHistoryTableComponent } from './employee/employee-salary-history-table/employee-salary-history-table.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 
 
 // AoT requires an exported function for factories
@@ -152,7 +155,8 @@ const lang = 'en-US';
     EmployeeDetailComponent,
     CalendarComponent,
     EmployeeAttendanceHistoryTableComponent,
-    EmployeeSalaryHistoryTableComponent
+    EmployeeSalaryHistoryTableComponent,
+    LoginComponent
 
     ],
   imports: [
@@ -164,6 +168,7 @@ const lang = 'en-US';
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    SocialLoginModule,
 
     MatSidenavModule,
     MatToolbarModule,
@@ -202,6 +207,18 @@ const lang = 'en-US';
     },
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: true,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('78240900209-7t7he8b9tbgt22d54gflduvfcavhisqe.apps.googleusercontent.com')
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }, AuthGuardServiceService
   ],
   bootstrap: [AppComponent]
 })

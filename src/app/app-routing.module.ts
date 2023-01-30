@@ -29,79 +29,97 @@ import { ClientDataResolverService } from './core/services/client/client-data-re
 import { AddUpdateEmployeeComponent } from './employee/add-update-employee/add-update-employee.component';
 import { EmployeeDetailComponent } from './employee/employee-detail/employee-detail.component';
 import { EmployeeDataResolverService } from './core/services/employee/employee-data-resolver.service';
+import { LoginComponent } from './login/login.component';
+import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'products',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
-  { path: 'products', component: ProductsComponent },
+  {
+    path: 'login', component: LoginComponent
+  },
+  { path: 'products', component: ProductsComponent, canActivate: [AuthGuardServiceService] },
   { path: 'product/detail/:selectedProductID',
     component: ProductsDetailComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       productData: ProductsDataResolverService
     }},
-  { path: 'materials', component: MaterialComponent },
+  { path: 'materials', component: MaterialComponent, canActivate: [AuthGuardServiceService] },
   { path: 'materials/detail/:materialID',
     component: MaterialDetailComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       materialData: MaterialDataResolverService
     } },
-  { path: 'production', component: ProductionComponent },
-  { path: 'production/add_update_production/:createOrUpdate', component: AddUpdateProductionComponent},
+  { path: 'production', component: ProductionComponent, canActivate: [AuthGuardServiceService] },
+  { path: 'production/add_update_production/:createOrUpdate',
+    component: AddUpdateProductionComponent,
+    canActivate: [AuthGuardServiceService]},
   { path: 'production/add_update_production/:createOrUpdate/:selectedProductionID',
   component: AddUpdateProductionComponent,
+  canActivate: [AuthGuardServiceService],
   resolve: {
     productionData: ProductionDataResolverService
   }},
   { path: 'production/detail/:selectedProductionID',
     component: ProductionDetailComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       productionData: ProductionDataResolverService
     }},
-  { path: 'clients', component: ClientComponent },
+  { path: 'clients', component: ClientComponent, canActivate: [AuthGuardServiceService] },
   { path: 'clients/detail/:selectedClientID',
     component: ClientDetailComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       clientData: ClientDataResolverService
     }},
-  { path: 'expense', component: ExpenseComponent },
-  { path: 'sales', component: SalesComponent },
-  { path: 'purchase', component: PurchaseComponent },
+  { path: 'expense', component: ExpenseComponent,canActivate: [AuthGuardServiceService] },
+  { path: 'sales', component: SalesComponent, canActivate: [AuthGuardServiceService] },
+  { path: 'purchase', component: PurchaseComponent, canActivate: [AuthGuardServiceService] },
   { path: 'purchase/transaction/:selectedPurchaseID',
     component: PurchaseTransactionComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       purchaseData: PurchaseDataResolverService
     }},
-  { path: 'purchase/add_update_purchase/:createOrUpdate', component: AddUpdatePurchaseComponent},
+  { path: 'purchase/add_update_purchase/:createOrUpdate', component: AddUpdatePurchaseComponent, canActivate: [AuthGuardServiceService]},
   { path: 'purchase/add_update_purchase/:createOrUpdate/:selectedPurchaseID',
   component: AddUpdatePurchaseComponent,
+  canActivate: [AuthGuardServiceService],
   resolve: {
     purchaseData: PurchaseDataResolverService
   }},
-  { path: 'employee', component: EmployeeComponent },
-  { path: 'employee/add_update_employee/:createOrUpdate', component: AddUpdateEmployeeComponent},
+  { path: 'employee', component: EmployeeComponent, canActivate: [AuthGuardServiceService] },
+  { path: 'employee/add_update_employee/:createOrUpdate', component: AddUpdateEmployeeComponent, canActivate: [AuthGuardServiceService]},
   { path: 'employee/add_update_employee/:createOrUpdate/:selectedEmployeeID',
   component: AddUpdateEmployeeComponent,
+  canActivate: [AuthGuardServiceService],
   resolve: {
     employeeData: EmployeeDataResolverService
   }},
   { path: 'employee/detail/:selectedEmployeeID',
     component: EmployeeDetailComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       employeeData: EmployeeDataResolverService
     }
   },
-  { path: 'settings', component: SettingsComponent },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardServiceService] },
   { path: 'sale/transaction/:selectedSalesID',
     component: SalesTransactionComponent,
+    canActivate: [AuthGuardServiceService],
     resolve: {
       saleData: SaleDataResolverService
     }},
-  { path: 'sale/add_update_sale/:createOrUpdate', component: AddUpdateSaleComponent},
+  { path: 'sale/add_update_sale/:createOrUpdate', component: AddUpdateSaleComponent, canActivate: [AuthGuardServiceService]},
   { path: 'sale/add_update_sale/:createOrUpdate/:selectedSalesID',
   component: AddUpdateSaleComponent,
+  canActivate: [AuthGuardServiceService],
   resolve: {
     saleData: SaleDataResolverService
   }},
