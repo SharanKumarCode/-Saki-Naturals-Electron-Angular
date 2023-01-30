@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,7 +11,7 @@ import * as moment from 'moment';
   templateUrl: './employee-attendance-history-table.component.html',
   styleUrls: ['./employee-attendance-history-table.component.scss']
 })
-export class EmployeeAttendanceHistoryTableComponent implements OnInit {
+export class EmployeeAttendanceHistoryTableComponent implements OnInit, OnChanges {
 
   @Input() selectedEmployeeData: IEmployeeData;
 
@@ -104,6 +104,19 @@ export class EmployeeAttendanceHistoryTableComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.selectedEmployeeData);
+    this.selectedMonth = moment().month();
+    this.selectedYear = moment().year();
+    const listOfYears = [...new Set(this.selectedEmployeeData.employeeAttendanceEntries.map(data=>moment(data.date).year()))]
+                        .sort((a, b)=> b - a)
+                        .reverse();
+    this.yearList = listOfYears;
+    this.form.controls.year.setValue(this.yearList[this.yearList.length - 1]);
+    this.selectedMonthName = moment(`${this.form.value.year}-${this.selectedMonth+1}-${1}`)
+                            .startOf('month').format('MMMM');
+    this.setTableData();
+  }
+
+  ngOnChanges(): void {
     this.selectedMonth = moment().month();
     this.selectedYear = moment().year();
     const listOfYears = [...new Set(this.selectedEmployeeData.employeeAttendanceEntries.map(data=>moment(data.date).year()))]

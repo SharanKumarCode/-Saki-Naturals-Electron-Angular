@@ -16,7 +16,7 @@ import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { PromptDialogComponent } from '../../dialogs/prompt-dialog/prompt-dialog.component';
-import { EnumPurchaseStatus, EnumTransactionType, EnumRouteActions } from '../../core/interfaces/enums';
+import { EnumPurchaseStatus, EnumTransactionType, EnumRouteActions, EnumTransactionDialogType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase-transaction',
@@ -144,7 +144,7 @@ export class PurchaseTransactionComponent implements OnInit, OnDestroy {
       width: '50%',
       data: {
         editCreate: 'Create',
-        saleFlag: false,
+        dialogType: EnumTransactionDialogType.purchase,
         totalPrice: this.purchaseDetail.totalPrice,
         paid: 0,
         remarks: '',

@@ -9,6 +9,12 @@ export enum EnumClientType {
     dealer = 'Dealer'
   }
 
+  export enum EnumTransactionDialogType {
+    sales = 'Sales',
+    purchase = 'Purchase',
+    salary = 'Salary'
+  }
+
   export enum EnumTransactionType {
   advance = 'Advance',
   paid = 'Paid',

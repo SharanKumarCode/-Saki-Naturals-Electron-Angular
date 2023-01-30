@@ -5,8 +5,12 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification.service';
-import { IEmployeeData } from '../../core/interfaces/interfaces';
-import { EnumRouteActions } from '../../core/interfaces/enums';
+import { IEmployeeData, ISalaryTransaction } from '../../core/interfaces/interfaces';
+import { EnumRouteActions, EnumTransactionDialogType } from '../../core/interfaces/enums';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  SalesPurchaseTransactionDialogComponent
+ } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 
 @Component({
   selector: 'app-employee-detail',
@@ -22,6 +26,7 @@ export class EmployeeDetailComponent implements OnInit {
   private path = 'assets/icon/';
 
   constructor(
+    public dialog: MatDialog,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
@@ -69,7 +74,40 @@ export class EmployeeDetailComponent implements OnInit {
   }
 
   onAddSalaryTransaction(): void {
-    
+    console.log('INFO : Opening dialog box add transaction');
+    const dialogRef = this.dialog.open(SalesPurchaseTransactionDialogComponent, {
+      width: '50%',
+      data: {
+        editCreate: 'Create',
+        dialogType: EnumTransactionDialogType.salary,
+        salary: this.selectedEmployeeData.salary,
+        remarks: '',
+        transactionDate: ''
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('INFO : The dialog box is closed');
+      if (result){
+        console.log(result);
+        const salaryEntry: ISalaryTransaction = {
+          employee: this.selectedEmployeeData,
+          amount: result.transactionAmount,
+          transactionDate: result.transactionDate,
+          transactionType: result.transactionType,
+          remarks: result.remarks
+        };
+
+        this.employeeDBservice.insertSalaryTransaction(salaryEntry)
+        .then(_=>{
+          this.notificationService.updateSnackBarMessageSubject('Added Salary Transaction entry');
+        })
+        .catch(err=>{
+          console.log(err);
+          this.notificationService.updateSnackBarMessageSubject('Unable to add Salary Transaction entry');
+        });
+      }
+    });
   }
 
   onRefresh(): void {

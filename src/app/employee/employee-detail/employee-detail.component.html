@@ -1,5 +1,6 @@
 <section class="employee-details-button-section">
     <div class="employee-details-button-row">
+      <button mat-raised-button color="accent" (click)="onAddSalaryTransaction()">ADD SALARY TRANSACTION</button>
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
       <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
     </div>
@@ -98,7 +99,7 @@
             <app-employee-attendance-history-table [selectedEmployeeData]="selectedEmployeeData"></app-employee-attendance-history-table>
           </mat-tab>
         <mat-tab class="employee-details-tab-section-3" label="Salary History"> 
-            <app-employee-salary-history-table></app-employee-salary-history-table>
+            <app-employee-salary-history-table [selectedEmployeeData]="selectedEmployeeData"></app-employee-salary-history-table>
         </mat-tab>
       </mat-tab-group>
 </section>

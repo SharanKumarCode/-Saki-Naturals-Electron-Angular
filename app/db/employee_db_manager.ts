@@ -206,7 +206,7 @@ async function updateSalaryTransaction(transaction: ISalaryTransaction){
     salaryTransactionEntity.transactionDate = transaction.transactionDate
     salaryTransactionEntity.remarks = transaction.remarks
 
-    return await AppDataSource.manager.update(AttendanceEntry,
+    return await AppDataSource.manager.update(SalaryTransaction,
         {
             salaryTransactionID: transaction.salaryTransactionID
         },

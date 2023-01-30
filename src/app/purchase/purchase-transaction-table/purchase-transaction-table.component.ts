@@ -9,7 +9,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import {
   SalesPurchaseTransactionDialogComponent
  } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
-import { EnumTransactionType } from '../../core/interfaces/enums';
+import { EnumTransactionDialogType, EnumTransactionType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase-transaction-table',
@@ -75,7 +75,7 @@ export class PurchaseTransactionTableComponent implements OnInit, OnChanges, Aft
       width: '50%',
       data: {
         editCreate: 'Edit',
-        saleFlag: false,
+        dialogType: EnumTransactionDialogType.purchase,
         transactionType: transactionData.transactionType,
         totalPrice: totPrice,
         transactionAmount: transactionData.transactionAmount,

@@ -1,7 +1,7 @@
 .employee-details-button-section {
-    width: 15%;
+    width: 26%;
     height: 10%;
-    margin-left: 80%;
+    margin-left: 70%;
 }
 
 .employee-details-button-row{
@@ -22,7 +22,12 @@
     margin-right: 2%;
 }
 
-.employee-details-button-row > button:nth-child(2) {
+.employee-details-button-row > button:nth-child(1) {
+   flex-grow: 1;
+   margin-right: 2%;
+}
+
+.employee-details-button-row > button:nth-child(3) {
     flex-grow: 0.7;
     height: 100%;
     border-radius: 5%;

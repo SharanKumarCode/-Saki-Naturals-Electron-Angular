@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
 import { ISaleTransactions } from '../../core/interfaces/interfaces';
 import { NotificationService } from '../../core/services/notification/notification.service';
-import { EnumTransactionType } from '../../core/interfaces/enums';
+import { EnumTransactionDialogType, EnumTransactionType } from '../../core/interfaces/enums';
 
 const moment = _moment;
 
@@ -18,7 +18,7 @@ const moment = _moment;
 export class SalesPurchaseTransactionDialogComponent implements OnInit {
 
   form: FormGroup;
-  saleFlag: boolean;
+  dialogType: EnumTransactionDialogType;
   transactionDate: Date;
   transactionTime: string;
   totalPrice: number;
@@ -39,8 +39,8 @@ export class SalesPurchaseTransactionDialogComponent implements OnInit {
     private matIconRegistry: MatIconRegistry,
     private notificationService: NotificationService
   ) {
-    this.saleFlag = this.data.saleFlag;
-    this.totalPrice = this.data.totalPrice;
+    this.dialogType = this.data.dialogType;
+    this.totalPrice = this.data.dialogType === EnumTransactionDialogType.salary ? this.data.salary : this.data.totalPrice;
     this.transactionAmount = this.data.transactionAmount;
     this.remarks = this.data.remarks;
     this.editCreate = this.data.editCreate;
@@ -92,6 +92,11 @@ export class SalesPurchaseTransactionDialogComponent implements OnInit {
     this.minTransactionDate = moment(this.data.salesDate).toDate();
     if (this.data.returnDate) {
       this.transactionTypeList = [EnumTransactionType.advance, EnumTransactionType.paid, EnumTransactionType.refund];
+    }
+
+    if (this.dialogType === EnumTransactionDialogType.salary) {
+      this.minTransactionDate = null;
+      this.transactionTypeList = [EnumTransactionType.salary, EnumTransactionType.advance];
     }
   }
 

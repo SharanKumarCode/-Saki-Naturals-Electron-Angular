@@ -13,7 +13,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
-import { EnumSaleStatus, EnumTransactionType, EnumRouteActions } from '../../core/interfaces/enums';
+import { EnumSaleStatus, EnumTransactionType, EnumRouteActions, EnumTransactionDialogType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales-transaction',
@@ -137,7 +137,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
       width: '50%',
       data: {
         editCreate: 'Create',
-        saleFlag: true,
+        dialogType: EnumTransactionDialogType.sales,
         totalPrice: this.salesDetail.totalPrice,
         paid: 0,
         remarks: '',
