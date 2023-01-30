@@ -2,6 +2,14 @@ const { productsDB } = require('../db/db_manager')
 
 module.exports = {
     productsHandler: [
+            global.share.ipcMain.handle('check-for-updates', async () => {
+                return productsDB.checkForAppUpdates();
+            }),
+
+            global.share.ipcMain.handle('get-app-version', async () => {
+                return productsDB.getAppVersion();
+            }),
+
             global.share.ipcMain.handle('get-products', async () => {
                 return productsDB.getAllProducts();
             }),

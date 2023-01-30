@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { EnumRouteActions, EnumTransactionType, IPurchaseData, IPurchaseTransactions } from '../core/interfaces/interfaces';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IClientData, IPurchaseData, IPurchaseTransactions } from '../core/interfaces/interfaces';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -12,6 +12,7 @@ import { PurchaseService } from '../core/services/purchase/purchase.service';
 import { PurchasedbService } from '../core/services/purchase/purchasedb.service';
 import { Moment } from 'moment';
 import { ExportService } from '../core/services/export.service';
+import { EnumTransactionType, EnumRouteActions } from '../core/interfaces/enums';
 
 @Component({
   selector: 'app-purchase',
@@ -21,6 +22,7 @@ import { ExportService } from '../core/services/export.service';
 export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
+  @Input() selectedClientData?: IClientData;
 
   selectedSupplierValue: string;
   selectedPurchaseStatusValue: string;
@@ -71,8 +73,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   setTableData(data: IPurchaseData[]){
     this.dataSource = new MatTableDataSource();
-      const tmpPurchaseList = [];
-      data.forEach((element, index)=>{
+      data.filter(d=>this.selectedClientData ? d.supplier.clientID === this.selectedClientData?.clientID : true).forEach((element, index)=>{
 
       let totalPrice = element
                       ?.purchaseEntries
@@ -195,7 +196,7 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
       exportFileContent.push(tmp);
     });
-    this.exportService.exportAsExcel(exportFileContent, 'purchase_history');
+    this.exportService.exportAsExcel(exportFileContent, 'purchase_list');
   }
 
   calcTransactionData(transactionData: IPurchaseTransactions[]): any{
@@ -216,6 +217,19 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.selectedClientData) {
+      this.displayedColumns = [
+                                'serial_number',
+                                'purchaseDate',
+                                'numberOfMaterials',
+                                'purchasedQuantity',
+                                'returnedQuantity',
+                                'totalPrice',
+                                'paidAmount',
+                                'balanceAmount',
+                                'purchaseStatus'
+                              ];
+    }
     this.getPurchaseList();
     this.purchaseService.getPurchaseList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
       this.setTableData(data);

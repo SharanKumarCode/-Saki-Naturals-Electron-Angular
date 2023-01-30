@@ -1,4 +1,4 @@
-<section class="purchase-button-section">
+<section *ngIf="!selectedClientData" class="purchase-button-section">
   <div class="purchase-title">
     <span>PURCHASE</span>
   </div>
@@ -14,7 +14,7 @@
   <div class="filter-label">
       <span style="font-size: 1.5em">Filter</span>
   </div>
-  <mat-form-field class="supplier-filter-type table-filters" appearance="outline">
+  <mat-form-field *ngIf="!selectedClientData" class="supplier-filter-type table-filters" appearance="outline">
       <mat-select placeholder="by Supplier" [(ngModel)]="selectedSupplierValue" name="supplier" (selectionChange)="onFilterChange()">
         <mat-option *ngFor="let supplier of supplierList" [value]="supplier">
           {{supplier}}

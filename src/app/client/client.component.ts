@@ -12,6 +12,7 @@ import { AddClientDialogComponent } from '../dialogs/add-client-dialog/add-clien
 import { ClientdbService } from '../core/services/client/clientdb.service';
 import { ClientService } from '../core/services/client/client.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ExportService } from '../core/services/export.service';
 
 
 interface IClientTypeFilter {
@@ -58,6 +59,7 @@ export class ClientComponent implements OnInit, AfterViewInit, OnDestroy {
     private liveAnnouncer: LiveAnnouncer,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
+    private exportService: ExportService,
     private router: Router,
     private clientDBservice: ClientdbService,
     private clientService: ClientService
@@ -119,22 +121,71 @@ export class ClientComponent implements OnInit, AfterViewInit, OnDestroy {
   this.dataSource = new MatTableDataSource(tmpClientList);
   }
 
+  onExportAsExcel(): void {
+    const columnNames = [
+                          'ClientID',
+                          'Client Type',
+                          'Client Name',
+                          'Description',
+                          'Contact Person',
+                          'Primary Contact #',
+                          'Secondary Contact #',
+                          'Landline',
+                          'Email',
+                          'Address',
+                          'City',
+                          'State',
+                          'Country',
+                          'PIN Code',
+                          'Created Date',
+                          'Remarks'
+                        ];
+    const exportFileContent = [];
+    this.getFilteredList().forEach(elem=>{
+      const tmp = {};
+      tmp[columnNames[0]] = elem.clientID;
+      tmp[columnNames[1]] = elem.clientType;
+      tmp[columnNames[2]] = elem.clientName;
+      tmp[columnNames[3]] = elem.description;
+      tmp[columnNames[4]] = elem.contactPerson;
+      tmp[columnNames[5]] = elem.contact1;
+      tmp[columnNames[6]] = elem.contact2;
+      tmp[columnNames[7]] = elem.landline;
+      tmp[columnNames[8]] = elem.email;
+      tmp[columnNames[9]] = `${elem.addressLine1}\n${elem.addressLine2}`;
+      tmp[columnNames[10]] = elem.city;
+      tmp[columnNames[11]] = elem.state;
+      tmp[columnNames[12]] = elem.country;
+      tmp[columnNames[13]] = elem.pincode;
+      tmp[columnNames[14]] = elem.createdDate;
+      tmp[columnNames[15]] = elem.remarks;
+
+      exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'client_list');
+  }
+
   onRefresh(): void {
     this.clientDBservice.getClients();
   }
 
-  onFilterChange(e): void {
-    if (e.value === 'cust_suppl'){
-      this.dataSource = new MatTableDataSource(tmpClientList);
-    } else {
-      const filteredList = tmpClientList.filter(data=> data.clientType === e.value);
-      this.dataSource = new MatTableDataSource(filteredList);
+  onFilterChange(): void {
+    this.dataSource = new MatTableDataSource(this.getFilteredList());
+
+  }
+
+  getFilteredList(): any[] {
+
+    if (!this.selectedValue || this.selectedValue === 'cust_suppl') {
+      return tmpClientList;
     }
+
+    return tmpClientList
+            .filter(data=> data.clientType === this.selectedValue);
   }
 
   onRowClick(e: any){
-    this.clientService.updateSelectedClientID(e.clientID);
-    this.router.navigate(['clients/details']);
+    this.router.navigate(['clients/detail', e.clientID]);
   }
 
   ngOnInit(): void {

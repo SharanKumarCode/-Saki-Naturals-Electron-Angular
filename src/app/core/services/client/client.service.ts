@@ -9,9 +9,11 @@ export class ClientService {
 
   private clientListSubject$: Subject<IClientData[]>;
   private selectedClientID: string;
+  private selectedClientDataSubject$: Subject<IClientData>;
 
   constructor() {
     this.clientListSubject$ = new Subject<IClientData[]>();
+    this.selectedClientDataSubject$ = new Subject<IClientData>();
    }
 
    getClientList(): Subject<IClientData[]>{
@@ -28,6 +30,14 @@ export class ClientService {
 
    updateSelectedClientID(clientID: string){
     this.selectedClientID = clientID;
+   }
+
+   getSelectedClientData(): Subject<IClientData>{
+    return this.selectedClientDataSubject$;
+   }
+
+   updateSelectedClientData(data: IClientData): void {
+      this.selectedClientDataSubject$.next(data);
    }
 
 }

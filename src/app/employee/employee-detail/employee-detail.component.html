@@ -1,0 +1,105 @@
+<section class="employee-details-button-section">
+    <div class="employee-details-button-row">
+      <button mat-raised-button color="accent" (click)="onAddSalaryTransaction()">ADD SALARY TRANSACTION</button>
+      <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+      <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+    </div>
+</section>
+<section class="employee-details-data-section">
+    <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                EMPLOYEE DATA
+            </mat-panel-title>
+            <mat-panel-description>
+                {{panelOpenState ? '' : 'Expand to update or delete Employee data'}}
+            </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="employee-details-data">
+                <mat-card class="employee-details-tab-section-1">
+                    <span class="employee-data-key-sections">Employee ID</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.employeeID ? employeeDetail.employeeID : '')}}</span>
+                  </mat-card>
+                <mat-card class="employee-details-tab-section-2">
+                    <span class="employee-data-key-sections">Employee Name</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.employeeName ? employeeDetail.employeeName : '')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-3">
+                    <span class="employee-data-key-sections">Created Date</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.createdDate ? employeeDetail.createdDate : '')}}</span>
+                </mat-card>
+                  <mat-card class="employee-details-tab-section-4">
+                    <span class="employee-data-key-sections">Role</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.role ? employeeDetail.role : '')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-5">
+                    <span class="employee-data-key-sections">D.O.B</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.dob ? employeeDetail.dob : '-') | date}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-6">
+                    <span class="employee-data-key-sections">Gender</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.gender ? employeeDetail.gender : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-7">
+                    <span class="employee-data-key-sections">Joined Date</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.joiningDate ? employeeDetail.joiningDate : '') | date}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-8">
+                    <span class="employee-data-key-sections">Exit Date</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.exitDate ? (employeeDetail.exitDate | date) : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-9">
+                    <span class="employee-data-key-sections">Primary Contact</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.contact1 ? employeeDetail.contact1 : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-10">
+                    <span class="employee-data-key-sections">Secondary Contact</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.contact2 ? employeeDetail.contact2 : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-11">
+                    <span class="employee-data-key-sections">Email</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.email ? employeeDetail.email : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-12">
+                    <span class="employee-data-key-sections">Aadhar</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.aadhar ? employeeDetail.aadhar : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-13">
+                    <span class="employee-data-key-sections">Salary</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.salary ? employeeDetail.salary : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-14">
+                    <span class="employee-data-key-sections">Salary Frequency</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.salaryFrequency ? employeeDetail.salaryFrequency : '-')}}</span>
+                </mat-card>
+                <mat-card class="employee-details-tab-section-15">
+                    <span class="employee-data-key-sections">Address</span>
+                    <span style="float: right; font-size: 1.1em;">{{(employeeDetail.address ? employeeDetail.address : '-')}}</span>
+                </mat-card>
+                <div class="employee-details-tab-section-16">
+                    <span class="employee-data-key-sections">Remarks</span>
+                    <span style="margin-left : 2%; font-size: 1em;">{{employeeDetail.remarks ? employeeDetail.remarks : '(blank)'}}</span>
+                  </div>
+            </div>
+            <mat-action-row>
+                <button mat-button color="primary" (click)="onUpdateEmployee()">UPDATE</button>
+                <button mat-button color="warn" (click)="onDeleteEmployee()"><mat-icon svgIcon="delete"></mat-icon></button>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>
+<section class="employee-details-tab-section">
+    <mat-tab-group dynamicHeight="true" class="employee-details-tab-group">
+        <mat-tab class="employee-details-tab-section-1" label="Add Attendance Entry">
+          <app-calendar [selectedEmployeeData]="selectedEmployeeData"></app-calendar>
+        </mat-tab>
+        <mat-tab class="employee-details-tab-section-2" label="Attendance History">
+            <app-employee-attendance-history-table [selectedEmployeeData]="selectedEmployeeData"></app-employee-attendance-history-table>
+          </mat-tab>
+        <mat-tab class="employee-details-tab-section-3" label="Salary History"> 
+            <app-employee-salary-history-table [selectedEmployeeData]="selectedEmployeeData"></app-employee-salary-history-table>
+        </mat-tab>
+      </mat-tab-group>
+</section>

@@ -1,6 +1,17 @@
 import { AppDataSource } from './db_manager';
 import { IProductData, IProductGroup } from '../../src/app/core/interfaces/interfaces';
 import { Product, ProductGroup } from './data/models/items.schema';
+import { autoUpdater } from 'electron-updater'
+
+
+async function checkForAppUpdates() {
+    console.log('Checking for Updates..')
+    return autoUpdater.checkForUpdatesAndNotify()
+}
+
+async function getAppVersion() {
+    return autoUpdater.currentVersion.version
+}
 
 async function getAllProducts(){
     console.log('INFO : Getting all products')
@@ -151,7 +162,10 @@ async function hardDeleteProductGroup(productGroupID: string){
     return res
 }
 
-export { getAllProducts, 
+export { 
+        checkForAppUpdates,
+        getAppVersion,
+        getAllProducts, 
         getProductByID,
         getProductByProductGroupID, 
         insertProduct, 

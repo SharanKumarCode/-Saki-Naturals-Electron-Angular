@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ISalesData, ISaleTransactions, EnumRouteActions, EnumTransactionType, EnumSaleStatus } from '../../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions } from '../../core/interfaces/interfaces';
 import { SalesService } from '../../core/services/sales/sales.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import {
@@ -13,6 +13,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { SalesReturnDialogComponent } from '../../dialogs/sales-return-dialog/sales-return-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { EnumSaleStatus, EnumTransactionType, EnumRouteActions, EnumTransactionDialogType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales-transaction',
@@ -136,7 +137,7 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
       width: '50%',
       data: {
         editCreate: 'Create',
-        saleFlag: true,
+        dialogType: EnumTransactionDialogType.sales,
         totalPrice: this.salesDetail.totalPrice,
         paid: 0,
         remarks: '',
@@ -171,12 +172,6 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
     });
   }
 
-  openEditSaleDialog(): void {
-    this.router.navigate(['sale/add_update_sale',
-                        EnumRouteActions.update,
-                        this.selectedSaleData.salesID]);
-  }
-
   onUpdateSale(){
     if (this.selectedSaleData.completedDate || this.selectedSaleData.cancelledDate) {
       const message = `Unable to make changes as Sale is marked as ${this.selectedSaleData.completedDate ? 'COMPLETED' : 'CANCELLED'}`;
@@ -184,7 +179,9 @@ export class SalesTransactionComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.openEditSaleDialog();
+    this.router.navigate(['sale/add_update_sale',
+                        EnumRouteActions.update,
+                        this.selectedSaleData.salesID]);
   }
 
   onDeleteSale(){

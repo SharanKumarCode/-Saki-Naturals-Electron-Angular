@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ISaleTransactions, EnumTransactionType, IProductData, IMaterialData } from '../interfaces/interfaces';
+import { ISaleTransactions, IProductData, IMaterialData } from '../interfaces/interfaces';
+import { EnumTransactionType } from '../interfaces/enums';
 
 @Injectable({
   providedIn: 'root'

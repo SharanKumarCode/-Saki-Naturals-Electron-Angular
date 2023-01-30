@@ -1,3 +1,5 @@
+import { EnumSaleType, EnumTransactionType, EnumClientType, EnumGender, EnumSalaryFrequency, EnumAttendanceValues } from './enums';
+
 export interface IProductData {
     productID?: string;
     productName: string;
@@ -193,56 +195,45 @@ export interface IClientData {
   createdDate: Date;
 }
 
-export enum EnumClientType {
-  customer = 'CUSTOMER',
-  supplier = 'SUPPLIER'
+export interface IEmployeeData {
+  employeeAttendanceEntries?: IAttendanceEntry[];
+  employeeSalaryEntries?: ISalaryTransaction[];
+  employeeID?: string;
+  employeeName: string;
+  role: string;
+  dob: Date;
+  aadhar: string;
+  gender: EnumGender;
+  salary: number;
+  salaryFrequency: EnumSalaryFrequency;
+  contact1: string;
+  contact2?: string;
+  address?: string;
+  email?: string;
+  joiningDate: Date;
+  exitDate?: Date;
+  remarks?: string;
+
+  editCreate?: string;
+  deleteFlag?: boolean;
+  createdDate?: Date;
 }
 
-export enum EnumSaleType {
-  directSale = 'Direct Sale',
-  reseller = 'Reseller',
-  dealer = 'Dealer'
+export interface IAttendanceEntry {
+  attendanceEntryID?: string;
+  employee: IEmployeeData;
+  date: Date;
+  status: EnumAttendanceValues;
+  remarks?: string;
 }
 
-export enum EnumTransactionType {
-advance = 'Advance',
-paid = 'Paid',
-refund = 'Refund'
+export interface ISalaryTransaction {
+  salaryTransactionID?: string;
+  employee: IEmployeeData;
+  transactionType: string;
+  amount: number;
+  transactionDate: Date;
+  remarks: string;
 }
+export { EnumClientType };
 
-export enum EnumSalaryFrequency {
-monthly = 'Monthly',
-weekly = 'Weekly',
-others = 'Others'
-}
-
-export enum EnumRouteActions {
-  update = 'Update',
-  create = 'Create'
-}
-
-export enum EnumSaleStatus {
-  initiated = 'Initiated',
-  dispatched = 'Dispatched',
-  delivered = 'Delivered',
-  returned = 'Returned',
-  refunded = 'Refunded',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}
-
-export enum EnumPurchaseStatus {
-  initiated = 'Initiated',
-  dispatched = 'Dispatched',
-  delivered = 'Delivered',
-  returned = 'Returned',
-  refunded = 'Refunded',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}
-
-export enum EnumProductionStatus {
-  initiated = 'Initiated',
-  completed = 'Completed',
-  cancelled = 'Cancelled'
-}

@@ -25,6 +25,10 @@ import { AddUpdateProductionComponent } from './production/add-update-production
 import { ProductionDataResolverService } from './core/services/production/production-data-resolver.service';
 import { ProductionDetailComponent } from './production/production-detail/production-detail.component';
 import { ProductsDataResolverService } from './core/services/products/products-data-resolver.service';
+import { ClientDataResolverService } from './core/services/client/client-data-resolver.service';
+import { AddUpdateEmployeeComponent } from './employee/add-update-employee/add-update-employee.component';
+import { EmployeeDetailComponent } from './employee/employee-detail/employee-detail.component';
+import { EmployeeDataResolverService } from './core/services/employee/employee-data-resolver.service';
 
 const routes: Routes = [
   {
@@ -57,7 +61,11 @@ const routes: Routes = [
       productionData: ProductionDataResolverService
     }},
   { path: 'clients', component: ClientComponent },
-  { path: 'clients/details', component: ClientDetailComponent },
+  { path: 'clients/detail/:selectedClientID',
+    component: ClientDetailComponent,
+    resolve: {
+      clientData: ClientDataResolverService
+    }},
   { path: 'expense', component: ExpenseComponent },
   { path: 'sales', component: SalesComponent },
   { path: 'purchase', component: PurchaseComponent },
@@ -73,6 +81,18 @@ const routes: Routes = [
     purchaseData: PurchaseDataResolverService
   }},
   { path: 'employee', component: EmployeeComponent },
+  { path: 'employee/add_update_employee/:createOrUpdate', component: AddUpdateEmployeeComponent},
+  { path: 'employee/add_update_employee/:createOrUpdate/:selectedEmployeeID',
+  component: AddUpdateEmployeeComponent,
+  resolve: {
+    employeeData: EmployeeDataResolverService
+  }},
+  { path: 'employee/detail/:selectedEmployeeID',
+    component: EmployeeDetailComponent,
+    resolve: {
+      employeeData: EmployeeDataResolverService
+    }
+  },
   { path: 'settings', component: SettingsComponent },
   { path: 'sale/transaction/:selectedSalesID',
     component: SalesTransactionComponent,
