@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { EnumClientType, IClientData } from '../../../core/interfaces/interfaces';
+import { IClientData } from '../../../core/interfaces/interfaces';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import * as countryListJson from '../add-client-dialog/country_list.json';
+import { EnumClientType } from '../../../core/interfaces/enums';
 
 export interface IClientTypeSelect {
   value: EnumClientType;

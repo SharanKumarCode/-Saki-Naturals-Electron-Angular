@@ -235,5 +235,28 @@ export interface ISalaryTransaction {
   transactionDate: Date;
   remarks: string;
 }
-export { EnumClientType };
+
+export interface ICompanyData {
+  companyID?: string;
+  companyName: string;
+  proprietor: string;
+  contact1: string;
+  contact2?: string;
+  landline?: string;
+  addressLine1: string;
+  addressLine2?: string;
+  gstNumber: string;
+  msmeNumber: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  email?: string;
+  remarks?: string;
+  theme?: string;
+  lastBackup?: Date;
+  editCreate?: string;
+  deleteFlag?: boolean;
+  createdDate: Date;
+}
 
