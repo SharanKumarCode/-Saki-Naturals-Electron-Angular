@@ -7,12 +7,13 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { EnumClientType, IClientData } from '../core/interfaces/interfaces';
+import { IClientData } from '../core/interfaces/interfaces';
 import { AddClientDialogComponent } from '../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
 import { ClientdbService } from '../core/services/client/clientdb.service';
 import { ClientService } from '../core/services/client/client.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ExportService } from '../core/services/export.service';
+import { EnumClientType } from '../core/interfaces/enums';
 
 
 interface IClientTypeFilter {

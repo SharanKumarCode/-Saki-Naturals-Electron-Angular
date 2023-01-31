@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as _moment from 'moment';
 import {
-  EnumClientType,
   IClientData,
   IProductData,
   ISaleEntry,
@@ -20,7 +19,7 @@ import { ClientService } from '../../core/services/client/client.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EnumSaleType, EnumRouteActions } from '../../core/interfaces/enums';
+import { EnumSaleType, EnumRouteActions, EnumClientType } from '../../core/interfaces/enums';
 
 const moment = _moment;
 
