@@ -257,6 +257,6 @@ export interface ICompanyData {
   lastBackup?: Date;
   editCreate?: string;
   deleteFlag?: boolean;
-  createdDate: Date;
+  createdDate?: Date;
 }
 
