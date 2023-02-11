@@ -12,9 +12,12 @@ import * as _moment from 'moment';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IProductData } from '../core/interfaces/interfaces';
+import { ICompanyData, IProductData } from '../core/interfaces/interfaces';
 import { ProductGroupDialogComponent } from '../dialogs/product-group-dialog/product-group-dialog.component';
 import { ExportService } from '../core/services/export.service';
+import { SettingsService } from '../core/services/settings/settings.service';
+import { CompanydbService } from '../core/services/settings/companydb.service';
+import { NotificationService } from '../core/services/notification/notification.service';
 
 const moment = _moment;
 
@@ -43,6 +46,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
   private productdata: IProductData;
   private destroy$ = new Subject();
+  private destroyCompanyData$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -51,6 +55,9 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     private liveAnnouncer: LiveAnnouncer,
     private productService: ProductsService,
     private exportService: ExportService,
+    private settingsService: SettingsService,
+    private companyDBservice: CompanydbService,
+    private notificationService: NotificationService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -165,7 +172,31 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     this.exportService.exportAsExcel(exportFileContent, 'products_list');
   }
 
+  checkIfCompanyDataExists(): void {
+    this.companyDBservice.getCompany();
+    this.settingsService.getSelectedCompanyData().pipe(takeUntil(this.destroyCompanyData$)).subscribe(data=>{
+      if (!data?.companyID) {
+        const initCompanyData: ICompanyData = this.settingsService.getInitCompanyData();
+        this.companyDBservice.initialiseCompany(initCompanyData)
+        .then(d=>{
+          this.destroyCompanyData$.next(true);
+          this.router.navigate(['settings/add_update_company', d.companyID]);
+          this.notificationService.updateSnackBarMessageSubject('Please provide Company Data');
+        })
+        .catch(err=>{
+          console.log(err);
+          this.notificationService.updateSnackBarMessageSubject('Unable to get company Data');
+        });
+      } else if (data?.companyName === '-') {
+        this.router.navigate(['settings/add_update_company', data.companyID]);
+        this.destroyCompanyData$.next(true);
+        this.notificationService.updateSnackBarMessageSubject('Please provide Company Data');
+      }
+    });
+  }
+
   ngOnInit(): void {
+    this.checkIfCompanyDataExists();
     this.productdbservice.getProducts();
     this.productService.getProductList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
       this.setProductsData(data);
@@ -178,6 +209,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
+    this.destroyCompanyData$.next(true);
   }
 
   announceSortChange(sortState: Sort) {
