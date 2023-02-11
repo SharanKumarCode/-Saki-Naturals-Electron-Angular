@@ -1,0 +1,11 @@
+<mat-dialog-content>
+    <mat-card style="box-shadow: none;">
+        <p style="text-align: center; font-size: 1.1em;">{{promptMessage}}</p>
+    </mat-card>
+
+    <div mat-dialog-actions class="prompt-button-action">
+        <button mat-raised-button style="background-color: greenyellow;" (click)="onYes()">YES</button>
+        <button mat-icon-button (click)="onCancel()"><mat-icon class="icon-display" svgIcon="close"></mat-icon></button>        
+    </div>
+</mat-dialog-content>
+

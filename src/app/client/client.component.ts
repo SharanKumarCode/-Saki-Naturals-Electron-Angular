@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -7,11 +7,13 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { EnumClientType, IClientData } from '../core/interfaces/interfaces';
+import { IClientData } from '../core/interfaces/interfaces';
 import { AddClientDialogComponent } from '../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
 import { ClientdbService } from '../core/services/client/clientdb.service';
 import { ClientService } from '../core/services/client/client.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { ExportService } from '../core/services/export.service';
+import { EnumClientType } from '../core/interfaces/enums';
 
 
 interface IClientTypeFilter {
@@ -26,7 +28,7 @@ const tmpClientList = [];
   templateUrl: './client.component.html',
   styleUrls: ['./client.component.scss']
 })
-export class ClientComponent implements OnInit, AfterViewInit {
+export class ClientComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -49,7 +51,7 @@ export class ClientComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource([]);
 
-  private clientListObservable: Subject<IClientData[]>;
+  private destroy$ = new Subject();
   private clientData: IClientData;
   private path = 'assets/icon/';
 
@@ -58,6 +60,7 @@ export class ClientComponent implements OnInit, AfterViewInit {
     private liveAnnouncer: LiveAnnouncer,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
+    private exportService: ExportService,
     private router: Router,
     private clientDBservice: ClientdbService,
     private clientService: ClientService
@@ -103,51 +106,102 @@ export class ClientComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getClients(): void {
-    this.clientDBservice.getClients();
-    this.clientListObservable.subscribe(data=>{
-      data.map((value, index)=>({
-          ...value,
-          serialNumber: index
-        })
-      );
-      tmpClientList.length = 0;
-      data.forEach((element, index)=>{
-        tmpClientList.push({
-          ...element,
-          serialNumber: index + 1
-        });
-      });
-      this.dataSource = new MatTableDataSource(tmpClientList);
+  setClientData(data: IClientData[]): void {
+    data.map((value, index)=>({
+      ...value,
+      serialNumber: index
+    })
+  );
+  tmpClientList.length = 0;
+  data.forEach((element, index)=>{
+    tmpClientList.push({
+      ...element,
+      serialNumber: index + 1
     });
+  });
+  this.dataSource = new MatTableDataSource(tmpClientList);
   }
 
+  onExportAsExcel(): void {
+    const columnNames = [
+                          'ClientID',
+                          'Client Type',
+                          'Client Name',
+                          'Description',
+                          'Contact Person',
+                          'Primary Contact #',
+                          'Secondary Contact #',
+                          'Landline',
+                          'Email',
+                          'Address',
+                          'City',
+                          'State',
+                          'Country',
+                          'PIN Code',
+                          'Created Date',
+                          'Remarks'
+                        ];
+    const exportFileContent = [];
+    this.getFilteredList().forEach(elem=>{
+      const tmp = {};
+      tmp[columnNames[0]] = elem.clientID;
+      tmp[columnNames[1]] = elem.clientType;
+      tmp[columnNames[2]] = elem.clientName;
+      tmp[columnNames[3]] = elem.description;
+      tmp[columnNames[4]] = elem.contactPerson;
+      tmp[columnNames[5]] = elem.contact1;
+      tmp[columnNames[6]] = elem.contact2;
+      tmp[columnNames[7]] = elem.landline;
+      tmp[columnNames[8]] = elem.email;
+      tmp[columnNames[9]] = `${elem.addressLine1}\n${elem.addressLine2}`;
+      tmp[columnNames[10]] = elem.city;
+      tmp[columnNames[11]] = elem.state;
+      tmp[columnNames[12]] = elem.country;
+      tmp[columnNames[13]] = elem.pincode;
+      tmp[columnNames[14]] = elem.createdDate;
+      tmp[columnNames[15]] = elem.remarks;
 
-  ngOnInit(): void {
-    this.clientListObservable = this.clientService.getClientList();
-    this.getClients();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+      exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'client_list');
   }
 
   onRefresh(): void {
     this.clientDBservice.getClients();
   }
 
-  onFilterChange(e): void {
-    if (e.value === 'cust_suppl'){
-      this.dataSource = new MatTableDataSource(tmpClientList);
-    } else {
-      const filteredList = tmpClientList.filter(data=> data.clientType === e.value);
-      this.dataSource = new MatTableDataSource(filteredList);
+  onFilterChange(): void {
+    this.dataSource = new MatTableDataSource(this.getFilteredList());
+
+  }
+
+  getFilteredList(): any[] {
+
+    if (!this.selectedValue || this.selectedValue === 'cust_suppl') {
+      return tmpClientList;
     }
+
+    return tmpClientList
+            .filter(data=> data.clientType === this.selectedValue);
   }
 
   onRowClick(e: any){
-    this.clientService.updateSelectedClientID(e.clientID);
-    this.router.navigate(['clients/details']);
+    this.router.navigate(['clients/detail', e.clientID]);
+  }
+
+  ngOnInit(): void {
+    this.clientDBservice.getClients();
+    this.clientService.getClientList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setClientData(data);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
   announceSortChange(sortState: Sort) {

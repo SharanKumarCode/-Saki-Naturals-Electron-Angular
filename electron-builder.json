@@ -1,5 +1,7 @@
 {
   "asar": true,
+  "appId": "com.sakiproducts.app",
+  "productName": "Saki-Products-Inventory-Management",
   "directories": {
     "output": "release/"
   },
@@ -15,13 +17,21 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
+    "icon": "dist/assets/icons/saki_products.png",
     "target": [
-      "portable"
-    ]
+      "nsis"
+    ],
+    "publish": [{
+      "provider": "github",
+      "releaseType": "release",
+      "owner": "SharanKumarCode",
+      "repo": "-Saki-Naturals-Electron-Angular",
+      "private": false,
+      "protocol": "https"
+    }]
   },
   "portable": {
-    "splashImage": "dist/assets/icons/saki_naturals.bmp"
+    "splashImage": "dist/assets/icons/saki_products.ico"
   },
   "mac": {
     "icon": "dist/assets/icons",

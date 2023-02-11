@@ -1,22 +1,43 @@
 .products-button-section {
-    height: 15%;
-    width: 33%;
-    float: right;
-    margin-right: 1.5%;
-    margin-top: 1%;
-}
-
-.products-button-row{
-    width: 90%;
-    height: 50%;
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
 
     display: flex;
     flex-direction: row;
 
-    justify-content: space-between;
+}
+
+.products-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.products-button-section-dummy-div {
+    flex-grow: 8;
+}
+
+.products-button-row{
+    width: 30%;
+    height: 55%;
+    flex-grow: 0.8;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
     align-content: stretch;
 
-    margin: 4% auto 8px auto;
+    margin: 2% auto 8px auto;
   }
 
 .products-button-row > button:first-child {
@@ -51,11 +72,6 @@ table{
 
 th{
     background-color: #e0e0e0;
-    color: black;
-}
-
-td{
-    color: black;
 }
 
 .mat-row .mat-cell {
@@ -66,4 +82,27 @@ td{
 
 .mat-row:hover .mat-cell {
     border-color: currentColor;
+}
+
+.no-products-div {
+    width: 100%;
+    margin-top: 4%;
+    font-style: italic;
+    text-align: center;
+  }
+
+.export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 16%;
+    margin-top: 2%;
+    margin-right: 2%;
+}
+
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
 }

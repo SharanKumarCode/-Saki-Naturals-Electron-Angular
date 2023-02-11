@@ -1,10 +1,62 @@
-<section class="sales-button-section">
+<section *ngIf="!selectedClientData" class="sales-button-section">
+  <div class="sales-title">
+    <span>SALES</span>
+  </div>
+  <div class="sales-button-section-dummy-div">
+  </div>
     <div class="sales-button-row">
       <button mat-raised-button color="accent" (click)="onAddSales()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
     </div>
 </section>
-<section class="sales-table-section">
+
+<section class="sales-filter-section" style="font-size: 12px">
+  <div class="filter-label">
+      <span style="font-size: 1.5em">Filter</span>
+  </div>
+  <mat-form-field *ngIf="!selectedClientData" class="customer-filter-type table-filters" appearance="outline">
+    <mat-select placeholder="by Customer" [(ngModel)]="selectedCustomerValue" name="customer" (selectionChange)="onFilterChange()">
+      <mat-option *ngFor="let customer of customerList" [value]="customer">
+        {{customer}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="sale-filter-type table-filters" appearance="outline">
+  <mat-select placeholder="by Sale Type" [(ngModel)]="selectedSaleTypeValue" name="saleType" (selectionChange)="onFilterChange()">
+      <mat-option *ngFor="let saleType of saleTypeList" [value]="saleType">
+      {{saleType}}
+      </mat-option>
+  </mat-select>
+  </mat-form-field>
+  <mat-form-field class="sale-status-filter-type table-filters" appearance="outline">
+      <mat-select placeholder="by Sale Status" [(ngModel)]="selectedSaleStatusValue" name="saleStatus" (selectionChange)="onFilterChange()">
+          <mat-option *ngFor="let saleStatus of saleStatusList" [value]="saleStatus">
+          {{saleStatus}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+  <mat-form-field appearance="outline" class="sale-date-filter-type table-filters">
+      <mat-label>by Sale Date range</mat-label>
+      <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate [(ngModel)]="selectedStartDate" placeholder="Start date">
+          <input matEndDate [(ngModel)]="selectedEndDate" placeholder="End date">
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+          <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChange()">Apply</button>
+          </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+      </mat-form-field>
+  <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+      Clear all filters
+  </button>
+  
+</section>
+
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="sales-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
 
@@ -16,9 +68,9 @@
     <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
   </ng-container>
 
-  <!-- Purchaser Column -->
+  <!-- Customer Column -->
   <ng-container matColumnDef="customer">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by group">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by customer">
       Customer
     </th>
     <td mat-cell *matCellDef="let element"> {{element.customer}} </td>
@@ -27,14 +79,14 @@
   <!-- Number of Products Column -->
   <ng-container matColumnDef="numberOfProducts">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by numberOfProducts">
-      Number of Products
+      # of Products
     </th>
     <td mat-cell *matCellDef="let element"> {{element.numberOfProducts}} </td>
   </ng-container>
 
   <!-- Sale Type Column -->
   <ng-container matColumnDef="saleType">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by price">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by saleType">
       Sale Type
     </th>
     <td mat-cell *matCellDef="let element"> {{element.saleType}} </td>
@@ -42,34 +94,50 @@
 
   <!-- Sold Quantity Column -->
   <ng-container matColumnDef="soldQuantity">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by sold quantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by soldQuantity">
       Sold Quantity
     </th>
     <td mat-cell *matCellDef="let element"> {{element.sellingQuantity}} </td>
   </ng-container>
 
+  <!-- Returned Quantity Column -->
+  <ng-container matColumnDef="returnedQuantity">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by returnedQuantity">
+      Returned Quantity
+    </th>
+    <td mat-cell *matCellDef="let element"> {{element.returnedQuantity}} </td>
+  </ng-container>
+
   <!-- Total Amount Column -->
   <ng-container matColumnDef="totalAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by total amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by totalAmount">
       Total Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.totalAmount | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Paid Amount Column -->
   <ng-container matColumnDef="paidAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paid amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by paidAmount">
       Paid Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.paid}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.paid | number : '1.2-2'}} </td>
+  </ng-container>
+
+  <!-- Refund Amount Column -->
+  <ng-container matColumnDef="refundAmount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by refundAmount">
+      Refund Amount
+    </th>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.refund | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Balance Amount Column -->
   <ng-container matColumnDef="balanceAmount">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balance amount">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by balanceAmount">
       Balance Amount
     </th>
-    <td mat-cell *matCellDef="let element"> &#8377; {{element.balance}} </td>
+    <td mat-cell *matCellDef="let element"> &#8377; {{element.balance | number : '1.2-2'}} </td>
   </ng-container>
 
   <!-- Remarks Column -->
@@ -80,9 +148,19 @@
     <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
   </ng-container>
 
+  <!-- Sales Status Column -->
+  <ng-container matColumnDef="salesStatus">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by salesStatus">
+      Sales Status
+    </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'status-completed': element.salesStatusCompleteFlag,
+                                                        'status-cancelled':element.salesStatusCancelledFlag,
+                                                        'status-general': !element.salesStatusCancelledFlag && !element.salesStatusCompleteFlag}"> {{element.salesStatus}} </td>
+  </ng-container>
+
   <!-- Date Column -->
   <ng-container matColumnDef="salesDate">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by salesDate">
       Sale Date
     </th>
     <td mat-cell *matCellDef="let element"> {{element.salesDate | date:'medium'}} </td>
@@ -95,4 +173,17 @@
       (click)="onRowClick(row)">
     </tr>
 </table>
+</section>
+
+<div class="no-sales-div" *ngIf="!dataSource.data.length">
+  No sales added yet..
+</div>
+
+<section class="export-btn-container">
+  <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+      Export as Excel
+  </button>
+  <button mat-flat-button color="primary" class="export-pdf-btn">
+      Export as PDF
+  </button>
 </section>

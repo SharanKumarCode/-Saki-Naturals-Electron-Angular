@@ -5,12 +5,13 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { EnumClientType, IClientData } from '../../core/interfaces/interfaces';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IClientData } from '../../core/interfaces/interfaces';
 import { ClientService } from '../../core/services/client/client.service';
 import { ClientdbService } from '../../core/services/client/clientdb.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { AddClientDialogComponent } from '../../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
+import { EnumClientType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-client-detail',
@@ -23,6 +24,8 @@ export class ClientDetailComponent implements OnInit {
   panelOpenState = false;
 
   panelTitle: string;
+  customerClientType = EnumClientType.customer;
+  supplierClientType = EnumClientType.supplier;
   clientAddress: string;
 
   displayedColumns: string[] = [
@@ -48,6 +51,7 @@ export class ClientDetailComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private clientService: ClientService,
     private clientDBService: ClientdbService,
     private notificationService: NotificationService
@@ -78,13 +82,9 @@ export class ClientDetailComponent implements OnInit {
    }
 
 
-  getClientData(): void{
-    this.clientDBService.getClientByID(this.selectedClientID)
-    .then(data=>{
-      this.selectedClientData = data[0];
-      this.panelTitle = `CLIENT DATA - [ ${this.selectedClientData.clientType} ]`;
+  setClientDetails(): void{
+    this.panelTitle = `CLIENT DATA - [ ${this.selectedClientData.clientType} ]`;
       this.clientAddress = this.selectedClientData.addressLine1 + ', ' + this.selectedClientData.addressLine2;
-    });
   }
 
   openEditDialog(editClientData: IClientData): void {
@@ -104,8 +104,16 @@ export class ClientDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.selectedClientID = this.clientService.getSelectedClientID();
-    this.getClientData();
+    this.activatedRoute.data.subscribe(data=>{
+      this.selectedClientData = data.clientData;
+      this.setClientDetails();
+      this.clientService.getSelectedClientData().subscribe(d=>{
+        this.selectedClientData = d;
+        this.setClientDetails();
+      });
+    });
   }
 
   onUpdateClient(): void {
@@ -131,12 +139,8 @@ export class ClientDetailComponent implements OnInit {
     });
   }
 
-  onRowClick(row: any): void {
-
-  }
-
   onRefresh(): void {
-    this.getClientData();
+    this.clientDBService.getClientByID(this.selectedClientID);
   }
 
   onBack(): void {

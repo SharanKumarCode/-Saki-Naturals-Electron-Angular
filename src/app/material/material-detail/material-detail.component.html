@@ -1,0 +1,61 @@
+<section class="material-button-section">
+      <div class="material-button-row">
+        <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+        <button mat-raised-button color="primary" (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+      </div>
+  </section>
+  <section class="material-data-section">
+    <mat-accordion multi>
+      <mat-expansion-panel (opened)="panelOpenState = true"
+                      (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+          <mat-panel-title>
+              MATERIAL DATA
+          </mat-panel-title>
+          <mat-panel-description>
+              {{panelOpenState ? '' : 'Expand to update or delete Material data'}}
+          </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="material-data">
+              <mat-card class="material-data-section-1">
+                <span class="material-data-key-sections">Material ID</span>
+                <span style="float: right; font-size: 1.1em;">{{materialData.materialID? materialData.createdDate : ''}}</span>
+              </mat-card>
+              <mat-card class="material-data-section-2">
+                <span class="material-data-key-sections">Created Date</span>
+                <span style="float: right; font-size: 1.1em;">{{(materialData.createdDate ? materialData.createdDate : '') | date:'MMMM dd, YYY'}}</span>
+              </mat-card>
+              <mat-card class="material-data-section-3">
+                <span class="material-data-key-sections">Stock</span>
+                <span style="float: right; font-size: 1.1em;">{{materialData.stock ? materialData.stock : ''}}</span>
+              </mat-card>
+              <mat-card class="material-data-section-4">
+                <span class="material-data-key-sections">Description</span>
+                <span style="float: right; font-size: 1.1em;">{{materialData.description ? materialData.description : ''}}</span>
+              </mat-card>
+              <mat-card class="material-data-section-5">
+                <span class="material-data-key-sections">Consumed</span>
+                <span style="float: right; font-size: 1.1em;">{{materialData.consumed ? materialData.consumed : ''}}</span>
+              </mat-card>
+              <div class="material-data-section-6">
+                <span class="material-data-key-sections">Remarks</span>
+                <span style="margin-left : 2%; font-size: 1em;">{{materialData.remarks ? materialData.remarks : '(blank)'}}</span>
+              </div>              
+          </div>
+          <mat-action-row>
+              <button mat-button color="primary" (click)="onUpdateMaterial()">UPDATE</button>
+              <button mat-button color="warn" (click)="onDeleteMaterial()"><mat-icon svgIcon="delete"></mat-icon></button>
+          </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>
+<section class="material-details-tab-section">
+  <mat-tab-group dynamicHeight="true" class="material-details-tab-group">
+      <mat-tab class="material-details-tab-section-one" label="Purchase History">
+        <app-material-purchase-history-table class="product-details-tab-section-one" [selectedMaterialData]="materialData"></app-material-purchase-history-table>
+      </mat-tab>
+      <mat-tab class="material-details-tab-section-one" label="Consumption History"> 
+        <app-material-consumption-history-table class="material-details-tab-section-one" [selectedMaterialData]="materialData"></app-material-consumption-history-table>
+        </mat-tab>
+    </mat-tab-group>
+</section>

@@ -1,0 +1,18 @@
+mat-dialog-content {
+    height: 100%;
+    overflow: hidden;
+}
+
+.prompt-button-action {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.prompt-button-action > button:nth-child(1) {
+    flex-grow: 5;
+}
+
+.prompt-button-action > button:nth-child(2) {
+    flex-grow: 1;
+}

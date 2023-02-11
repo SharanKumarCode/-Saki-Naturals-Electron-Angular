@@ -1,0 +1,28 @@
+<h1 mat-dialog-title *ngIf="editCreate !== 'Edit'">ADD MATERIAL</h1>
+<h1 mat-dialog-title *ngIf="editCreate === 'Edit'">UPDATE MATERIAL</h1>
+<mat-dialog-content class="form-container" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Material Name</mat-label>
+    <input matInput #input maxlength="50" formControlName="materialName" value="{{materialName}}"/>
+    <mat-hint align="end">{{input.value?.length || 0}}/50</mat-hint>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput #inputdesc maxlength="100" formControlName="description" value="{{description}}"></textarea>
+    <mat-hint align="end">{{inputdesc.value?.length || 0}}/100</mat-hint>
+  </mat-form-field>
+  
+  <mat-form-field appearance="outline">
+    <mat-label>Remarks</mat-label>
+    <textarea matInput #inputremarks maxlength="100" formControlName="remarks" value="{{remarks}}"></textarea>
+    <mat-hint align="end">{{inputremarks.value?.length || 0}}/100</mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<div mat-dialog-actions *ngIf="editCreate !== 'Edit'" class="form-button-container">
+  <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onSave()" style="background-color: #33b249; color: black;" >ADD MATERIAL</button>
+</div>
+<div mat-dialog-actions *ngIf="editCreate === 'Edit'" class="form-button-edit-container">
+  <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+  <button mat-button cdkFocusInitial (click)="onUpdate()" style="background-color: #33b249; color: black;" >UPDATE MATERIAL</button>
+</div>

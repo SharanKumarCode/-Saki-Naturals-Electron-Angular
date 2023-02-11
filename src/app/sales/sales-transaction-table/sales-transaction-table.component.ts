@@ -2,11 +2,14 @@ import { Component, OnInit, ViewChild, AfterViewInit, Input, OnChanges } from '@
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { ISalesData, EnumTransactionType, ISaleTransactions } from '../../core/interfaces/interfaces';
+import { ISalesData, ISaleTransactions } from '../../core/interfaces/interfaces';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { SalesdbService } from '../../core/services/sales/salesdb.service';
-import { SalesTransactionDialogComponent } from '../../dialogs/sales-transaction-dialog/sales-transaction-dialog.component';
+import {
+  SalesPurchaseTransactionDialogComponent
+ } from '../../dialogs/sales-purchase-transaction-dialog/sales-purchase-transaction-dialog.component';
 import { NotificationService } from '../../core/services/notification/notification.service';
+import { EnumTransactionType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-sales-transaction-table',
@@ -30,7 +33,6 @@ export class SalesTransactionTableComponent implements OnInit, OnChanges, AfterV
   dataSource = new MatTableDataSource([]);
 
   selectedSalesID: string;
-  salesDetail: any;
 
   constructor(
     public dialog: MatDialog,
@@ -38,16 +40,6 @@ export class SalesTransactionTableComponent implements OnInit, OnChanges, AfterV
     private salesDBservice: SalesdbService,
     private notificationService: NotificationService
   ) {
-
-    this.salesDetail = {
-      saleType: '',
-      saleDate: '',
-      clienID: '',
-      clientName: '',
-      totalSoldQuantity: 0,
-      totalPrice: 0,
-      remarks: ''
-    };
 
    }
 
@@ -69,16 +61,23 @@ export class SalesTransactionTableComponent implements OnInit, OnChanges, AfterV
 
   openTransactionEditDeleteDialog(transactionData: any): void {
     console.log('opening dialog box edit/delete transaction..');
+    let totPrice = this.selectedSaleData
+                        ?.saleEntries
+                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
+    totPrice -= this.selectedSaleData
+                ?.saleEntries.filter(d=>d.returnFlag === true)
+                .map(d=>d.price * d.quantity)
+                .reduce((partialSum, a) => partialSum + a, 0);
     const tmpDate = new Date(transactionData.transactionDate.getFullYear(),
                               transactionData.transactionDate.getMonth(),
                               transactionData.transactionDate.getDate());
     const tmpTime = `${String(transactionData.transactionDate.getHours()).padStart(2, '0')}:`+
                       `${String(transactionData.transactionDate.getMinutes()).padStart(2, '0')}`;
-    const dialogRef = this.dialog.open(SalesTransactionDialogComponent, {
+    const dialogRef = this.dialog.open(SalesPurchaseTransactionDialogComponent, {
       width: '50%',
       data: {
         transactionType: transactionData.transactionType,
-        totalPrice: this.salesDetail.totalPrice,
+        totalPrice: totPrice,
         transactionAmount: transactionData.transactionAmount,
         remarks: transactionData.remarks,
         editCreate: 'Edit',

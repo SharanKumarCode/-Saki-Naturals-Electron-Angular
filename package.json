@@ -1,11 +1,15 @@
 {
   "name": "saki-naturals",
-  "version": "11.1.0",
-  "description": "Angular 14 with Electron 19 (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/saki-naturals",
+  "version": "1.0.0",
+  "description": "Saki Products Inventory Management application with Electron and Angular",
+  "homepage": "https://github.com/SharanKumarCode/-Saki-Naturals-Electron-Angular",
   "author": {
     "name": "Sharan Kumar",
     "email": "sharankumaraero@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SharanKumarCode/-Saki-Naturals-Electron-Angular"
   },
   "keywords": [
     "angular",
@@ -37,6 +41,7 @@
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:build": "npm run build:prod && electron-builder build --publish=never",
+    "dist": "npm run build:prod && electron-builder --publish=always",
     "test": "ng test --watch=false",
     "test:watch": "ng test",
     "e2e": "npm run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
@@ -45,6 +50,7 @@
     "lint": "ng lint"
   },
   "dependencies": {
+    "@abacritt/angularx-social-login": "1.2.5",
     "@angular/animations": "14.1.2",
     "@angular/cdk": "14.1.2",
     "@angular/common": "14.1.2",
@@ -57,11 +63,13 @@
     "@angular/platform-browser": "14.1.2",
     "@angular/platform-browser-dynamic": "14.1.2",
     "@angular/router": "14.1.2",
+    "file-saver": "2.0.5",
     "moment": "2.29.4",
     "rxjs": "7.5.6",
     "sqlite3": "5.0.11",
     "tslib": "^2.4.0",
     "typeorm": "0.3.7",
+    "xlsx": "0.18.5",
     "zone.js": "~0.11.6"
   },
   "devDependencies": {

@@ -27,7 +27,6 @@ export class SalesdbService {
     .then(data=>{
 
       data.forEach(element=>{
-
         // sorting sales transactoin by date and type - ascending order
         element.saleTransactions = element.saleTransactions.length > 0 ?
                                    this.commonService.sortSalesTransactionByTypeAndDate(element.saleTransactions) :
@@ -35,16 +34,24 @@ export class SalesdbService {
 
         const saleData: ISalesData = {
           salesID: element.salesID,
-          salesDate: element.salesDate,
           saleType: element.saleType,
           gstPercentage: element.gstPercentage,
           overallDiscountPercentage: element.overallDiscountPercentage,
-          transportCharges: element.transportationCharges,
+          transportCharges: element.transportCharges,
           miscCharges: element.miscCharges,
           paymentTerms: element.paymentTerms,
           customer: element.customer,
           saleEntries: element.saleEntries,
-          saleTransactions: element.saleTransactions
+          saleTransactions: element.saleTransactions,
+          remarks: element.remarks,
+
+          salesDate: element.salesDate,
+          deliveredDate: element.deliveredDate,
+          dispatchDate: element.dispatchDate,
+          returnedDate: element.returnedDate,
+          refundedDate: element.refundedDate,
+          completedDate: element.completedDate,
+          cancelledDate: element.cancelledDate
         };
         salesList.push(saleData);
       });
@@ -92,28 +99,6 @@ export class SalesdbService {
   deleteSales(salesID: string): Promise<any>{
     console.log('INFO: Deleting sales data');
     return this.ipcRenderer.invoke('delete-sale', salesID);
-  }
-
-  getSaleTransactionsList(): void{
-    console.log('INFO: Getting all transaction data');
-    this.ipcRenderer.invoke('get-sales-transaction')
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
-  }
-
-  getSaleTransactionByID(transactionID: string): void{
-    console.log('INFO: Getting sale transaction by ID');
-    this.ipcRenderer.invoke('get-sales-transaction-by-id', transactionID)
-    .then(data=>{
-      console.log(data);
-    })
-    .catch(err=>{
-      console.error(err);
-    });
   }
 
   insertSaleTransaction(transaction: ISaleTransactions): Promise<any>{

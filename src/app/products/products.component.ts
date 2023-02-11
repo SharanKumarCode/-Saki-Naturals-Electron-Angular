@@ -5,15 +5,19 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 import { AddProductsDialogComponent } from '../dialogs/add-products-dialog/add-products-dialog.component';
-import { ProductsService } from '../core/services/products.service';
-import { Subject } from 'rxjs';
-import { ProductsdbService } from '../core/services/productsdb.service';
+import { ProductsService } from '../core/services/products/products.service';
+import { Subject, takeUntil } from 'rxjs';
+import { ProductsdbService } from '../core/services/products/productsdb.service';
 import * as _moment from 'moment';
 import { Router } from '@angular/router';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { IProductData } from '../core/interfaces/interfaces';
+import { ICompanyData, IProductData } from '../core/interfaces/interfaces';
 import { ProductGroupDialogComponent } from '../dialogs/product-group-dialog/product-group-dialog.component';
+import { ExportService } from '../core/services/export.service';
+import { SettingsService } from '../core/services/settings/settings.service';
+import { CompanydbService } from '../core/services/settings/companydb.service';
+import { NotificationService } from '../core/services/notification/notification.service';
 
 const moment = _moment;
 
@@ -30,16 +34,19 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
                                 'serial_number',
                                 'product_name',
                                 'group',
-                                'stock',
                                 'priceDirectSale',
                                 'priceReseller',
                                 'priceDealer',
+                                'inProduction',
+                                'stock',
+                                'toBeSold',
                                 'sold',
-                                'createdDate'];
+                                'defectQuantity'];
   dataSource = new MatTableDataSource([]);
 
   private productdata: IProductData;
-  private productListObservable: Subject<IProductData[]>;
+  private destroy$ = new Subject();
+  private destroyCompanyData$ = new Subject();
   private path = 'assets/icon/';
 
   constructor(
@@ -47,6 +54,10 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
     public dialog: MatDialog,
     private liveAnnouncer: LiveAnnouncer,
     private productService: ProductsService,
+    private exportService: ExportService,
+    private settingsService: SettingsService,
+    private companyDBservice: CompanydbService,
+    private notificationService: NotificationService,
     private router: Router,
     private domSanitizer: DomSanitizer,
     private matIconRegistry: MatIconRegistry
@@ -69,19 +80,6 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
     }
 
-  ngOnInit(): void {
-    this.productListObservable = this.productService.getProductList();
-    this.getProducts();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
-  ngOnDestroy(): void {
-    // this.productListObservalble.unsubscribe();
-  }
-
   openProductGroupDialog(): void {
     console.log('INFO : Opening dialog box add product group..');
     const dialogRef = this.dialog.open(ProductGroupDialogComponent, {
@@ -102,33 +100,30 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('INFO : The dialog box is closed');
-      console.log(result);
       if (result){
         this.productdbservice.insertProduct(result);
       }
     });
   }
 
-  getProducts(){
-    this.productdbservice.getProducts();
-    this.productListObservable.subscribe(d=>{
-      d.map((value, index)=>{
-        value.createdDate = value.createdDate;
-        return {
-          ...value,
-          serialNumber: index
-        };
-      }
-      );
-      const tmp = [];
-      d.forEach((element, index)=>{
-        tmp.push({
-          ...element,
-          serialNumber: index + 1
-        });
+  setProductsData(data: IProductData[]){
+    data.map((value, index)=>{
+      value.createdDate = value.createdDate;
+      return {
+        ...value,
+        serialNumber: index
+      };
+    }
+    );
+    const tmp = [];
+    data.forEach((element, index)=>{
+      tmp.push({
+        ...element,
+        defectQuantity: 0,
+        serialNumber: index + 1
       });
-      this.dataSource = new MatTableDataSource(tmp);
     });
+    this.dataSource = new MatTableDataSource(tmp);
   }
 
   onRefresh(){
@@ -136,8 +131,85 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   onRowClick(e: any){
-    this.productService.updateSelectedProductID(e.productID);
-    this.router.navigate(['product/detail']);
+    this.router.navigate(['product/detail', e.productID]);
+  }
+
+  onExportAsExcel(): void {
+    const columnNames = [
+      'ProductID',
+      'Product Name',
+      'Product Group',
+      'Price - Direct Sale',
+      'Price - Reseller',
+      'Price - Dealer',
+      'In Production',
+      'Stock',
+      'In Sale Transit',
+      'Sold',
+      'Defective',
+      'Created Date',
+      'Remarks'
+    ];
+    const exportFileContent = [];
+    this.dataSource.data.forEach(elem=>{
+    const tmp = {};
+    tmp[columnNames[0]] = elem.productID;
+    tmp[columnNames[1]] = elem.productName;
+    tmp[columnNames[2]] = elem.productGroupName;
+    tmp[columnNames[3]] = elem.priceDirectSale;
+    tmp[columnNames[4]] = elem.priceReseller;
+    tmp[columnNames[5]] = elem.priceDealer;
+    tmp[columnNames[6]] = elem.inProduction;
+    tmp[columnNames[7]] = elem.stock;
+    tmp[columnNames[8]] = elem.toBeSold;
+    tmp[columnNames[9]] = elem.sold;
+    tmp[columnNames[10]] = 0;
+    tmp[columnNames[11]] = elem.createdDate;
+    tmp[columnNames[12]] = elem.remarks;
+
+    exportFileContent.push(tmp);
+    });
+    this.exportService.exportAsExcel(exportFileContent, 'products_list');
+  }
+
+  checkIfCompanyDataExists(): void {
+    this.companyDBservice.getCompany();
+    this.settingsService.getSelectedCompanyData().pipe(takeUntil(this.destroyCompanyData$)).subscribe(data=>{
+      if (!data?.companyID) {
+        const initCompanyData: ICompanyData = this.settingsService.getInitCompanyData();
+        this.companyDBservice.initialiseCompany(initCompanyData)
+        .then(d=>{
+          this.destroyCompanyData$.next(true);
+          this.router.navigate(['settings/add_update_company', d.companyID]);
+          this.notificationService.updateSnackBarMessageSubject('Please provide Company Data');
+        })
+        .catch(err=>{
+          console.log(err);
+          this.notificationService.updateSnackBarMessageSubject('Unable to get company Data');
+        });
+      } else if (data?.companyName === '-') {
+        this.router.navigate(['settings/add_update_company', data.companyID]);
+        this.destroyCompanyData$.next(true);
+        this.notificationService.updateSnackBarMessageSubject('Please provide Company Data');
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.checkIfCompanyDataExists();
+    this.productdbservice.getProducts();
+    this.productService.getProductList().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.setProductsData(data);
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroyCompanyData$.next(true);
   }
 
   announceSortChange(sortState: Sort) {
@@ -147,5 +219,4 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy{
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }
-
 }

@@ -1,0 +1,59 @@
+<mat-stepper [linear]="true" #stepper>
+    <ng-template matStepperIcon="edit" let-index="index">
+		{{index +1}}
+	</ng-template>
+  <ng-template matStepperIcon="done">
+		<mat-icon svgIcon="tick"></mat-icon>
+	</ng-template>
+  <ng-template matStepperIcon="home">
+		<mat-icon svgIcon="tick"></mat-icon>
+	</ng-template>
+    <mat-step [stepControl]="productionInitiateFormGroup" label="Production intiated date">
+        <form [formGroup]="productionInitiateFormGroup">
+        <ng-template matStepLabel>Production Initiated</ng-template>
+        <mat-form-field appearance="outline">
+            <mat-label>Production initated Date</mat-label>
+            <input matInput [matDatepicker]="dp" formControlName="productionInitiatedDate">
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+          <button mat-button (click)="resetDates(stepper);">Reset</button>
+        </div>
+      </form>
+    </mat-step>
+      <mat-step *ngIf="!productionData.cancelledDate" [stepControl]="completedFormGroup" label="Completed date">
+        <form [formGroup]="completedFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Completed Date</mat-label>
+                <input matInput [min]="minCompletedDate" [matDatepicker]="dp6" formControlName="completedDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                <mat-datepicker #dp6></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onProductionComplete()">Done</button>
+            <button mat-button *ngIf="productionData.completedDate" (click)="onProductionInComplete()">Mark as InComplete</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step *ngIf="productionData.cancelledDate" [stepControl]="cancelledFormGroup" label="Cancelled date">
+        <form [formGroup]="cancelledFormGroup">
+            <mat-form-field appearance="outline">
+                <mat-label>Cancelled Date</mat-label>
+                <input matInput [matDatepicker]="dp7" formControlName="cancelledDate">
+                <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="dp7"></mat-datepicker-toggle>
+                <mat-datepicker #dp7></mat-datepicker>
+            </mat-form-field>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="resetDates(stepper);">Reset</button>
+          </div>
+        </form>
+      </mat-step>
+  </mat-stepper>

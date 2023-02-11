@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { EnumSaleStatus, ISalesData } from '../../interfaces/interfaces';
+import { ISalesData } from '../../interfaces/interfaces';
+import { EnumSaleStatus } from '../../interfaces/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,22 @@ export class SalesService {
 
    updateSelectedSaleData(data: ISalesData): void {
       this.selectedSaleDataSubject$.next(data);
+   }
+
+   getNetSalePrice(saleData: ISalesData): number {
+    let totPrice = saleData.saleEntries
+                      .filter(d=>d.returnFlag === false)
+                      .map(d=>(d.price * d.quantity) - (d.price * d.quantity * d.discountPercentage / 100))
+                      .reduce((partialSum, a) => partialSum + a, 0);
+    totPrice -= saleData.saleEntries
+                .filter(d=>d.returnFlag === true)
+                .map(d=>(d.price * d.quantity)
+                      - (d.price * d.quantity * d.discountPercentage / 100))
+                .reduce((partialSum, a) => partialSum + a, 0);
+    totPrice -= saleData.overallDiscountPercentage * totPrice / 100;
+    totPrice += saleData.gstPercentage * totPrice / 100;
+    totPrice += saleData.transportCharges + saleData.miscCharges;
+    return totPrice;
    }
 
    getSaleStatus(saleData: ISalesData): EnumSaleStatus {

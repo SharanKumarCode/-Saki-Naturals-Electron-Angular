@@ -1,19 +1,28 @@
 <section class="client-button-section">
+  <div class="client-title">
+    <span>CLIENT</span>
+  </div>
+  <div class="client-button-section-dummy-div">
+  </div>
     <div class="client-button-row">
       <button mat-raised-button (click)="openAddDialog()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
       <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
     </div>
 </section>
+
 <section class="client-filter-section">
-  <mat-form-field class="client-filter-type" appearance="outline">
-    <mat-select placeholder="Filter by Client type" [(ngModel)]="selectedValue" name="clientType" (selectionChange)="onFilterChange($event)">
+  <div class="filter-label">
+    <span style="font-size: 1.5em">Filter</span>
+  </div>
+  <mat-form-field class="client-filter-type table-filters" appearance="outline">
+    <mat-select placeholder="Filter by Client type" [(ngModel)]="selectedValue" name="clientType" (selectionChange)="onFilterChange()">
       <mat-option *ngFor="let clientType of clientTypes" [value]="clientType.value">
         {{clientType.viewValue}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 </section>
-<section class="client-table-section">
+<section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="client-table-section">
   <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
     class="mat-elevation-z8">
 
@@ -80,4 +89,17 @@
       (click)="onRowClick(row)">
     </tr>
 </table>
+</section>
+
+<div class="no-client-div" *ngIf="!dataSource.data.length">
+  No clients added yet..
+</div>
+
+<section class="export-btn-container">
+  <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+      Export as Excel
+  </button>
+  <button mat-flat-button color="primary" class="export-pdf-btn">
+      Export as PDF
+  </button>
 </section>

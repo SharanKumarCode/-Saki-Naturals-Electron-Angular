@@ -1,0 +1,191 @@
+<section class="add-update-purchase-button-section">
+    <div class="add-update-purchase-button-row">
+      <button *ngIf="componentBehaviourFlag" mat-raised-button style="background-color: #2be813; color: black;" (click)="onCreatePurchase()">CREATE PURCHASE</button>
+      <button *ngIf="!componentBehaviourFlag" mat-raised-button style="background-color: #2be813; color: black;" (click)="onUpdatePurchase()">UPDATE PURCHASE</button>
+      <button mat-icon-button (click)="onBack()"><mat-icon class="icon-display" svgIcon="back"></mat-icon></button>
+    </div>
+</section>
+<section class="add-update-purchase-container-one" [formGroup]="form">
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Purchase date</mat-label>
+            <input matInput [matDatepicker]="dp" [formControl]="date">
+            <mat-hint align="end">MMMM DD, YYYY</mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+        </mat-form-field>
+    </div>
+      <!-- Supplier Data -->
+    <div>
+      <mat-form-field appearance="outline">
+          <mat-label>Supplier</mat-label>
+          <mat-select formControlName="supplier" >
+              <mat-option *ngFor="let supplier of suppliers" [value]="supplier.clientID">
+                  {{supplier.clientName}}
+              </mat-option>
+              </mat-select>
+      </mat-form-field>
+  </div> 
+    <div class="add-material-button-container">
+        <button mat-raised-button style="background-color: #1f8612; color: white; height: 100%;" (click)="onAddMaterial()">ADD MATERIAL</button>   
+    </div>   
+</section>
+
+<section @slideDownUp *ngIf="addPurchaseEntryFlag" class="add-update-purchase-add-entry-container">
+  <mat-card>
+    <mat-card-content [formGroup]="formPurchaseEntry">
+
+      <div class="add-update-purchase-add-entry-container-row-one">
+        <mat-form-field appearance="outline">
+          <mat-label>Material Name</mat-label>
+          <mat-select formControlName="materialName" >
+              <mat-option *ngFor="let material of materials" (onSelectionChange)="onMaterialChange($event)" [value]="material.materialID">
+                  {{material.materialName}}
+              </mat-option>
+              </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Net Price</mat-label>
+          <input matInput type="number" class="price-right-align" formControlName="netPrice" value="{{netPrice}}"/>
+          <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input matInput min="1" type="number" formControlName="quantity" (input)="onDiscountAmountChange()" value="{{quantity}}"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Discount %</mat-label>
+          <input matInput min="0" type="number" class="price-right-align" formControlName="discountPercentage" (input)="onDiscountPercentageChange()" value="{{discountPercentage}}"/>
+          <span matPrefix>%</span>
+        </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="always">
+          <mat-label>Discount Amount</mat-label>
+          <input matInput min="0" type="number" class="price-right-align" formControlName="discountAmount" (input)="onDiscountAmountChange()" value="{{discountAmount}}"/>
+          <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+      </div>
+      <div class="add-update-purchase-add-entry-container-row-second">
+        <mat-form-field class="purchase-entry-total-price" appearance="outline" floatLabel="always">
+          <mat-label>Gross Price</mat-label>
+          <input matInput type="number" class="price-right-align" formControlName="materialTotalPrice" value="{{materialTotalPrice}}"/>
+          <span matPrefix>&#8377;&nbsp;</span>
+        </mat-form-field>
+        <div class="purchase-entry-dummy-div"></div>
+        <button class="purchase-entry-add-btn" mat-raised-button color="accent" (click)="onAddPurchaseEntry()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+        <button class="purchase-entry-cancel-btn" mat-icon-button (click)="onPurchaseEntryCancel()"><mat-icon class="icon-display" style="color: rgb(206, 36, 36);" svgIcon="close"></mat-icon></button>
+      </div>
+      
+    </mat-card-content>
+  </mat-card>
+  <br>
+</section>
+
+<section class="add-update-purchase-container-two">
+
+    <section class="material-list-table mat-elevation-z8" tabindex="0">
+        <table mat-table [dataSource]="dataSourceMaterialList">
+      
+          <!-- Material Name Column -->
+          <ng-container matColumnDef="materialName">
+            <th mat-header-cell *matHeaderCellDef> Material Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.material.materialName}} </td>
+          </ng-container>
+      
+          <!-- Net price Column -->
+          <ng-container matColumnDef="netPrice">
+            <th mat-header-cell *matHeaderCellDef> Net Price </th>
+            <td mat-cell *matCellDef="let element"> &#8377;&nbsp; {{element.price}} </td>
+          </ng-container>
+
+          <!-- Quantity Column -->
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+          </ng-container>
+
+          <!-- Discount % Column -->
+          <ng-container matColumnDef="discountPercentage">
+            <th mat-header-cell *matHeaderCellDef> Discount % </th>
+            <td mat-cell *matCellDef="let element"> {{element.discountPercentage | number : '1.2-2'}} </td>
+          </ng-container>
+
+          <!-- Discount Amount Column -->
+          <ng-container matColumnDef="discountAmount">
+            <th mat-header-cell *matHeaderCellDef> Discount Amount </th>
+            <td mat-cell *matCellDef="let element"> &#8377;&nbsp; {{element.discountPercentage * element.price * element.quantity / 100 | number : '1.2-2'}} </td>
+          </ng-container>
+
+          <!-- Amount Column -->
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef> Amount </th>
+            <td mat-cell *matCellDef="let element" #input> &#8377;&nbsp; {{(element.price * element.quantity) - (element.price * element.quantity * element.discountPercentage / 100) | number : '1.2-2'}} </td>
+          </ng-container>
+
+          <!-- Delete Column -->
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element" style="width: 6%;"> <button mat-icon-button (click)="onDeletePurchaseEntry(element.material.materialID)"><mat-icon class="icon-display" style="color: rgb(206, 36, 36);" svgIcon="close"></mat-icon></button></td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsMaterialList; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsMaterialList;"></tr>
+        </table>
+        
+      </section>
+      <div class="no-materials-div" *ngIf="!dataSourceMaterialList.data.length">
+        No materials added yet..
+    </div>
+
+</section>
+
+<section class="add-update-purchase-container-three" [formGroup]="form">
+    <!-- Remarks -->
+    <mat-form-field class="grid-element-1" appearance="outline">
+      <mat-label>Remarks</mat-label>
+      <input matInput type="text" formControlName="remarks" value="{{remarks}}"/>
+      </mat-form-field>
+    <!-- Payment Details -->
+    <mat-form-field class="grid-element-2" appearance="outline" floatLabel="always">
+      <mat-label>Overall Discount %</mat-label>
+      <input matInput min="0" max="100" type="number" class="price-right-align" formControlName="overallDiscountPercentage" (input)="onOverallDiscountPercentageChange()" value="{{overallDiscountPercentage}}"/>
+      <span matPrefix>%</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-3" appearance="outline" floatLabel="always">
+      <mat-label>Overall Discount Amount</mat-label>
+      <input matInput min="0" type="number" class="price-right-align" formControlName="overallDiscountAmount" (input)="onOverallDiscountAmountChange()" value="{{overallDiscountAmount}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-4" appearance="outline" floatLabel="always">
+      <mat-label>GST %</mat-label>
+      <input matInput min="0" max="100" type="number" class="price-right-align" formControlName="gstPercentage" (input)="onGSTpercentageChange()" value="{{gstPercentage}}"/>
+      <span matPrefix>%</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-5" appearance="outline" floatLabel="always">
+      <mat-label>GST Amount</mat-label>
+      <input matInput min="0" type="number" class="price-right-align" formControlName="gstAmount" (input)="onGSTamountChange()" value="{{gstAmount}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-6" appearance="outline" floatLabel="always">
+      <mat-label>Transportation Charges</mat-label>
+      <input matInput min="0" type="number" class="price-right-align" (input)="setAmounts()" formControlName="transportCharges" value="{{transportCharges}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-7" appearance="outline" floatLabel="always">
+      <mat-label>Misc. Charges</mat-label>
+      <input matInput min="0" type="number" class="price-right-align" (input)="setAmounts()" formControlName="miscCharges" value="{{miscCharges}}"/>
+      <span matPrefix>&#8377;&nbsp;</span>
+    </mat-form-field>
+    <mat-form-field class="grid-element-8" appearance="outline" floatLabel="always">
+      <mat-label>Payment Terms</mat-label>
+      <input matInput min="0" type="number" class="price-right-align" formControlName="paymentTerms" value="{{paymentTerms}}"/>
+      <span matSuffix>&nbsp;&nbsp;days</span>
+    </mat-form-field>
+    <!-- Total Details -->
+    <div class="grid-element-9">
+      <mat-card>
+        <span>Total Amount</span>
+        <span style="float: right; font-size: 1.1em;">&#8377; {{totalAmount | number : '1.2-2'}}</span>
+      </mat-card>
+    </div>
+    
+</section>
