@@ -1,14 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppUpdateService } from '../core/services/app-update.service';
 import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { ICompanyData } from '../core/interfaces/interfaces';
+import { Router } from '@angular/router';
+import { CompanydbService } from '../core/services/settings/companydb.service';
+import { SettingsService } from '../core/services/settings/settings.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
 
   statusMessage: string;
   name: string;
@@ -20,10 +24,15 @@ export class SettingsComponent implements OnInit {
   appVersion: string;
   selectedCompanyData: ICompanyData;
   categories: any[];
+  private destroy$ = new Subject();
+
 
   constructor(
     private appUpdateService: AppUpdateService,
-    private socialAuthService: SocialAuthService
+    private socialAuthService: SocialAuthService,
+    private companyDBservice: CompanydbService,
+    private settingsService: SettingsService,
+    private route: Router
   ) {
 
     this.categories = [
@@ -67,31 +76,14 @@ export class SettingsComponent implements OnInit {
   }
 
   onUpdateCompany(): void {
-
+    this.route.navigate(['settings/add_update_company', this.selectedCompanyData.companyID]);
   }
 
   signOut(): void {
     this.socialAuthService.signOut();
   }
 
-  ngOnInit(): void {
-    // this.photoUrl = this.defaultPhotoUrl;
-    // this.socialAuthService.authState.subscribe((user)=>{
-    //   this.name = user.name;
-    //   this.email = user.email;
-    //   this.photoUrl = user.photoUrl ? user.photoUrl : this.defaultPhotoUrl;
-    // });
-    this.name = 'sharan kumar';
-    this.email = 'sharankumaraero@gmail.com';
-    this.photoUrl = this.defaultPhotoUrl;
-    this.appUpdateService.getAppVersion()
-    .then(data=>{
-      console.log(data);
-      this.appVersion = data;
-    });
-
-    this.lastBackup = new Date();
-
+  setDummyData(): void {
     this.selectedCompanyData = {
       companyID: '8956-4684asd-awd546awd584-46a8wd84',
       companyName: 'Saki Products',
@@ -111,6 +103,33 @@ export class SettingsComponent implements OnInit {
       msmeNumber: 'DL01F0006288',
       createdDate: new Date()
     };
+  }
+
+  ngOnInit(): void {
+    this.photoUrl = this.defaultPhotoUrl;
+    this.socialAuthService.authState.subscribe((user)=>{
+      this.name = user.name;
+      this.email = user.email;
+      this.photoUrl = user.photoUrl ? user.photoUrl : this.defaultPhotoUrl;
+    });
+
+    this.appUpdateService.getAppVersion()
+    .then(data=>{
+      console.log(data);
+      this.appVersion = data;
+    });
+
+    this.lastBackup = new Date();
+    this.setDummyData();
+    this.companyDBservice.getCompany();
+    this.settingsService.getSelectedCompanyData().pipe(takeUntil(this.destroy$)).subscribe(data=>{
+      this.selectedCompanyData = data;
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 
 }

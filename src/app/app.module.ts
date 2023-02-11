@@ -92,6 +92,7 @@ import { EmployeeSalaryHistoryTableComponent } from './employee/employee-salary-
 import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
 
 
 // AoT requires an exported function for factories
@@ -155,7 +156,8 @@ const lang = 'en-US';
     CalendarComponent,
     EmployeeAttendanceHistoryTableComponent,
     EmployeeSalaryHistoryTableComponent,
-    LoginComponent
+    LoginComponent,
+    AddUpdateCompanyComponent
 
     ],
   imports: [

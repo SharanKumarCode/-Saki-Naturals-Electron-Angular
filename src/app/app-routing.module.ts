@@ -31,6 +31,8 @@ import { EmployeeDetailComponent } from './employee/employee-detail/employee-det
 import { EmployeeDataResolverService } from './core/services/employee/employee-data-resolver.service';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
+import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
+import { CompanyDataResolverService } from './core/services/settings/company-data-resolver.service';
 
 const routes: Routes = [
   {
@@ -109,7 +111,6 @@ const routes: Routes = [
       employeeData: EmployeeDataResolverService
     }
   },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardServiceService] },
   { path: 'sale/transaction/:selectedSalesID',
     component: SalesTransactionComponent,
     canActivate: [AuthGuardServiceService],
@@ -123,6 +124,15 @@ const routes: Routes = [
   resolve: {
     saleData: SaleDataResolverService
   }},
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardServiceService] },
+  { path: 'settings/add_update_company', component: AddUpdateCompanyComponent, canActivate: [AuthGuardServiceService] },
+  { path: 'settings/add_update_company/:selectedCompanyID',
+    component: AddUpdateCompanyComponent,
+    canActivate: [AuthGuardServiceService],
+    resolve: {
+      companyData: CompanyDataResolverService
+    }
+  },
   {
     path: '**',
     component: PageNotFoundComponent
