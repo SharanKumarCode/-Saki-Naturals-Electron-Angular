@@ -72,3 +72,10 @@ export enum EnumClientType {
     leave = 'Leave',
     cHoliday = 'Company Holiday',
   }
+
+  export enum EnumThemes {
+    deeppurpleAmber = 'deeppurple-amber',
+    indigoPink = 'indigo-pink',
+    pinkBluegrey = 'pink-bluegrey',
+    purpleGreen = 'purple-green',
+  }

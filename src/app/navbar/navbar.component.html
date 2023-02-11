@@ -9,16 +9,16 @@
                            [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
       <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
                    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
-        <mat-nav-list>
-          <a routerLink="/products" mat-list-item><mat-icon svgIcon="products"></mat-icon><span class="nav-link-item">Products</span></a>
-          <a routerLink="/production" mat-list-item><mat-icon svgIcon="production"></mat-icon><span class="nav-link-item">Production</span></a>
-          <a routerLink="/sales" mat-list-item><mat-icon svgIcon="sales"></mat-icon><span class="nav-link-item">Sales</span></a>
-          <a routerLink="/materials" mat-list-item><mat-icon svgIcon="material"></mat-icon><span class="nav-link-item">Material</span></a>
-          <a routerLink="/purchase" mat-list-item><mat-icon svgIcon="purchase"></mat-icon><span class="nav-link-item">Purchase</span></a>
-          <a routerLink="/clients" mat-list-item><mat-icon svgIcon="clients"></mat-icon><span class="nav-link-item">Clients</span></a>
-          <a routerLink="/expense" mat-list-item><mat-icon svgIcon="expense"></mat-icon><span class="nav-link-item">Expense</span></a>
-          <a routerLink="/employee" mat-list-item><mat-icon svgIcon="employee"></mat-icon><span class="nav-link-item">Employee</span></a>
-          <a routerLink="/settings" mat-list-item><mat-icon svgIcon="settings"></mat-icon><span class="nav-link-item">Settings</span></a>
+        <mat-nav-list style="overflow: hidden; height: auto;">
+          <a routerLink="/products" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="products"></mat-icon><span class="nav-link-item">Products</span></a>
+          <a routerLink="/production" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="production"></mat-icon><span class="nav-link-item">Production</span></a>
+          <a routerLink="/sales" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="sales"></mat-icon><span class="nav-link-item">Sales</span></a>
+          <a routerLink="/materials" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="material"></mat-icon><span class="nav-link-item">Material</span></a>
+          <a routerLink="/purchase" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="purchase"></mat-icon><span class="nav-link-item">Purchase</span></a>
+          <a style="margin-top: 20%;" routerLink="/clients" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="clients"></mat-icon><span class="nav-link-item">Clients</span></a>
+          <a routerLink="/employee" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="employee"></mat-icon><span class="nav-link-item">Employee</span></a>
+          <a routerLink="/expense" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="expense"></mat-icon><span class="nav-link-item">Expense</span></a>
+          <a style="margin-top: 330%;" routerLink="/settings" routerLinkActive="active-nav-item mat-accent" mat-list-item><mat-icon svgIcon="settings"></mat-icon><span class="nav-link-item">Settings</span></a>
         </mat-nav-list>
       </mat-sidenav>
   

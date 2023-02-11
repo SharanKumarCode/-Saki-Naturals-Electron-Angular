@@ -1,10 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 
+import { MatChipsModule } from '@angular/material/chips';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,12 +28,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatCommonModule} from '@angular/material/core';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -90,6 +89,10 @@ import {
   EmployeeAttendanceHistoryTableComponent
 } from './employee/employee-attendance-history-table/employee-attendance-history-table.component';
 import { EmployeeSalaryHistoryTableComponent } from './employee/employee-salary-history-table/employee-salary-history-table.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
+import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
 
 
 // AoT requires an exported function for factories
@@ -152,18 +155,23 @@ const lang = 'en-US';
     EmployeeDetailComponent,
     CalendarComponent,
     EmployeeAttendanceHistoryTableComponent,
-    EmployeeSalaryHistoryTableComponent
+    EmployeeSalaryHistoryTableComponent,
+    LoginComponent,
+    AddUpdateCompanyComponent
 
     ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    NoopAnimationsModule,
+    MatCommonModule,
     HttpClientModule,
     CoreModule,
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    SocialLoginModule,
 
     MatSidenavModule,
     MatToolbarModule,
@@ -185,6 +193,8 @@ const lang = 'en-US';
     MatStepperModule,
     MatRadioModule,
     MatSlideToggleModule,
+    MatChipsModule,
+
 
     TranslateModule.forRoot({
       loader: {
@@ -202,6 +212,18 @@ const lang = 'en-US';
     },
 
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: true,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('78240900209-7t7he8b9tbgt22d54gflduvfcavhisqe.apps.googleusercontent.com')
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }, AuthGuardServiceService
   ],
   bootstrap: [AppComponent]
 })

@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _moment from 'moment';
 import {
-  EnumClientType,
           IClientData,
           IMaterialData,
           IPurchaseData,
@@ -20,7 +19,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { EnumRouteActions } from '../../core/interfaces/enums';
+import { EnumClientType, EnumRouteActions } from '../../core/interfaces/enums';
 
 const moment = _moment;
 

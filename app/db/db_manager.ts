@@ -31,6 +31,7 @@ import * as materialDB from './materials_db_manager';
 import * as purchaseDB from './purchase_db_manager';
 import * as productionDB from './production_db_manager';
 import * as employeeDB from './employee_db_manager';
+import * as companyDB from './company_db_manager';
 import * as stockSoldConsumedDB from './stock_sold_consumed_db_manager';
 
 import {existsSync} from 'fs';
@@ -60,7 +61,8 @@ const AppDataSource = new DataSource({
         ProductionEntry,
         AttendanceEntry,
         SalaryTransaction,
-        Employee
+        Employee,
+        Company
          ],
 })
 
@@ -82,5 +84,6 @@ export {
     purchaseDB,
     productionDB,
     employeeDB,
+    companyDB,
     stockSoldConsumedDB
 }

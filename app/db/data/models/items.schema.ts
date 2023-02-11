@@ -12,7 +12,13 @@ export class Company
 	companyName: string;
 
 	@Column()
-	description: string;
+	proprietor: string;
+
+	@Column()
+	gstNumber: string;
+
+	@Column()
+	msmeNumber: string;
 
 	@Column()
 	contact1: string;
@@ -21,10 +27,39 @@ export class Company
 	contact2: string;
 
 	@Column()
-	contact3: string;
+	landline: string;
 
 	@Column()
-	address: string;
+	email: string;
+
+	@Column()
+	addressLine1: string;
+
+	@Column()
+	addressLine2: string;
+
+	@Column()
+	city: string;
+
+	@Column()
+	state: string;
+
+	@Column()
+	country: string;
+
+	@Column()
+	pincode: string;
+
+	@Column({
+		nullable: true
+	})
+	theme: string;
+
+	@Column({
+		type: 'datetime',
+		nullable: true
+	})
+	lastBackup: Date;
 
 	@CreateDateColumn()
 	createdDate: Date;

@@ -65,7 +65,6 @@ async function deleteEmployee(employeeID: string){
 
 async function insertEmployee(employeeData: IEmployeeData){
     console.log("INFO: Inserting employee data")
-    console.log(employeeData)
     const employeeEntity = new Employee()
     const ignoreEmployeePropList = ['editCreate', 'deleteFlag', 'createdDate', 'employeeID', 'employeeSalaryEntries', 'employeeAttendanceEntries']
     if (!employeeData.exitDate) {
@@ -77,8 +76,6 @@ async function insertEmployee(employeeData: IEmployeeData){
         }
         
     }
-
-    console.log(employeeEntity);
     
     return await AppDataSource.getRepository(Employee).save(employeeEntity)
 }

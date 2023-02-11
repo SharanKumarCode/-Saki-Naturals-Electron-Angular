@@ -1,3 +1,101 @@
-<p>Current App Version : {{appVersion}}</p>
+<mat-card class="login-details-container">
+    <span>Logged in as</span>
+    <span>{{name}}</span>
+    <span>{{email}}</span>
+    <img [src]="photoUrl" width="60px" height="60px" style="float: right; margin: 0px;" />
+    <button mat-raised-button color="warn" (click)="signOut()">Sign Out</button>
+</mat-card>
 
-<button mat-raised-button color="primary" (click)="checkForUpdate()">Check for Update</button>
+<mat-card class="app-details-container">
+    <span>Current App Version</span>
+    <span>{{appVersion}}</span>
+    <button mat-raised-button color="primary" (click)="checkForUpdate()">Check for Update</button>
+</mat-card>
+
+<div class="theme-select-container">
+    <mat-chip-list #chipList [multiple]="true" [selectable]="true">
+        <mat-chip *ngFor="let category of categories" #chip="matChip" (click)="onChipClicked(category)" [selected]="category.selected" [selectable]="true" class="theme-select-chip">
+            {{category.name}}
+        </mat-chip>
+        </mat-chip-list>
+</div>
+
+<mat-card class="company-detail-container">
+    <mat-card-title>COMPANY DETAILS</mat-card-title>
+    <mat-card-content class="company-details-data">
+        <mat-card class="company-data-section-1">
+            <span class="company-data-key-sections">Company ID</span>
+            <span style="float: right; font-size: 1.1em;">{{(selectedCompanyData.companyID ? selectedCompanyData.companyID : '')}}</span>
+          </mat-card>
+          <mat-card class="company-data-section-2">
+              <span class="company-data-key-sections">Created Date</span>
+              <span style="float: right; font-size: 1.1em;">{{(selectedCompanyData.createdDate ? selectedCompanyData.createdDate : '') | date:'medium'}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-3">
+              <span class="company-data-key-sections">Company Name</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.companyName ? selectedCompanyData.companyName : ''}}</span>
+            </mat-card>
+        <mat-card class="company-data-section-4">
+            <span class="company-data-key-sections">Proprietor</span>
+            <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.proprietor ? selectedCompanyData.proprietor : ''}}</span>
+            </mat-card>
+        <mat-card class="company-data-section-5">
+            <span class="company-data-key-sections">GSTIN</span>
+            <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.gstNumber ? selectedCompanyData.gstNumber : ''}}</span>
+        </mat-card>
+        <mat-card class="company-data-section-6">
+            <span class="company-data-key-sections">MSME #</span>
+            <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.msmeNumber ? selectedCompanyData.msmeNumber : ''}}</span>
+        </mat-card>
+          <mat-card class="company-data-section-7">
+              <span class="company-data-key-sections">Primary Contact</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.contact1 ? selectedCompanyData.contact1 : ''}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-8">
+              <span class="company-data-key-sections">Secondary Contact</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.contact2 ? selectedCompanyData.contact2 : '(blank)'}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-9">
+              <span class="company-data-key-sections">Landline</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.landline ? selectedCompanyData.landline : '(blank)'}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-10">
+              <span class="company-data-key-sections">Email</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.email ? selectedCompanyData.email : '(blank)'}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-11">
+              <span class="company-data-key-sections">Address</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.addressLine1 ? selectedCompanyData.addressLine1 + ', ' + selectedCompanyData.addressLine2 : '(blank)'}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-12">
+              <span class="company-data-key-sections">City / District</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.city ? selectedCompanyData.city : ''}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-13">
+              <span class="company-data-key-sections">State / Province</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.state ? selectedCompanyData.state : ''}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-14">
+              <span class="company-data-key-sections">Country</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.country ? selectedCompanyData.country : ''}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-15">
+              <span class="company-data-key-sections">PIN Code</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.pincode ? selectedCompanyData.pincode : ''}}</span>
+            </mat-card>
+          <mat-card class="company-data-section-16">
+              <span class="company-data-key-sections">Remarks</span>
+              <span style="float: right; font-size: 1.1em;">{{selectedCompanyData.remarks ? selectedCompanyData.remarks : ''}}</span>
+            </mat-card>
+    </mat-card-content>
+    <mat-card-actions>
+        <button style="float: right; background-color: greenyellow; margin-right: 2%;" mat-raised-button (click)="onUpdateCompany()">UPDATE COMPANY DATA</button>
+    </mat-card-actions>
+    
+</mat-card>
+
+<mat-card class="backup-details-container">
+    <span style="font-style: italic;">last backup at</span>
+    <span>{{lastBackup | date:'medium'}}</span>
+    <button mat-raised-button color="accent" (click)="checkForUpdate()">Backup Data</button>
+</mat-card>

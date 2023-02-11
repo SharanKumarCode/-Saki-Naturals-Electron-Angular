@@ -6,11 +6,12 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EnumClientType, IClientData } from '../../core/interfaces/interfaces';
+import { IClientData } from '../../core/interfaces/interfaces';
 import { ClientService } from '../../core/services/client/client.service';
 import { ClientdbService } from '../../core/services/client/clientdb.service';
 import { NotificationService } from '../../core/services/notification/notification.service';
 import { AddClientDialogComponent } from '../../dialogs/add-client-dialog/add-client-dialog/add-client-dialog.component';
+import { EnumClientType } from '../../core/interfaces/enums';
 
 @Component({
   selector: 'app-client-detail',

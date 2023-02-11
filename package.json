@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url":"https://github.com/SharanKumarCode/-Saki-Naturals-Electron-Angular"
+    "url": "https://github.com/SharanKumarCode/-Saki-Naturals-Electron-Angular"
   },
   "keywords": [
     "angular",
@@ -50,6 +50,7 @@
     "lint": "ng lint"
   },
   "dependencies": {
+    "@abacritt/angularx-social-login": "1.2.5",
     "@angular/animations": "14.1.2",
     "@angular/cdk": "14.1.2",
     "@angular/common": "14.1.2",
