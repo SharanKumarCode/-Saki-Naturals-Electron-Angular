@@ -1,0 +1,126 @@
+<section class="transaction-button-section">
+    <div class="transaction-title">
+      <span>TRANSACTIONS</span>
+    </div>
+    <div class="transaction-button-section-dummy-div">
+    </div>
+      <div class="transaction-button-row">
+        <button mat-raised-button color="accent" (click)="openTransactionTypeDialog()">ADD TRANSACTION TYPE</button>
+        <button mat-raised-button color="accent" (click)="onAddTransaction()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+        <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+      </div>
+  </section>
+  
+  <section class="transaction-filter-section" style="font-size: 12px">
+    <div class="filter-label">
+        <span style="font-size: 1.5em">Filter</span>
+    </div>
+    <mat-form-field class="transaction-group-filter-type table-filters" appearance="outline">
+      <mat-select placeholder="by Transaction Group" [(ngModel)]="selectedTransactionGroupValue" name="transactionGroup" (selectionChange)="onFilterChange()">
+          <mat-option *ngFor="let transactionGroup of transactionGroupList" [value]="transactionGroup">
+          {{transactionGroup}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    <mat-form-field class="transaction-name-filter-type table-filters" appearance="outline">
+      <mat-select placeholder="by Transaction Name" [(ngModel)]="selectedTransactionNameValue" name="transactionName" (selectionChange)="onFilterChange()">
+          <mat-option *ngFor="let transactionName of transactionNameList" [value]="transactionName">
+          {{transactionName}}
+          </mat-option>
+      </mat-select>
+      </mat-form-field>
+    <mat-form-field appearance="outline" class="transaction-date-filter-type table-filters">
+        <mat-label>by Transaction Date range</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+            <input matStartDate [(ngModel)]="selectedStartDate" placeholder="Start date">
+            <input matEndDate [(ngModel)]="selectedEndDate" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker>
+            <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChange()">Apply</button>
+            </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+        </mat-form-field>
+    <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+        Clear all filters
+    </button>
+    
+  </section>
+  
+  <section [ngStyle]="{'height': (dataSource.data.length > 0) ? '70%' : '10%'}" class="transaction-table-section">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8">
+  
+    <!-- Serial Number Column -->
+    <ng-container matColumnDef="serial_number">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number">
+        
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.serialNumber}} </td>
+    </ng-container>
+  
+    <!-- Transaction Date Column -->
+    <ng-container matColumnDef="transactionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by transactionDate">
+            Transaction Date
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.transactionDate | date}} </td>
+    </ng-container>
+    
+    <!-- Transaction Group Column -->
+    <ng-container matColumnDef="transactionGroup">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by transactionGroup">
+        Transaction Group
+    </th>
+    <td mat-cell *matCellDef="let element" [ngClass]="{'income-color': element.transactionGroup === 'Income',
+    'expense-color':element.transactionGroup === 'Expense'}"> {{element.transactionGroup | uppercase}} </td>
+    </ng-container>
+  
+    <!-- Transaction Name Column -->
+    <ng-container matColumnDef="transactionName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by transactionName">
+        Transaction Name
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.transactionName}} </td>
+      </ng-container>
+    
+    <!-- Transaction Name Column -->
+    <ng-container matColumnDef="transactionAmount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by transactionAmount">
+          Transaction Amount
+        </th>
+        <td mat-cell *matCellDef="let element"> {{element.transactionAmount}} </td>
+        </ng-container>
+  
+    <!-- Remarks Column -->
+    <ng-container matColumnDef="remarks">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by remarks">
+        Remarks
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr 
+        mat-row 
+        *matRowDef="let row; columns: displayedColumns;"
+        (click)="onRowClick(row)">
+      </tr>
+  </table>
+  </section>
+  <div class="no-transaction-div" *ngIf="!dataSource.data.length">
+    No transactions added yet..
+  </div>
+  
+  <section class="export-btn-container">
+    <button mat-flat-button color="primary" class="export-excel-btn" (click)="onExportAsExcel()">
+        Export as Excel
+    </button>
+    <button mat-flat-button color="primary" class="export-pdf-btn">
+        Export as PDF
+    </button>
+  </section>
+  

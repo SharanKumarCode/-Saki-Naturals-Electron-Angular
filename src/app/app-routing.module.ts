@@ -33,6 +33,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
 import { CompanyDataResolverService } from './core/services/settings/company-data-resolver.service';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 const routes: Routes = [
   {
@@ -80,6 +81,7 @@ const routes: Routes = [
     resolve: {
       clientData: ClientDataResolverService
     }},
+  { path: 'transactions', component: TransactionsComponent,canActivate: [AuthGuardServiceService] },
   { path: 'expense', component: ExpenseComponent,canActivate: [AuthGuardServiceService] },
   { path: 'sales', component: SalesComponent, canActivate: [AuthGuardServiceService] },
   { path: 'purchase', component: PurchaseComponent, canActivate: [AuthGuardServiceService] },
