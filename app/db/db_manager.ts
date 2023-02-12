@@ -32,9 +32,11 @@ import * as purchaseDB from './purchase_db_manager';
 import * as productionDB from './production_db_manager';
 import * as employeeDB from './employee_db_manager';
 import * as companyDB from './company_db_manager';
+import * as transactionDB from './transaction_db_manager';
 import * as stockSoldConsumedDB from './stock_sold_consumed_db_manager';
 
 import {existsSync} from 'fs';
+import { TransactionEntry, TransactionType } from "./data/models/transaction-items.schema";
 
 let synchroniseFlag = existsSync(`app/db/data/saki_naturals_db.db`) ? false : true;
 console.log(synchroniseFlag)
@@ -62,7 +64,9 @@ const AppDataSource = new DataSource({
         AttendanceEntry,
         SalaryTransaction,
         Employee,
-        Company
+        Company,
+        TransactionEntry,
+        TransactionType
          ],
 })
 
@@ -85,5 +89,6 @@ export {
     productionDB,
     employeeDB,
     companyDB,
+    transactionDB,
     stockSoldConsumedDB
 }

@@ -1,4 +1,10 @@
-import { EnumSaleType, EnumTransactionType, EnumClientType, EnumGender, EnumSalaryFrequency, EnumAttendanceValues } from './enums';
+import { EnumSaleType,
+         EnumTransactionType,
+         EnumClientType,
+         EnumGender,
+         EnumSalaryFrequency,
+         EnumAttendanceValues,
+         EnumTransactionGroup } from './enums';
 
 export interface IProductData {
     productID?: string;
@@ -260,3 +266,17 @@ export interface ICompanyData {
   createdDate?: Date;
 }
 
+export interface ITransactionTypeData {
+  transactionTypeID?: string;
+  transactionGroup: EnumTransactionGroup;
+  transactionName: string;
+}
+
+export interface ITransactionEntry {
+  transactionEntryID?: string;
+  transactionType?: ITransactionTypeData;
+  transactionAmount: number;
+  transactionDate: Date;
+  remarks?: string;
+  editCreate?: string;
+}

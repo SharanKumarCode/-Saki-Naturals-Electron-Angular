@@ -156,8 +156,6 @@ export class ProductsdbService {
         DELETE_TYPE = 'soft-delete-product-group';
       }
 
-      console.log(DELETE_TYPE);
-
       this.ipcRenderer.invoke(DELETE_TYPE, productGroupID)
         .then(_=>{
           console.log('INFO : Deleted product group by ID');

@@ -93,6 +93,9 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { TransactionTypeDialogComponent } from './dialogs/transaction-type-dialog/transaction-type-dialog.component';
+import { TransactionDialogComponent } from './dialogs/transaction-dialog/transaction-dialog.component';
 
 
 // AoT requires an exported function for factories
@@ -157,7 +160,10 @@ const lang = 'en-US';
     EmployeeAttendanceHistoryTableComponent,
     EmployeeSalaryHistoryTableComponent,
     LoginComponent,
-    AddUpdateCompanyComponent
+    AddUpdateCompanyComponent,
+    TransactionsComponent,
+    TransactionTypeDialogComponent,
+    TransactionDialogComponent
 
     ],
   imports: [
@@ -223,7 +229,8 @@ const lang = 'en-US';
           }
         ]
       } as SocialAuthServiceConfig,
-    }, AuthGuardServiceService
+    },
+    AuthGuardServiceService
   ],
   bootstrap: [AppComponent]
 })
