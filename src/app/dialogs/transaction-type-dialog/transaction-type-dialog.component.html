@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>TRANSACTION TYPES</h1>
+<mat-dialog-content class="form-container" [formGroup]="form">
+    <div class="transaction-add-type-container">
+        <mat-form-field class="add-transaction-group" appearance="outline">
+            <mat-select placeholder="Select transaction type" [(ngModel)]="selectedValue" formControlName="transactionGroup" name="transactionGroup">
+              <mat-option *ngFor="let transactionGroup of transactionGroupList" [value]="transactionGroup">
+                {{transactionGroup}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        <mat-form-field class="add-transaction-name" appearance="outline">
+            <mat-label>Add Transaction Name</mat-label>
+            <input matInput #input maxlength="50" formControlName="transactionName" value="{{transactionName}}"/>
+            <mat-hint align="end">{{input.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button (click)="onAddTransactionType()"><mat-icon class="icon-display" svgIcon="plus"></mat-icon></button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="card-group-list">
+        <mat-card *ngFor="let type of transactionTypeList">
+            <mat-card-content>
+                <div class="card-container">
+                    <div>
+                        <span [ngClass]="{'income-color': type.transactionGroup === 'Income',
+                        'expense-color':type.transactionGroup === 'Expense'}">{{type.transactionGroup | uppercase}}</span>
+                        <span>{{type.transactionName}}</span>
+                    </div>                    
+                    <button mat-button (click)="onDeleteTransactionType(type.transactionTypeID)"><mat-icon class="icon-display" color="warn" svgIcon="delete"></mat-icon></button>
+                </div>            
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+
+    <div mat-dialog-actions class="form-button-container">
+        <button mat-button (click)="onClose()"><mat-icon svgIcon="close"></mat-icon></button>
+    </div>
+    
+</mat-dialog-content>

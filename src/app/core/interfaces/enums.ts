@@ -79,3 +79,8 @@ export enum EnumClientType {
     pinkBluegrey = 'pink-bluegrey',
     purpleGreen = 'purple-green',
   }
+
+export enum EnumTransactionGroup {
+  income = 'Income',
+  expense = 'Expense'
+}
