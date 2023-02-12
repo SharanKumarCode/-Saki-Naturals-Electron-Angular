@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     .addSvgIcon('material',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'material_icon.svg'))
     .addSvgIcon('employee',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'employee_icon.svg'))
     .addSvgIcon('rupee',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'rupee_icon.svg'))
-    .addSvgIcon('expense',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'expense_icon.svg'))
+    .addSvgIcon('dashboard',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'dashboard_icon.svg'))
     .addSvgIcon('clients',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'clients_icon.svg'))
     .addSvgIcon('purchase',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'purchase_icon.svg'))
     .addSvgIcon('sales',this.domSanitizer.bypassSecurityTrustResourceUrl(this.path + 'sales_icon.svg'))

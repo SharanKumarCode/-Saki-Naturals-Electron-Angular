@@ -38,7 +38,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductsComponent } from './products/products.component';
-import { ExpenseComponent } from './expense/expense.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { SalesComponent } from './sales/sales.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { EmployeeComponent } from './employee/employee.component';
@@ -119,7 +119,7 @@ const lang = 'en-US';
     AppComponent,
     NavbarComponent,
     ProductsComponent,
-    ExpenseComponent,
+    DashboardComponent,
     SalesComponent,
     PurchaseComponent,
     EmployeeComponent,
