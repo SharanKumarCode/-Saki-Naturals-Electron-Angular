@@ -163,7 +163,7 @@
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by salesDate">
       Sale Date
     </th>
-    <td mat-cell *matCellDef="let element"> {{element.salesDate | date:'medium'}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.salesDate | date}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
