@@ -1,1 +1,14 @@
-<p>expense works!</p>
+<section class="dashboard-button-section">
+    <div class="dashboard-title">
+      <span>DASHBOARD</span>
+    </div>
+    <div class="dashboard-button-section-dummy-div">
+    </div>
+      <div class="dashboard-button-row">
+        <button mat-raised-button color="warn" (click)="onRefresh()"><mat-icon class="icon-display" svgIcon="refresh"></mat-icon></button>
+      </div>
+  </section>
+<section class="income-expense-chart-section">
+  <app-income-expense-chart-table class="income-expense-chart-1"></app-income-expense-chart-table>
+  <app-income-expense-granularity-chart-table class="income-expense-chart-2"></app-income-expense-granularity-chart-table>
+</section>
