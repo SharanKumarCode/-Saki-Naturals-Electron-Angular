@@ -1,0 +1,62 @@
+.chart-container {
+    height: 42%;
+    margin-bottom: 3%;
+}
+
+.chart-top-section {
+    height: 10%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 2%;
+    margin-bottom: 1%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.transaction-group-filter-type {
+    flex-grow: 0.2;
+    width: 2%;
+}
+
+.chart-title {
+    flex-grow: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.1em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.chart-top-section-inner-container {
+    flex-grow: 0.3;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-filters, .clear-filter-btn, .export-btn {
+    flex-grow: 1;
+    margin-right: 1.8%;
+}
+
+.clear-filter-btn, .export-btn {
+    margin-bottom: 7%;
+    height: 100%;
+}
+
+.clear-filter-btn {
+    margin-left: 5%;
+}
+
+.export-btn {
+    margin-bottom: 9%;
+}

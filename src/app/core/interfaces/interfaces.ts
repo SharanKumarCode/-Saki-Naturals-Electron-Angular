@@ -198,7 +198,7 @@ export interface IClientData {
   remarks?: string;
   editCreate?: string;
   deleteFlag?: boolean;
-  createdDate: Date;
+  createdDate?: Date;
 }
 
 export interface IEmployeeData {

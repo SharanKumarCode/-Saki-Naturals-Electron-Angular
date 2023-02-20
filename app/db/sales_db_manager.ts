@@ -96,6 +96,10 @@ async function insertSale(saleData: ISalesData){
     saleEntity.transportCharges = saleData.transportCharges
     saleEntity.miscCharges = saleData.miscCharges
     saleEntity.paymentTerms = saleData.paymentTerms
+
+    saleEntity.dispatchDate = saleData.dispatchDate
+    saleEntity.deliveredDate = saleData.deliveredDate
+    saleEntity.completedDate = saleData.completedDate
     
     const res = await AppDataSource.getRepository(Sales).save(saleEntity)
 

@@ -86,6 +86,7 @@ async function insertProduction(productionData: IProductionData){
     productionEntity.productionDate = productionData.productionDate
     productionEntity.remarks = productionData.remarks
     productionEntity.productQuantity = productionData.productQuantity
+    productionEntity.completedDate = productionData.completedDate
     productionEntity.product = productEntity
     
     const res = await AppDataSource.getRepository(Production).save(productionEntity)
