@@ -75,21 +75,15 @@ export class PurchaseComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource = new MatTableDataSource();
       data.filter(d=>this.selectedClientData ? d.supplier.clientID === this.selectedClientData?.clientID : true).forEach((element, index)=>{
 
-      let totalPrice = element
-                      ?.purchaseEntries
-                      .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
-                      totalPrice -= element
-                      ?.purchaseEntries.filter(d=>d.returnFlag === true)
-                      .map(d=>d.price * d.quantity)
-                      .reduce((partialSum, a) => partialSum + a, 0);
+      const totalPrice = this.purchaseService.getNetPurchasePrice(element);
 
-      const paidAmount = element.purchaseTransactions
+      const paidAmount = parseFloat((element.purchaseTransactions
                               .filter(d=>d.transactionType !== EnumTransactionType.refund)
-                              .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-      const totalRefundAmount = element.purchaseTransactions
+                              .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0)).toFixed(2));
+      const totalRefundAmount = parseFloat((element.purchaseTransactions
                                   .filter(d=>d.transactionType === EnumTransactionType.refund)
-                                  .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0);
-      const balance = totalPrice + totalRefundAmount - paidAmount;
+                                  .map(d=>d.transactionAmount).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)));
+      const balance = parseFloat((totalPrice + totalRefundAmount - paidAmount).toFixed(2));
 
       const numberOfMaterials = [...new Set(element.purchaseEntries.map(d=>d.material.materialID))].length;
       const purchasedQuantity = element.purchaseEntries

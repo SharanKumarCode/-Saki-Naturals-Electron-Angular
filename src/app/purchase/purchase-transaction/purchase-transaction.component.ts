@@ -77,13 +77,7 @@ export class PurchaseTransactionComponent implements OnInit, OnDestroy {
   }
 
   setPurchaseDetails(): void {
-    let totPrice = this.selectedPurchaseData
-                        ?.purchaseEntries
-                        .filter(d=>d.returnFlag === false).map(d=>d.price * d.quantity).reduce((partialSum, a) => partialSum + a, 0);
-    totPrice -= this.selectedPurchaseData
-                ?.purchaseEntries.filter(d=>d.returnFlag === true)
-                .map(d=>d.price * d.quantity)
-                .reduce((partialSum, a) => partialSum + a, 0);
+    const totPrice = this.purchaseService.getNetPurchasePrice(this.selectedPurchaseData);
 
     let totSoldQuantity = this.selectedPurchaseData
                             ?.purchaseEntries

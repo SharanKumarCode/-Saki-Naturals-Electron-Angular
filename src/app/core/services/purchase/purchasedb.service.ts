@@ -25,14 +25,13 @@ export class PurchasedbService {
     const purchaseList: IPurchaseData[] = [];
     this.ipcRenderer.invoke('get-purchase')
     .then(data=>{
-
       data.forEach(element=>{
 
         const purchaseData: IPurchaseData = {
           purchaseID: element.purchaseID,
           gstPercentage: element.gstPercentage,
           overallDiscountPercentage: element.overallDiscountPercentage,
-          transportCharges: element.transportationCharges,
+          transportCharges: element.transportCharges,
           miscCharges: element.miscCharges,
           paymentTerms: element.paymentTerms,
           supplier: element.supplier,
@@ -62,10 +61,6 @@ export class PurchasedbService {
     return this.ipcRenderer.invoke('get-purchase-by-id', purchaseID)
     .then(data=>{
 
-      // sorting sales transactoin by date and type - ascending order
-      // data[0].saleTransactions = data[0].saleTransactions.length > 0 ?
-      //                             this.commonService.sortSalesTransactionByTypeAndDate(data[0].saleTransactions)
-      //                             : [];
       this.purchaseService.updateSelectedPurchaseData(data[0]);
 
       return new Promise((res, rej)=>{
