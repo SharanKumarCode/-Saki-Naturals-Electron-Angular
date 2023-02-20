@@ -1,0 +1,329 @@
+{
+    "productGroupData": [
+        {
+            "productGroupName": "Soap"
+        },
+        {
+            "productGroupName": "Cream"
+        },
+        {
+            "productGroupName": "Shampoo"
+        },
+        {
+            "productGroupName": "Oil"
+        }
+    ],
+    "productData" : [
+        {
+            "productName": "Herbal Soap",
+            "productGroupName": "Soap",
+            "productGroupId": "",
+            "description": "Herbal Soap 50 grams",
+            "priceDirectSale": 126.5,
+            "priceReseller": 135.6,
+            "priceDealer": 156.6,
+            "remarks": "First Product"
+        },
+        {
+            "productName": "Chocolate Soap",
+            "productGroupName": "Soap",
+            "productGroupId": "",
+            "description": "Chocolate Soap 100 grams",
+            "priceDirectSale": 156.59,
+            "priceReseller": 158.56,
+            "priceDealer": 160.59,
+            "remarks": "Brown color soap"
+        },
+        {
+            "productName": "Face Cream",
+            "productGroupName": "Cream",
+            "productGroupId": "",
+            "description": "Face Cream 50 ml",
+            "priceDirectSale": 356.56,
+            "priceReseller": 362.56,
+            "priceDealer": 362.56,
+            "remarks": "Herbal Cream"
+        },
+        {
+            "productName": "Baby Shampoo",
+            "productGroupName": "Shampoo",
+            "productGroupId": "",
+            "description": "Baby Shampoo 150 ml",
+            "priceDirectSale": 60.25,
+            "priceReseller": 65.56,
+            "priceDealer": 59.68,
+            "remarks": "Tear free shampoo"
+        },
+        {
+            "productName": "Anti Dandruff Shampoo",
+            "productGroupName": "Shampoo",
+            "productGroupId": "",
+            "description": "Anti Dandruff Shampoo 250 ml",
+            "priceDirectSale": 450.25,
+            "priceReseller": 455.65,
+            "priceDealer": 456.69,
+            "remarks": "Large shampoo"
+        },
+        {
+            "productName": "Olive Oil",
+            "productGroupName": "Oil",
+            "productGroupId": "",
+            "description": "Olive Oil 1 L",
+            "priceDirectSale": 35.98,
+            "priceReseller": 40.86,
+            "priceDealer": 42.68,
+            "remarks": "Cooking oil"
+        }
+    ],
+    "materialData" : [
+        {
+            "materialName": "Glycerin",
+            "description": "Glycerin 150 ml",
+            "remarks": "For Soap"
+        },
+        {
+            "materialName": "Herbs",
+            "description": "Herbs 50 grams",
+            "remarks": "For Herbal Soap"
+        },
+        {
+            "materialName": "Coconut Oil",
+            "description": "IMaterialDataCoconut Oil 500 ml",
+            "remarks": "For Oil and Shampoo"
+        },
+        {
+            "materialName": "Olive plant",
+            "description": "Olive plant 300 grams",
+            "remarks": "For Olive Oil"
+        },
+        {
+            "materialName": "Coco nuts",
+            "description": "Coco nuts 100 grams",
+            "remarks": "For Chocolate Soap"
+        },
+        {
+            "materialName": "Multhanimitti",
+            "description": "Multhanimitti 150 grams",
+            "remarks": "For face cream"
+        }
+    ],
+    "clientData": [
+        {
+            "clientType": "SUPPLIER",
+            "clientName": "Sharan Industries",
+            "contactPerson": "Sharan Kumar",
+            "contact1": "9865895475",
+            "contact2": "9686889568",
+            "landline": "0422-986545",
+            "email": "sharan@gmail.com",
+            "addressLine1": "649/1 A, Masagounden Chettipalayam, Annur Taluk",
+            "addressLine2": "Poonekoundanpuddur, Tamil Nadu",
+            "city": "Coimbatore",
+            "state": "Tamil Nadu",
+            "country": "India",
+            "pincode": "641107",
+            "description": "Multhani mitti suppliers",
+            "remarks": "First Client"
+        },
+        {
+            "clientType": "SUPPLIER",
+            "clientName": "Multimech Engineers",
+            "contactPerson": "Dhuvaarahan",
+            "contact1": "9899632510",
+            "contact2": "8955632012",
+            "landline": "044-586894",
+            "email": "dhuvaarahan@yahoo.com",
+            "addressLine1": "19/20, W TV Swamy Rd, East,",
+            "addressLine2": "R.S. Puram, Coimbatore",
+            "city": "Coimbatore",
+            "state": "Tamil Nadu",
+            "country": "India",
+            "pincode": "641002",
+            "description": "Herbs suppliers",
+            "remarks": "Client Test"
+        },
+        {
+            "clientType": "CUSTOMER",
+            "clientName": "Lifestyle Stores",
+            "contactPerson": "Yasothan",
+            "contact1": "8858565485",
+            "contact2": "8668159714",
+            "landline": "044-235689",
+            "email": "yasothanb@hotmail.com",
+            "addressLine1": "#2, 80 Feet Road, (opp. Koramangala Indoor Stadium)",
+            "addressLine2": "Koramangala 8th Block, Bengaluru",
+            "city": "Bengaluru",
+            "state": "Karnataka",
+            "country": "India",
+            "pincode": "560095",
+            "description": "First Customer",
+            "remarks": "Client Test 2"
+        },
+        {
+            "clientType": "CUSTOMER",
+            "clientName": "Shivarnikan Dealers",
+            "contactPerson": "Shivarnikan Kumar",
+            "contact1": "9763145689",
+            "contact2": "8264821539",
+            "landline": "044-254123",
+            "email": "shivarnikankumar1973@hotmail.com",
+            "addressLine1": "Rajaji Salai, Fourth Floor, 62, Beach Rd, George Town, Chennai",
+            "addressLine2": "George Town, Chennai",
+            "city": "Chennai",
+            "state": "Tamil Nadu",
+            "country": "India",
+            "pincode": "600056",
+            "description": "Second Customer",
+            "remarks": "Client Test 3"
+        },
+        {
+            "clientType": "SUPPLIER",
+            "clientName": "Komagan Stores",
+            "contactPerson": "Komagan Sivan",
+            "contact1": "8885896523",
+            "contact2": "9965640023",
+            "landline": "044-250021",
+            "email": "komagansivan5698@hotmail.com",
+            "addressLine1": "BANK OF INDIA STAR AVAS, G Block BKC",
+            "addressLine2": "Bandra Kurla Complex, Bandra East, Mumbai",
+            "city": "Mumbai",
+            "state": "Maharashtra",
+            "country": "India",
+            "pincode": "400051",
+            "description": "Third Customer",
+            "remarks": "Client Test 3"
+        }
+    ],
+    "employeeData": [
+        {
+            "employeeName": "Jeyakanthan Lathooshan",
+            "role": "Administrator",
+            "dob": "Fri July 02 1976 00:00:00 GMT+0530",
+            "aadhar": "254568951256",
+            "gender": "Male",
+            "salary": 45000,
+            "salaryFrequency": "Monthly",
+            "contact1": "9865895475",
+            "contact2": "9686889568",
+            "email": "jeyakanthanlathooshan89454@gmail.com",
+            "address": "649/1 A, Masagounden Chettipalayam, Annur Taluk, Poonekoundanpuddur, Tamil Nadu",
+            "joiningDate": "Fri Aug 05 2022 00:00:00 GMT+0530",
+            "remarks": "First Employee"
+        },
+        {
+            "employeeName": "Gunash Nagavelan",
+            "role": "Accountant",
+            "dob": "Thurs Jan 26 1978 00:00:00 GMT+0530",
+            "aadhar": "232021252365",
+            "gender": "Male",
+            "salary": 15000,
+            "salaryFrequency": "Monthly",
+            "contact1": "9899632510",
+            "contact2": "8955632012",
+            "email": "gunashnagavelan@yahoo.com",
+            "address": "19/20, W TV Swamy Rd, East, R.S. Puram, Coimbatore",
+            "joiningDate": "Wed Aug 24 2022 00:00:00 GMT+0530",
+            "remarks": "Employee Test"
+        },
+        {
+            "employeeName": "Dhayanan Yasothan",
+            "role": "Laborer",
+            "dob": "Sat Aug 07 1982 00:00:00 GMT+0530",
+            "aadhar": "326254887859",
+            "gender": "Female",
+            "salary": 25000,
+            "salaryFrequency": "Monthly",
+            "contact1": "8858565485",
+            "contact2": "8668159714",
+            "email": "dhayananyasothanb@hotmail.com",
+            "address": "#2, 80 Feet Road, (opp. Koramangala Indoor Stadium), Koramangala 8th Block, Bengaluru",
+            "joiningDate": "Tue Sep 06 2022 00:00:00 GMT+0530",
+            "remarks": "Test Employee Labourer"
+        },
+        {
+            "employeeName": "Nirushikan Kumar",
+            "role": "Laborer",
+            "dob": "Sat Aug 03 1985 00:00:00 GMT+0530",
+            "aadhar": "325001202365",
+            "gender": "Male",
+            "salary": 15000,
+            "salaryFrequency": "Monthly",
+            "contact1": "9763145689",
+            "contact2": "8264821539",
+            "email": "nirushikankumar1973@hotmail.com",
+            "address": "Rajaji Salai, Fourth Floor, 62, Beach Rd, George Town, Chennai",
+            "joiningDate": "Thurs Nov 03 2022 00:00:00 GMT+0530",
+            "remarks": "Test Employee"
+        },
+        {
+            "employeeName": "Kharthik Sivan",
+            "role": "Sales Incharge",
+            "dob": "Tue Sep 23 1986 00:00:00 GMT+0530",
+            "aadhar": "302012562032",
+            "gender": "Male",
+            "salary": 23000,
+            "salaryFrequency": "Monthly",
+            "contact1": "8885896523",
+            "contact2": "9965640023",
+            "email": "kharthiksivan5698@hotmail.com",
+            "address": "BANK OF INDIA STAR AVAS, G Block BKC, Bandra Kurla Complex, Bandra East, Mumbai",
+            "joiningDate": "Thurs Dec 22 2022 00:00:00 GMT+0530",
+            "remarks": "New Joinee"
+        }
+    ],
+    "transactionTypeData": [
+        {
+            "transactionGroup": "Income",
+            "transactionName": "Capital"
+        },
+        {
+            "transactionGroup": "Income",
+            "transactionName": "Loan"
+        },
+        {
+            "transactionGroup": "Income",
+            "transactionName": "Others"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Rent"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Electricity"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "EMI"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Internet"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Telephone"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Food"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Transport"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Maintenance"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Repair"
+        },
+        {
+            "transactionGroup": "Expense",
+            "transactionName": "Others"
+        }
+    ]
+    
+}

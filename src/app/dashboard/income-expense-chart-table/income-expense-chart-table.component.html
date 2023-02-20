@@ -1,0 +1,49 @@
+<section class="chart-container">
+
+    <section class="chart-top-section">
+        <mat-form-field class="transaction-group-filter-type table-filters" appearance="outline">
+            <mat-select placeholder="by Transaction Group" [(ngModel)]="selectedTransactionGroupValue" name="transactionGroup" (selectionChange)="onFilterChange()">
+                <mat-option *ngFor="let transactionGroup of transactionGroupList" [value]="transactionGroup">
+                {{transactionGroup}}
+                </mat-option>
+            </mat-select>
+            </mat-form-field>
+        <div class="chart-title">
+            <span>INCOME & EXPENSES</span>
+          </div>
+        <div class="chart-top-section-inner-container">
+            
+            <mat-form-field appearance="outline" class="transaction-date-filter-type table-filters">
+                <mat-label>by Transaction Date range</mat-label>
+                <mat-date-range-input [rangePicker]="rangePicker">
+                    <input matStartDate [(ngModel)]="selectedStartDate" placeholder="Start date">
+                    <input matEndDate [(ngModel)]="selectedEndDate" placeholder="End date">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+                <mat-date-range-picker #rangePicker>
+                    <mat-date-range-picker-actions>
+                    <button mat-button matDateRangePickerCancel>Cancel</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChange()">Apply</button>
+                    </mat-date-range-picker-actions>
+                </mat-date-range-picker>
+                </mat-form-field>
+            <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+                Clear all filters
+            </button>
+            <button class="export-btn" mat-icon-button aria-label="export icon">
+                <mat-icon class="icon-display" svgIcon="export"></mat-icon>
+                </button>
+        </div>
+        
+    </section>
+    <section class="chart-section">
+        <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [title]="chartOptions.title"
+      ></apx-chart>
+    </section>
+
+</section>

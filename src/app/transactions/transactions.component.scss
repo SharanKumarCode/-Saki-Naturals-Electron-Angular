@@ -1,0 +1,159 @@
+.transaction-button-section {
+    height: 12%;
+    width: 95%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+
+    display: flex;
+    flex-direction: row;
+
+}
+
+.transaction-title {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.transaction-button-section-dummy-div {
+    flex-grow: 8;
+}
+
+.transaction-button-row{
+    width: 30%;
+    height: 55%;
+    flex-grow: 0.8;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: stretch;
+    align-content: stretch;
+
+    margin: 2% auto 8px auto;
+  }
+
+.transaction-button-row > button:first-child {
+    flex-grow: 7;
+    margin-right: 10%;
+
+}
+
+.transaction-button-row > button:nth-child(2) {
+    flex-grow: 1;
+    margin-right: 3%;
+    background-color: greenyellow;
+
+}
+
+.transaction-button-row > button:nth-child(3) {
+    flex-grow: 1;
+}
+
+// Filter section
+
+.transaction-filter-section {
+    display: flex;
+    flex-direction: row;
+    width: 65%;
+    height: 4%;
+    margin: 0% auto;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.filter-label {
+    flex-grow: 0.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.transaction-filter-section > mat-form-field {
+    flex-grow: 1;
+}
+
+.table-filters{
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+.clear-filter-btn {
+    margin-bottom: 1%;
+    margin-top: 0.5%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+// Filter section
+
+.transaction-table-section{
+    height: 60%;
+    width: 95%;
+    margin: 2% auto 8px auto;
+    overflow: auto;
+}
+
+table{
+    width: 100%;
+    color: black;
+
+}
+
+th{
+    background-color: #e0e0e0;
+}
+
+.mat-row .mat-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+.mat-row:hover .mat-cell {
+    border-color: currentColor;
+}
+
+.no-transaction-div {
+    width: 100%;
+    margin-top: 4%;
+    font-style: italic;
+    text-align: center;
+  }
+
+.export-btn-container {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    height: 5%;
+    width: 20%;
+    margin-right: 1%;
+}
+
+.export-excel-btn, .export-pdf-btn {
+    flex-grow: 1;
+    margin-top: 1%;
+    margin-right: 1%;
+}
+
+.income-color {
+    font-weight: 600;
+    color: green;
+}
+
+.expense-color {
+    font-weight: 600;
+    color: red;
+}

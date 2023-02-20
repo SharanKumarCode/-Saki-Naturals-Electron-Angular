@@ -27,9 +27,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatCommonModule} from '@angular/material/core';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatCommonModule } from '@angular/material/core';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -38,7 +41,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProductsComponent } from './products/products.component';
-import { ExpenseComponent } from './expense/expense.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { SalesComponent } from './sales/sales.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { EmployeeComponent } from './employee/employee.component';
@@ -78,7 +81,7 @@ import {
  } from './products/products-production-history-table/products-production-history-table.component';
 import {
   MaterialPurchaseHistoryTableComponent
-} from './material/material-purchase-history-table/material-purchase-history-table.component';
+ } from './material/material-purchase-history-table/material-purchase-history-table.component';
 import {
   MaterialConsumptionHistoryTableComponent
 } from './material/material-consumption-history-table/material-consumption-history-table.component';
@@ -93,10 +96,16 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 import { GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
-
+import { TransactionsComponent } from './transactions/transactions.component';
+import { TransactionTypeDialogComponent } from './dialogs/transaction-type-dialog/transaction-type-dialog.component';
+import { TransactionDialogComponent } from './dialogs/transaction-dialog/transaction-dialog.component';
+import { IncomeExpenseChartTableComponent } from './dashboard/income-expense-chart-table/income-expense-chart-table.component';
+import {
+  IncomeExpenseGranularityChartTableComponent
+ } from './dashboard/income-expense-granularity-chart-table/income-expense-granularity-chart-table.component';
 
 // AoT requires an exported function for factories
-const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader => new TranslateHttpLoader(http, './assets/i18n/', '.json');
 const MY_FORMATS = {
   parse: {
     dateInput: 'LL',
@@ -116,7 +125,7 @@ const lang = 'en-US';
     AppComponent,
     NavbarComponent,
     ProductsComponent,
-    ExpenseComponent,
+    DashboardComponent,
     SalesComponent,
     PurchaseComponent,
     EmployeeComponent,
@@ -157,9 +166,14 @@ const lang = 'en-US';
     EmployeeAttendanceHistoryTableComponent,
     EmployeeSalaryHistoryTableComponent,
     LoginComponent,
-    AddUpdateCompanyComponent
+    AddUpdateCompanyComponent,
+    TransactionsComponent,
+    TransactionTypeDialogComponent,
+    TransactionDialogComponent,
+    IncomeExpenseChartTableComponent,
+    IncomeExpenseGranularityChartTableComponent
 
-    ],
+  ],
   imports: [
     BrowserModule,
     FormsModule,
@@ -194,7 +208,8 @@ const lang = 'en-US';
     MatRadioModule,
     MatSlideToggleModule,
     MatChipsModule,
-
+    MatButtonToggleModule,
+    NgApexchartsModule,
 
     TranslateModule.forRoot({
       loader: {
@@ -211,7 +226,7 @@ const lang = 'en-US';
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -223,8 +238,10 @@ const lang = 'en-US';
           }
         ]
       } as SocialAuthServiceConfig,
-    }, AuthGuardServiceService
+    },
+    AuthGuardServiceService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}

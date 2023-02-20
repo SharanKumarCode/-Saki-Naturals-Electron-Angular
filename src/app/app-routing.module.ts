@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components';
 
 import { ProductsComponent } from './products/products.component';
-import { ExpenseComponent } from './expense/expense.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { SalesComponent } from './sales/sales.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -33,6 +33,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardServiceService } from './core/services/auth-guard-service.service';
 import { AddUpdateCompanyComponent } from './settings/add-update-company/add-update-company.component';
 import { CompanyDataResolverService } from './core/services/settings/company-data-resolver.service';
+import { TransactionsComponent } from './transactions/transactions.component';
 
 const routes: Routes = [
   {
@@ -80,7 +81,8 @@ const routes: Routes = [
     resolve: {
       clientData: ClientDataResolverService
     }},
-  { path: 'expense', component: ExpenseComponent,canActivate: [AuthGuardServiceService] },
+  { path: 'transactions', component: TransactionsComponent,canActivate: [AuthGuardServiceService] },
+  { path: 'dashboard', component: DashboardComponent,canActivate: [AuthGuardServiceService] },
   { path: 'sales', component: SalesComponent, canActivate: [AuthGuardServiceService] },
   { path: 'purchase', component: PurchaseComponent, canActivate: [AuthGuardServiceService] },
   { path: 'purchase/transaction/:selectedPurchaseID',

@@ -41,6 +41,24 @@ export class PurchaseService {
       this.selectedPurchaseDataSubject$.next(data);
    }
 
+   getNetPurchasePrice(purchaseData: IPurchaseData): number {
+    let totPrice = purchaseData.purchaseEntries
+                      .filter(d=>d.returnFlag === false)
+                      .map(d=>(d.price * d.quantity) - (d.price * d.quantity * d.discountPercentage / 100))
+                      .reduce((partialSum, a) => partialSum + a, 0);
+    totPrice -= purchaseData.purchaseEntries
+                .filter(d=>d.returnFlag === true)
+                .map(d=>(d.price * d.quantity)
+                      - (d.price * d.quantity * d.discountPercentage / 100))
+                .reduce((partialSum, a) => partialSum + a, 0);
+
+    totPrice -= purchaseData.overallDiscountPercentage * totPrice / 100;
+    totPrice += purchaseData.gstPercentage * totPrice / 100;
+    totPrice += purchaseData.transportCharges + purchaseData.miscCharges;
+
+    return parseFloat(totPrice.toFixed(2));
+   }
+
    getPurchaseStatus(purchaseData: IPurchaseData): EnumPurchaseStatus {
 
     if (purchaseData.cancelledDate) {

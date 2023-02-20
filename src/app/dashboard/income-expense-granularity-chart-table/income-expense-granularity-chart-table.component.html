@@ -1,0 +1,37 @@
+<section class="chart-container">
+
+    <section class="chart-top-section">
+        <mat-button-toggle-group [(ngModel)]="selectedValIncomeExpense" name="fontStyle" (change)="onToggleIncomeExpenseChange()" aria-label="Font Style">
+            <mat-button-toggle value="income">Income</mat-button-toggle>
+            <mat-button-toggle value="expense">Expense</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div class="chart-title">
+            <span>{{selectedValIncomeExpense | uppercase}}</span>
+          </div>
+        <div class="chart-top-section-inner-container">
+            <mat-form-field class="transaction-name-filter-type table-filters" appearance="outline">
+                <mat-select multiple="true" placeholder="by Transaction Names" [(ngModel)]="selectedTransactionNameValues" name="transactionNames" (selectionChange)="onFilterChange()">
+                    <mat-option *ngFor="let transactionName of transactionNamesList" [value]="transactionName">
+                    {{transactionName}}
+                    </mat-option>
+                </mat-select>
+                </mat-form-field>
+            <button mat-flat-button color="accent" class="clear-filter-btn" (click)="onClearFilters()">
+                Clear all filters
+            </button>
+            <button class="export-btn" mat-icon-button aria-label="export icon" (click)="onExportAsExcel()">
+                <mat-icon class="icon-display" svgIcon="export"></mat-icon>
+                </button>
+        </div>
+        
+    </section>
+    <section class="chart-section">
+        <apx-chart
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [title]="chartOptions.title"
+      ></apx-chart>
+    </section>
+
+</section>

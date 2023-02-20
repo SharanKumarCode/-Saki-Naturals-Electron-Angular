@@ -32,9 +32,14 @@ import * as purchaseDB from './purchase_db_manager';
 import * as productionDB from './production_db_manager';
 import * as employeeDB from './employee_db_manager';
 import * as companyDB from './company_db_manager';
+import * as transactionDB from './transaction_db_manager';
+import * as dashboardDB from './dashboard_db_manager';
 import * as stockSoldConsumedDB from './stock_sold_consumed_db_manager';
 
+// import {initialiseDB} from './initialise_db';
+
 import {existsSync} from 'fs';
+import { TransactionEntry, TransactionType } from "./data/models/transaction-items.schema";
 
 let synchroniseFlag = existsSync(`app/db/data/saki_naturals_db.db`) ? false : true;
 console.log(synchroniseFlag)
@@ -42,7 +47,7 @@ console.log(synchroniseFlag)
 const AppDataSource = new DataSource({
     type: 'sqlite',
     synchronize: synchroniseFlag,
-    logging: true,
+    logging: ["error"],
     logger: 'simple-console',
     database: 'app/db/data/saki_naturals_db.db',
     entities: [ 
@@ -62,7 +67,9 @@ const AppDataSource = new DataSource({
         AttendanceEntry,
         SalaryTransaction,
         Employee,
-        Company
+        Company,
+        TransactionEntry,
+        TransactionType
          ],
 })
 
@@ -70,6 +77,9 @@ const AppDataSource = new DataSource({
 AppDataSource.initialize()
     .then(() => {
         console.log("Data Source has been initialized!")
+        if (synchroniseFlag) {
+            // initialiseDB()
+        }
     })
     .catch((err) => {
         console.error("Error during Data Source initialization", err)
@@ -85,5 +95,7 @@ export {
     productionDB,
     employeeDB,
     companyDB,
+    transactionDB,
+    dashboardDB,
     stockSoldConsumedDB
 }

@@ -91,6 +91,10 @@ async function insertPurchase(purchaseData: IPurchaseData){
     purchaseEntity.transportCharges = purchaseData.transportCharges
     purchaseEntity.miscCharges = purchaseData.miscCharges
     purchaseEntity.paymentTerms = purchaseData.paymentTerms
+
+    purchaseEntity.dispatchDate= purchaseData.dispatchDate
+    purchaseEntity.deliveredDate= purchaseData.deliveredDate
+    purchaseEntity.completedDate= purchaseData.completedDate
     
     const res = await AppDataSource.getRepository(Purchase).save(purchaseEntity)
 
