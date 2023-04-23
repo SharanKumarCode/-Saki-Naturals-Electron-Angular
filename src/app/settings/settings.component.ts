@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AppUpdateService } from '../core/services/app-update.service';
-import { SocialAuthService } from '@abacritt/angularx-social-login';
+// import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { ICompanyData } from '../core/interfaces/interfaces';
 import { Router } from '@angular/router';
 import { CompanydbService } from '../core/services/settings/companydb.service';
@@ -29,7 +29,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private appUpdateService: AppUpdateService,
-    private socialAuthService: SocialAuthService,
+    // private socialAuthService: SocialAuthService,
     private companyDBservice: CompanydbService,
     private settingsService: SettingsService,
     private route: Router
@@ -80,7 +80,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   signOut(): void {
-    this.socialAuthService.signOut();
+    // this.socialAuthService.signOut();
   }
 
   setDummyData(): void {
@@ -107,11 +107,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.photoUrl = this.defaultPhotoUrl;
-    this.socialAuthService.authState.subscribe((user)=>{
-      this.name = user.name;
-      this.email = user.email;
-      this.photoUrl = user.photoUrl ? user.photoUrl : this.defaultPhotoUrl;
-    });
+    // this.socialAuthService.authState.subscribe((user)=>{
+    //   this.name = user.name;
+    //   this.email = user.email;
+    //   this.photoUrl = user.photoUrl ? user.photoUrl : this.defaultPhotoUrl;
+    // });
 
     this.appUpdateService.getAppVersion()
     .then(data=>{
